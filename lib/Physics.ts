@@ -25,6 +25,11 @@ class Ray {
   }
 }
 
+interface ResolveVelocityResult {
+  newVelocity: number;
+  collision: boolean;
+}
+
 class PhysicsManager {
   private _sprites = new MagicArray<Sprite>();
 
@@ -35,51 +40,92 @@ class PhysicsManager {
     
   }
 
-  moveSpriteX(sprite: Sprite, dx: number): void {
+  private moveSpriteX(sprite: Sprite, dx: number): ResolveVelocityResult {
     const spriteSideX = sprite.x + (dx > 0 ? sprite.width : 0);
     const rayStartX   = spriteSideX + (dx > 0 ? -PhysicsManager.SKIN_WIDTH : PhysicsManager.SKIN_WIDTH);
     const rayEndX     = rayStartX + dx;
 
-    let resultdx = dx;
+    let result = {
+      newVelocity: dx,
+      collision  : false
+    }
 
     for (let y = sprite.y; y < sprite.y + sprite.height; y += PhysicsManager.RAY_SPACING) {
       const ray = new Ray(rayStartX, y, rayEndX, y);
 
       this.raycast(ray).then(hit => {
-        resultdx = spriteSideX - hit.position.x;
+        const newVelocity = spriteSideX - hit.position.x;
+
+        if (!result.collision || newVelocity < result.newVelocity) {
+          result = {
+            collision: true,
+            newVelocity
+          };
+        }
       });
     }
 
-    sprite.x += resultdx;
+    return result;
   }
 
-  moveSpriteY(sprite: Sprite, dy: number): void {
+  private moveSpriteY(sprite: Sprite, dy: number): ResolveVelocityResult {
     const spriteSideY = sprite.y + (dy > 0 ? sprite.height : 0);
     const rayStartY   = spriteSideY + (dy > 0 ? -PhysicsManager.SKIN_WIDTH : PhysicsManager.SKIN_WIDTH);
     const rayEndY     = rayStartY + dy;
 
-    let resultdy = dy;
+    let result = {
+      newVelocity: dy,
+      collision  : false
+    }
 
     for (let x = sprite.x; x < sprite.x + sprite.width; x += PhysicsManager.RAY_SPACING) {
       const ray = new Ray(x, rayStartY, x, rayEndY);
 
       this.raycast(ray).then(hit => {
-        resultdy = hit.position.y - spriteSideY;
+        const newVelocity = hit.position.y - spriteSideY;
+
+        if (!result.collision || newVelocity < result.newVelocity) {
+          result = {
+            collision: true,
+            newVelocity
+          };
+        }
       });
     }
 
-    sprite.y += resultdy;
+    return result;
   }
 
-  moveSprite(sprite: Sprite, dx: number, dy: number): void {
-    // x
+  private moveSprite(sprite: Sprite, dx: number, dy: number): void {
+    if (dx != 0) {
+      const result = this.moveSpriteX(sprite, dx);
 
-    if (dx != 0) this.moveSpriteX(sprite, dx);
-    if (dy != 0) this.moveSpriteY(sprite, dy);
+      sprite.x += result.newVelocity;
+
+      if (result.collision) {
+        sprite.physics.touchingLeft  = dx < 0;
+        sprite.physics.touchingRight = dx > 0;
+      }
+    }
+
+    if (dy != 0) {
+      const result = this.moveSpriteY(sprite, dy);
+
+      sprite.y += result.newVelocity;
+
+      if (result.collision) {
+        sprite.physics.touchingTop    = dy < 0;
+        sprite.physics.touchingBottom = dy > 0;
+      }
+    }
   }
 
   update(): void {
     // move all sprites
+
+    for (const sprite of this._sprites) {
+      sprite.physics.resetFlags();
+    }
 
     for (const sprite of this._sprites) {
       this.moveSprite(sprite, sprite.physics.dx, sprite.physics.dy);
@@ -173,7 +219,14 @@ class PhysicsComponent extends Component {
     this.dy = 0;
   }
 
+  resetFlags(): void {
+    this.touchingBottom = false;
+    this.touchingTop    = false;
+    this.touchingLeft   = false;
+    this.touchingRight  = false;
+  }
+
   postUpdate(): void { }
-  preUpdate(): void { }
-  update(): void { }
+  preUpdate() : void { }
+  update()    : void { }
 }

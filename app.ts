@@ -51,6 +51,10 @@ class Player extends Sprite {
 
     this.physics.moveBy(dx, dy);
 
+    if (this.physics.touchingBottom) {
+      console.log("bot");
+    }
+
     /*
     Raycast debugging stuff.
     */
