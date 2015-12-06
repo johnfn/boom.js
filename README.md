@@ -1,21 +1,5 @@
-react-typescript-definitions
+boom.js
 ============================
 
-React.d.ts, file with ambient type declarations for working with Facebook React.
-
-With typings for React 0.12 (PARTIAL), 0.10.0 and TS 1.1, kinda incomplete, so **pull requests are welcome**.
-
-Based on TodoMVC sample by @fdecampredon, improved by @wizzard0, MIT licensed.
-
-Install via NPM:
-
-    npm install react-typescript-definitions
-
-or via NuGet:
-
-    PM> Install-Package React.TypeScript.DefinitelyTyped 
-
-Use:
-
-    /// <reference path="../node_modules/react-typescript-definitions/react.d.ts" />
+HTML5/JavaScript game library written in TypeScript, which I strongly recommend you use. Has every amazing feature you've ever dreamed a game engine should have. If Python's philosophy is "batteries included" then our philosophy is "ponies included."
 
