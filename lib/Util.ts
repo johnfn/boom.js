@@ -1,4 +1,7 @@
 ﻿class Util {
+  static Draw(item: Ray | Point | Polygon | PIXI.Rectangle, color: number = 0xff0000, alpha: number = 1) {
+    Globals.stage.debug.draw(item, color, alpha);
+  }
   static RunOnStart(func: () => void) {
     if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
       setTimeout(func); // setTimeout to allow the rest of the script to load.
@@ -69,8 +72,8 @@
    * @returns {} 
    */
   static RectPointIntersection(rect: PIXI.Rectangle, point: Point): boolean {
-    return rect.x >= point.x && rect.x + rect.width  <= point.x &&
-           rect.y >= point.y && rect.y + rect.height <= point.y;
+    return rect.x <= point.x && rect.x + rect.width  >= point.x &&
+           rect.y <= point.y && rect.y + rect.height >= point.y;
   }
 
   /**

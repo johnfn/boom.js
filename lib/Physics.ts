@@ -28,26 +28,47 @@ class Ray {
 class PhysicsManager {
   private _sprites = new MagicArray<Sprite>();
 
+  private static SKIN_WIDTH = 1;
+  private static RAY_SPACING = 8;
+
   constructor() {
     
   }
 
   moveSpriteX(sprite: Sprite, dx: number): void {
-    const rayStartX = sprite.x + (dx > 0 ? sprite.width : 0);
-    const rayEndX   = rayStartX + dx;
-    const raySpacing = 2;
+    const spriteSideX = sprite.x + (dx > 0 ? sprite.width : 0);
+    const rayStartX   = spriteSideX + (dx > 0 ? -PhysicsManager.SKIN_WIDTH : PhysicsManager.SKIN_WIDTH);
+    const rayEndX     = rayStartX + dx;
 
-    for (let y = sprite.y; y < sprite.y + sprite.height; y += raySpacing) {
+    let resultdx = dx;
+
+    for (let y = sprite.y; y < sprite.y + sprite.height; y += PhysicsManager.RAY_SPACING) {
       const ray = new Ray(rayStartX, y, rayEndX, y);
 
-      sprite.debug.draw(ray);
+      this.raycast(ray).then(hit => {
+        resultdx = spriteSideX - hit.position.x;
+      });
     }
+
+    sprite.x += resultdx;
   }
 
   moveSpriteY(sprite: Sprite, dy: number): void {
-    // const firstRayY = new Point(dy
+    const spriteSideY = sprite.y + (dy > 0 ? sprite.height : 0);
+    const rayStartY   = spriteSideY + (dy > 0 ? -PhysicsManager.SKIN_WIDTH : PhysicsManager.SKIN_WIDTH);
+    const rayEndY     = rayStartY + dy;
 
-    sprite.y += dy;
+    let resultdy = dy;
+
+    for (let x = sprite.x; x < sprite.x + sprite.width; x += PhysicsManager.RAY_SPACING) {
+      const ray = new Ray(x, rayStartY, x, rayEndY);
+
+      this.raycast(ray).then(hit => {
+        resultdy = hit.position.y - spriteSideY;
+      });
+    }
+
+    sprite.y += resultdy;
   }
 
   moveSprite(sprite: Sprite, dx: number, dy: number): void {
@@ -85,7 +106,8 @@ class PhysicsManager {
 
     let result: RaycastResult = undefined;
 
-    for (var sprite of this._sprites) { // TODO: could update var in a later version of TS.
+    // TODO: could update var in a later version of TS.
+    for (var sprite of this._sprites) { 
       if (Util.RectPointIntersection(sprite.bounds, ray.start)) {
         // The ray started in this sprite; disregard
         continue;
