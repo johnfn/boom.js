@@ -1,4 +1,7 @@
-﻿*.js
+﻿
+
+*.js
+*.js.map
 
 # The rest copied from a Visual Studio .gitignore file.
 
