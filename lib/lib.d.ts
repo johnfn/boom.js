@@ -4,3 +4,5 @@
 /// <reference path="Sprite.ts"/>
 /// <reference path="Game.tsx"/>
 /// <reference path="Util.ts"/>
+/// <reference path="Component.ts"/>
+/// <reference path="Physics.ts"/>

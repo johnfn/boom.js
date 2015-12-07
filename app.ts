@@ -2,6 +2,19 @@
 
 // TODO: parse map json (better than phaser -_-)
 
+@component(new PhysicsComponent({
+  solid: true,
+  immovable: true
+}))
+class Ship extends Sprite {
+  constructor() {
+    super("assets/ship.png");
+
+    this.z = 10;
+  }
+}
+
+/*
 class Player extends Sprite {
   public baseName: string = "Player";
 
@@ -55,9 +68,7 @@ class Player extends Sprite {
       console.log("bot");
     }
 
-    /*
-    Raycast debugging stuff.
-    */
+    // Raycast debugging stuff.
 
     const d = Globals.stage.debug;
     const l = new Ray(this.start.x, this.start.y, Globals.mouse.position.x, Globals.mouse.position.y);
@@ -81,24 +92,15 @@ class Box extends Sprite {
     ], "assets/img.png");
   }
 }
+*/
 
 class MyGame extends Game {
   constructor() {
     super(600, 400, document.getElementById("main"), true);
 
-    const player = new Player();
-    player.x = 100;
-    player.y = 100;
-    player.z = 10;
+    const ship = new Ship();
 
-    Globals.stage.addChild(player);
-
-    const box = new Box();
-    box.x = 200;
-    box.y = 200;
-    box.z = 10;
-
-    Globals.stage.addChild(box);
+    Globals.stage.addChild(ship);
 
     let tmp = new TiledMapParser("assets/map.json");
     tmp.z = -10;

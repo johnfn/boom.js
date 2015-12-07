@@ -133,7 +133,7 @@ class TiledMapParser extends Sprite {
 
         // TODO - cache these textures.
         let texture = new PIXI.Texture(spritesheet.texture, crop);
-        let tile = new Sprite([], texture);
+        let tile = new Sprite(texture);
 
         layer.addChild(tile);
 

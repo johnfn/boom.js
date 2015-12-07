@@ -11,7 +11,8 @@
         console.log = console.error = console.info = console.debug = console.warn = function (s) {
             window.consoleCache.push({ content: [s], metadata: "[bootstrap]" });
         };
-</script>
+    </script>
+
     <script src="external/pixi.js"></script>
     <script src="external/pixi.multistyletext.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons.js"></script>

@@ -45,6 +45,8 @@ class Sprite {
 
   public components: Component[];
 
+  public static componentsForClasses: {[className: string] : Component[]} = {};
+
   physics: PhysicsComponent;
 
   /**
@@ -170,7 +172,7 @@ class Sprite {
    */
   private static enqueuedSprites = new MagicArray<Sprite>();
 
-  constructor(components: Component[] = [], texture: PIXI.Texture | string = null) {
+  constructor(texture: PIXI.Texture | string = null) {
     let className = Util.GetClassName(this);
 
     if (!this.baseName) this.baseName = Util.GetClassName(this);
@@ -194,6 +196,8 @@ class Sprite {
     let _graphics = this.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
     this.displayObject.interactive = true;
     _graphics.interactive = true;
+
+    const components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
 
     this.initComponents(components.concat([
       new DebugDraw(this, _graphics)
@@ -245,7 +249,7 @@ class Sprite {
   }
 
   public clone(): Sprite {
-    var newSprite = new Sprite([], this.texture);
+    var newSprite = new Sprite(this.texture);
 
     return newSprite;
   }
@@ -295,3 +299,15 @@ class Sprite {
     });
   }
 }
+
+function component(component: Component) {
+  return (target: typeof Sprite) => {
+    const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
+    let comps = Sprite.componentsForClasses[name];
+
+    if (!comps) comps = Sprite.componentsForClasses[name] = [];
+
+    comps.push(component);
+  }
+}
+
