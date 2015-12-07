@@ -24,6 +24,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include=".gitignore" />
+    <Content Include="external\pixi.multistyletext.js" />
     <Content Include="index.html" />
     <Content Include="source-map.js" />
     <Content Include="web.config" />
@@ -49,6 +50,7 @@
     <TypeScriptCompile Include="lib\Debug\InspectorItems\InspectorItemString.tsx" />
     <TypeScriptCompile Include="lib\Debug\TransformWidget.ts" />
     <TypeScriptCompile Include="lib\ExternalTypings\external.d.ts" />
+    <TypeScriptCompile Include="lib\ExternalTypings\pixi.multistyletext\pixi.multistyletext.d.ts" />
     <TypeScriptCompile Include="lib\Game.tsx" />
     <TypeScriptCompile Include="lib\Globals.ts" />
     <TypeScriptCompile Include="lib\Input\Keyboard.ts" />
@@ -70,6 +72,7 @@
     <TypeScriptCompile Include="lib\Root.tsx" />
     <TypeScriptCompile Include="lib\Sprite.ts" />
     <TypeScriptCompile Include="lib\Stage.ts" />
+    <TypeScriptCompile Include="lib\Text.ts" />
     <TypeScriptCompile Include="lib\TiledMapParser.ts" />
     <TypeScriptCompile Include="lib\Util.ts" />
     <TypeScriptCompile Include="mixins.d.ts" />

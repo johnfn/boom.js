@@ -104,6 +104,10 @@ class MyGame extends Game {
     tmp.z = -10;
 
     Globals.stage.addChild(tmp);
+
+    let someText = new TextField("This is a text test! ")
+
+    Globals.stage.addChild(someText);
   }
 }
 
