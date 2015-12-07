@@ -2,6 +2,7 @@
   static Draw(item: Ray | Point | Polygon | PIXI.Rectangle, color: number = 0xff0000, alpha: number = 1) {
     Globals.stage.debug.draw(item, color, alpha);
   }
+
   static RunOnStart(func: () => void) {
     if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
       setTimeout(func); // setTimeout to allow the rest of the script to load.
@@ -10,6 +11,15 @@
         func();
       });
     }
+  }
+
+  /**
+   * Converts a single word to Title Case.
+   * @param s 
+   * @returns {} 
+   */
+  static ToTitleCase(s: string): string {
+    return s[0].toUpperCase() + s.slice(1).toLowerCase();
   }
 
   static ArrayEq(a: any[], b: any[]): boolean {

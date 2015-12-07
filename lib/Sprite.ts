@@ -303,7 +303,7 @@ class Sprite {
 function component(component: Component) {
   return (target: typeof Sprite) => {
     const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
-    let comps = Sprite.componentsForClasses[name];
+    let comps  = Sprite.componentsForClasses[name];
 
     if (!comps) comps = Sprite.componentsForClasses[name] = [];
 

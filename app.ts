@@ -11,6 +11,22 @@ class Ship extends Sprite {
     super("assets/ship.png");
 
     this.z = 10;
+
+    this.y = 300;
+  }
+
+  update(): void {
+    if (Globals.keyboard.down.A) {
+      this.physics.moveBy(-5, 0);
+    }
+
+    if (Globals.keyboard.down.D) {
+      this.physics.moveBy(5, 0);
+    }
+
+    if (Globals.keyboard.justDown.Spacebar) {
+      console.log("pew pew");
+    }
   }
 }
 

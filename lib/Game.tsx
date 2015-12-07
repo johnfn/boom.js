@@ -41,6 +41,8 @@
     const children = this.stage.children
     children.push(this.stage)
 
+    Globals.keyboard.update();
+
     for (const sprite of children) {
       for (const c of sprite.components) {
         c.preUpdate();
