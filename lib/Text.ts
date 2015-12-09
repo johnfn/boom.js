@@ -1,6 +1,9 @@
 ﻿class TextField extends Sprite {
   private _textField: PIXI.MultiStyleText;
 
+  public set text(val: string) { this._textField.text = val; }
+  public get text(): string { return this._textField.text; }
+
   constructor(content: string = "") {
     super();
 

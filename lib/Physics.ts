@@ -140,6 +140,14 @@ class PhysicsManager {
     this._sprites.push(sprite);
   }
 
+  remove(sprite: Sprite): void {
+    const index = this._sprites.indexOf(sprite);
+
+    if (index !== -1) {
+      this._sprites.splice(index, 1);
+    }
+  }
+
   /**
    * Raycasts from a given ray, returning the first sprite that the ray intersects.
    * Ignores any sprite that the start of the ray is already colliding with.
@@ -180,7 +188,7 @@ interface RaycastResult {
   position: Point;
 }
 
-class PhysicsComponent extends Component {
+class PhysicsComponent extends Component<Sprite> {
   public dx: number = 0;
   public dy: number = 0;
 
@@ -212,7 +220,6 @@ class PhysicsComponent extends Component {
 
   /**
    * Resets any physics changes the attached Sprite would have received on this turn.
-   * @returns {} 
    */
   reset(): void {
     this.dx = 0;
@@ -229,4 +236,8 @@ class PhysicsComponent extends Component {
   postUpdate(): void { }
   preUpdate() : void { }
   update()    : void { }
+  
+  destroy(): void {
+    Globals.physicsManager.remove(this._sprite);
+  }
 }

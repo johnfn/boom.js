@@ -25,11 +25,35 @@ class Ship extends Sprite {
     }
 
     if (Globals.keyboard.justDown.Spacebar) {
-      console.log("pew pew");
+      const bullet = new Bullet(new Point(0, -5));
+
+      Globals.stage.addChild(bullet);
+
+      bullet.x = this.x;
+      bullet.y = this.y - 40;
     }
   }
 }
 
+
+class MovingComponent extends Component<Bullet> {
+  postUpdate(): void { }
+  preUpdate() : void { }
+  update(): void {
+    this._sprite.physics.moveBy(0, -5);
+  }
+}
+
+@component(new DestroyWhenOffscreen())
+@component(new MovingComponent())
+@component(new PhysicsComponent({ solid: true, immovable: true }))
+class Bullet extends Sprite {
+  constructor(velocity: Point) {
+    super("assets/bullet.png");
+
+    this.z = 20;
+  }
+}
 /*
 class Player extends Sprite {
   public baseName: string = "Player";
@@ -126,6 +150,8 @@ class MyGame extends Game {
     let someText = new TextField("This is a text test! ")
 
     Globals.stage.addChild(someText);
+
+    Globals.stage.addChild(new FPSCounter().moveTo(300, 50))
   }
 }
 

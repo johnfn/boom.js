@@ -14,6 +14,28 @@
   }
 
   /**
+   * Clone obj, optionally copying over key value pairs from props onto obj.
+   * Currently too stupid to do cycle detection... blehhhhh.
+   */
+  static Clone<T>(obj: T): T {
+    if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj)
+      return obj;
+
+    var result: T = Object.create(Object.getPrototypeOf(obj));
+
+    for (var key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        (obj as any)['isActiveClone'] = null;
+        (result as any)[key] = Util.Clone((obj as any)[key]);
+        delete (obj as any)['isActiveClone'];
+      }
+    }
+
+    return result;
+  }
+
+
+  /**
    * Converts a single word to Title Case.
    * @param s 
    * @returns {} 

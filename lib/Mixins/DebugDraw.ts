@@ -1,4 +1,4 @@
-﻿class DebugDraw extends Component {
+﻿class DebugDraw extends Component<Sprite> {
   public events: Events<SpriteEvents> = new Events<SpriteEvents>(true);
 
   private _clickableShapes = new MagicArray<Polygon>();

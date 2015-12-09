@@ -67,6 +67,16 @@
 
     this._renderer.render(this.stage.displayObject); 
 
+    for (const sprite of Globals._destroyList) {
+      for (const c of sprite.components) {
+        c.destroy();
+      }
+
+      sprite.actuallyDestroy();
+    }
+
+    Globals._destroyList = [];
+
     requestAnimationFrame(this.update.bind(this));
   }
 

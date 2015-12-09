@@ -22,7 +22,7 @@ declare module PIXI {
     wordWrapWidth: number;
   }
 
-  export class MultiStyleText extends Sprite {
+  export class MultiStyleText extends PIXI.Text {
     /**
      * A Multi-Style Text Object will create a line or multiple lines of text, using tags to specify different styles.
      * A tag is similar to an html tag, except you can use whatever keyword you want. (e.g. <myTag>My text</myTag>)

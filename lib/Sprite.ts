@@ -28,6 +28,8 @@ class Sprite {
   */
   public inspectable: boolean = true;
 
+  private _destroyed: boolean = false;
+
   /**
    * This just maps sprite names to number of that type of sprite that we have
    * seen. Only really used for _derivedObjectCount.
@@ -43,9 +45,9 @@ class Sprite {
 
   protected _z: number;
 
-  public components: Component[];
+  public components: Component<Sprite>[];
 
-  public static componentsForClasses: {[className: string] : Component[]} = {};
+  public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};
 
   physics: PhysicsComponent;
 
@@ -100,7 +102,7 @@ class Sprite {
   }
 
   get stage(): Stage {
-    let sprite = this;
+    let sprite: Sprite = this;
 
     // If we keep going up, we'll either hit the Stage, or we're an orphaned 
     // Sprite. 
@@ -197,23 +199,22 @@ class Sprite {
     this.displayObject.interactive = true;
     _graphics.interactive = true;
 
-    const components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
+    this.components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
 
-    this.initComponents(components.concat([
-      new DebugDraw(this, _graphics)
-    ]));
+    this.initComponents(_graphics);
   }
 
-  private initComponents(components: Component[]): void {
-    for (const c of components) {
+  private initComponents(g: PIXI.Graphics): void {
+    this.components = this.components.map(c => Util.Clone(c));
+    this.components.push(new DebugDraw(this, g));
+
+    for (const c of this.components) {
       // Make easy-to-access references to common components.
       if (c instanceof PhysicsComponent) this.physics = c;
       if (c instanceof DebugDraw)        this.debug = c;
 
       c.init(this);
     }
-
-    this.components = components;
   }
 
   private sortDepths(): void {
@@ -232,6 +233,13 @@ class Sprite {
 
       return aZ - bZ;
     });
+  }
+
+  public moveTo(x: number, y: number): this {
+    this.x = x;
+    this.y = y;
+
+    return this;
   }
 
   public addChild<T extends Sprite>(child: T): T {
@@ -254,7 +262,8 @@ class Sprite {
     return newSprite;
   }
 
-  public update() {
+  public update(): void {
+
   }
 
   /**
@@ -298,10 +307,39 @@ class Sprite {
              point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
     });
   }
+
+  /**
+   * Destroys this sprite.
+   */
+  public destroy(): void {
+    // I lied! This doesn't actually destroy the sprite. It just marks it for deletion.
+    // Since updates are unordered, it's possible that a sprite that is yet to be
+    // deleted this tick still refers to this sprite, and if we deleted it immediately
+    // we would run into problems.
+
+    if (this._destroyed) {
+      console.error("Sprite destroyed multiple times. THIS IS REALLY BAD PPL.")
+
+      return;
+    }
+
+    Globals._destroyList.push(this);
+    this._destroyed = true;
+  }
+
+  /**
+   * Actually destroys the sprite. (I don't recommend using this method
+   * unless you know what you're doing.)
+   */
+  public actuallyDestroy(): void {
+    this.parent.displayObject.removeChild(this.displayObject);
+
+    this.displayObject = null;
+  }
 }
 
-function component(component: Component) {
-  return (target: typeof Sprite) => {
+function component<T extends Sprite>(component: Component<Sprite>) {
+  return (target: any) => { // TODO: Idk how to type this!
     const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
     let comps  = Sprite.componentsForClasses[name];
 

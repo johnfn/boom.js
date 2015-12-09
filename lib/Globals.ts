@@ -17,4 +17,6 @@ class Globals {
     Globals.mouse          = new Mouse(stage);
     Globals.stage          = Globals.stage || stage;
   }
+
+  public static _destroyList: Sprite[] = [];
 }

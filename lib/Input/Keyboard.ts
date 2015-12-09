@@ -37,13 +37,29 @@ class Keyboard {
     this._queuedEvents.push({ event: e, isDown: true });
   }
 
+  private eventToKey(event: KeyboardEvent): string {
+    const str = String.fromCharCode(event.keyCode || event.which);
+
+    if (str === " ") {
+      return "Spacebar";
+    }
+
+    if (str.length == 1) {
+      return str.toUpperCase();
+    }
+
+    console.log("Odd case in Keyboard#stringToKey: ", str);
+
+    return Util.ToTitleCase(str);
+  }
+
   update(): void {
     for (const key of KeyInfo.Keys) {
       this.justDown[key] = false;
     }
 
     for (const queuedEvent of this._queuedEvents) {
-      const key = Util.ToTitleCase(queuedEvent.event.key);
+      const key = this.eventToKey(queuedEvent.event);
 
       if (queuedEvent.isDown) {
         this.down[key]     = true;
