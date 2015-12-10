@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="lib\Camera.ts" />
     <TypeScriptCompile Include="lib\Component.ts" />
     <TypeScriptCompile Include="lib\Components\DestroyWhenOffscreen.ts" />
     <TypeScriptCompile Include="lib\Components\components.d.ts" />

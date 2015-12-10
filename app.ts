@@ -16,6 +16,9 @@ class Ship extends Sprite {
   }
 
   update(): void {
+    Globals.camera.x = this.x;
+    Globals.camera.y = this.y;
+
     if (Globals.keyboard.down.A) {
       this.physics.moveBy(-5, 0);
     }
