@@ -86,4 +86,10 @@
     
     return result;
   }
+
+  addAll(o: MagicArray<T>): void {
+    for (const item of o) {
+      this.push(item);
+    }
+  }
 }

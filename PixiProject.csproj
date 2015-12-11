@@ -35,6 +35,7 @@
     <TypeScriptCompile Include="lib\Component.ts" />
     <TypeScriptCompile Include="lib\Components\DestroyWhenOffscreen.ts" />
     <TypeScriptCompile Include="lib\Components\components.d.ts" />
+    <TypeScriptCompile Include="lib\Components\FixedToCamera.ts" />
     <TypeScriptCompile Include="lib\datastructures.d.ts" />
     <TypeScriptCompile Include="lib\DataStructures\Group.ts" />
     <TypeScriptCompile Include="lib\DataStructures\MagicArray.ts" />

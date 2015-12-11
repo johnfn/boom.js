@@ -7,6 +7,8 @@ class Globals {
    */
   public static stage: Stage;
 
+  public static fixedStage: Sprite;
+
   public static keyboard: Keyboard;
 
   public static mouse: Mouse;
@@ -16,12 +18,13 @@ class Globals {
    */
   public static camera: Camera;
 
-  public static initialize(stage: Stage) {
+  public static initialize(stage: Stage, fixedStage: Sprite) {
     Globals.physicsManager = new PhysicsManager();
     Globals.keyboard       = new Keyboard();
     Globals.mouse          = new Mouse(stage);
     Globals.camera         = new Camera(stage);
     Globals.stage          = Globals.stage || stage;
+    Globals.fixedStage     = Globals.fixedStage || fixedStage;
   }
 
   public static _destroyList: Sprite[] = [];

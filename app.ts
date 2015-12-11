@@ -198,9 +198,9 @@ class MyGame extends Game {
 
     Globals.stage.addChild(someText);
 
-    Globals.stage.addChild(new FPSCounter().moveTo(300, 50))
-
     Globals.stage.addChild(new EnemySpawner(Globals.stage));
+
+    new FPSCounter();
   }
 }
 

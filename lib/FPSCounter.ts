@@ -1,11 +1,14 @@
 ﻿/// <reference path="lib.d.ts"/>
 
+@component(new FixedToCamera(200, 100))
 class FPSCounter extends TextField {
   frames: number = 0;
   timeElapsed: number = 0;
 
   constructor() {
     super("FPS: ???");
+
+    this.z = 50;
   }
 
   update(): void {
@@ -13,12 +16,9 @@ class FPSCounter extends TextField {
 
     this.frames += 1;
 
-    this.x = Globals.camera.x;
-    this.y = Globals.camera.y;
-
     if (now - this.timeElapsed > 1000) {
-      this.text = `FPS: ${this.frames}
-Objects: ${Sprites.all().length()}`;
+      this.text = `FPS: ${ this.frames }
+Objects: ${ Sprites.all().length() }`;
 
       this.timeElapsed = now
       this.frames = 0;
