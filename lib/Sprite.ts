@@ -56,6 +56,8 @@ class Sprite {
    */
   public debug: DebugDraw;
 
+  private static sprites: { [key: string]: Group<Sprite> };
+
   public get textureUrl(): string {
     return this.texture.baseTexture.imageUrl;
   }
@@ -202,6 +204,9 @@ class Sprite {
     this.components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
 
     this.initComponents(_graphics);
+
+    // Removed in the main game loop.
+    Sprites.add(this);
   }
 
   private initComponents(g: PIXI.Graphics): void {
@@ -348,4 +353,5 @@ function component<T extends Sprite>(component: Component<Sprite>) {
     comps.push(component);
   }
 }
+
 

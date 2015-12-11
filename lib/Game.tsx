@@ -72,6 +72,7 @@
         c.destroy();
       }
 
+      Sprites.remove(sprite);
       sprite.actuallyDestroy();
     }
 

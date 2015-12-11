@@ -27,6 +27,14 @@ class Ship extends Sprite {
       this.physics.moveBy(5, 0);
     }
 
+    if (Globals.keyboard.down.W) {
+      this.physics.moveBy(0, -5);
+    }
+
+    if (Globals.keyboard.down.S) {
+      this.physics.moveBy(0, 5);
+    }
+
     if (Globals.keyboard.justDown.Spacebar) {
       const bullet = new Bullet(new Point(0, -5));
 
@@ -34,6 +42,8 @@ class Ship extends Sprite {
 
       bullet.x = this.x;
       bullet.y = this.y - 40;
+
+      console.log(Sprites.all(Bullet).length());
     }
   }
 }
@@ -55,8 +65,44 @@ class Bullet extends Sprite {
     super("assets/bullet.png");
 
     this.z = 20;
+
+    this.physics.collidesWith = Sprites.all(Ship);
   }
 }
+
+@component(new PhysicsComponent({
+  solid: true,
+  immovable: true
+}))
+class Enemy extends Sprite {
+  constructor() {
+    super("assets/ship.png");
+
+    this.z = 10;
+    this.y = 0;
+  }
+
+  update(): void {
+    this.physics.moveBy(0, -5);
+  }
+}
+
+class EnemySpawner extends Sprite {
+  private _stage: Stage;
+
+  constructor(stage: Stage) {
+    super();
+
+    this._stage = stage;
+  }
+
+  update(): void {
+    if (Math.random() > .95) {
+      Globals.stage.addChild(new Enemy());
+    }
+  }
+}
+
 /*
 class Player extends Sprite {
   public baseName: string = "Player";
@@ -155,6 +201,8 @@ class MyGame extends Game {
     Globals.stage.addChild(someText);
 
     Globals.stage.addChild(new FPSCounter().moveTo(300, 50))
+
+    Globals.stage.addChild(new EnemySpawner(Globals.stage));
   }
 }
 

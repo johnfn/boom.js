@@ -17,7 +17,7 @@ class Mouse {
 
   constructor(stage: Stage) {
     this.position = new Point(0, 0);
-    this.events = new Events();
+    this.events   = new Events<MouseEvents>();
 
     stage.displayObject.on('mousemove', (e: any) => this.mousemove(e))
     stage.displayObject.on('mouseup',   (e: any) => this.mouseup(e))

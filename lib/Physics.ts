@@ -53,7 +53,7 @@ class PhysicsManager {
     for (let y = sprite.y; y < sprite.y + sprite.height; y += PhysicsManager.RAY_SPACING) {
       const ray = new Ray(rayStartX, y, rayEndX, y);
 
-      this.raycast(ray).then(hit => {
+      this.raycast(ray, sprite.physics.collidesWith).then(hit => {
         const newVelocity = spriteSideX - hit.position.x;
 
         if (!result.collision || newVelocity < result.newVelocity) {
@@ -81,7 +81,7 @@ class PhysicsManager {
     for (let x = sprite.x; x < sprite.x + sprite.width; x += PhysicsManager.RAY_SPACING) {
       const ray = new Ray(x, rayStartY, x, rayEndY);
 
-      this.raycast(ray).then(hit => {
+      this.raycast(ray, sprite.physics.collidesWith).then(hit => {
         const newVelocity = hit.position.y - spriteSideY;
 
         if (!result.collision || newVelocity < result.newVelocity) {
@@ -155,13 +155,16 @@ class PhysicsManager {
    * @param ray 
    * @returns {} 
    */
-  raycast(ray: Ray): Maybe<RaycastResult> {
+  raycast(ray: Ray, against: Group<Sprite>): Maybe<RaycastResult> {
     // TODO could (should) use a quadtree or something
 
+    if (!against) return new Maybe<RaycastResult>();
+
+    const againstList = against.all();
     let result: RaycastResult = undefined;
 
     // TODO: could update var in a later version of TS.
-    for (var sprite of this._sprites) { 
+    for (var sprite of againstList) { 
       if (Util.RectPointIntersection(sprite.bounds, ray.start)) {
         // The ray started in this sprite; disregard
         continue;
@@ -200,11 +203,13 @@ class PhysicsComponent extends Component<Sprite> {
   public solid    : boolean;
   public immovable: boolean;
 
+  public collidesWith : Group<Sprite>;
+
   constructor(physics: Physics) {
     super();
 
-    this.solid     = physics.solid;
-    this.immovable = physics.immovable;
+    this.solid        = physics.solid;
+    this.immovable    = physics.immovable;
   }
 
   init(sprite: Sprite): void {

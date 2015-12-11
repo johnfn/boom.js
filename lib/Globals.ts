@@ -26,3 +26,36 @@ class Globals {
 
   public static _destroyList: Sprite[] = [];
 }
+
+class Sprites {
+  public static list = new Group<Sprite>();
+
+  public static all<T extends Sprite>(type: { new (...args: any[]) : T } = Sprite as any): Group<T> {
+    const typeName = ("" + type).split("function ")[1].split("(")[0];
+
+    if (typeName === "Sprite") {
+      return Sprites.list as Group<T>;
+    }
+
+    const sprites  = Sprites.list.all();
+    const result   = new Group<T>();
+
+    for (const s of sprites) {
+      const name = Util.GetClassName(s);
+
+      if (Util.GetClassName(s) === typeName) {
+        result.add(s as T);
+      }
+    }
+
+    return result;
+  }
+
+  public static add<T extends Sprite>(s: T): void {
+    this.list.add(s);
+  }
+
+  public static remove<T extends Sprite>(s: T): void {
+    this.list.remove(s);
+  }
+}

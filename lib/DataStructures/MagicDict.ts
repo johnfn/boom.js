@@ -1,13 +1,18 @@
 ﻿// TODO - maybe look into immutable.js for how they hash js objects, generally speaking.
 class MagicDict<Key, Value> {
   private _map: { [key: string]: Value; } = {};
+
+  private _hashToKey: { [key: string]: Key; } = {};
+
   private _defaultValue: () => Value = null;
+
+  private _length: number = 0;
 
   constructor(defaultValue: () => Value = null) {
     this._defaultValue = defaultValue;
   }
 
-  private getHashCode(obj: any) {
+  private getHashCode(obj: any): string {
     /*
       The following things in JavaScript are not objects:
 
@@ -25,7 +30,7 @@ class MagicDict<Key, Value> {
         type === "boolean" ||
         type === "null"    ||
         type == "undefined") {
-      return obj;
+      return String(obj);
     }
 
     if (!obj.__hashcode) {
@@ -39,15 +44,26 @@ class MagicDict<Key, Value> {
   }
 
   put(key: Key, value: Value): Value {
-    let hash = this.getHashCode(key);
+    const hash = this.getHashCode(key);
 
     if (this._map[hash] !== undefined && this._map[hash] !== value) {
       console.error("Uh oh, hashing issues.");
+
+      return;
     }
 
-    this._map[this.getHashCode(key)] = value;
+    if (this._map[hash] === undefined) {
+      this._length++;
+    }
+
+    this._map[hash]       = value;
+    this._hashToKey[hash] = key;
 
     return value;
+  }
+
+  length(): number {
+    return this._length;
   }
 
   get(key: Key): Value {
@@ -66,9 +82,22 @@ class MagicDict<Key, Value> {
     let hash = this.getHashCode(key);
 
     if (this.contains(key)) {
+      this._length--;
+
+      delete this._hashToKey[hash];
       delete this._map[hash];
     } else {
       console.error(key, " not found in MagicDict#remove");
     }
+  }
+
+  keys(): Key[] {
+    const keys: Key[] = [];
+
+    for (const k in this._hashToKey) {
+      keys.push(k)
+    }
+
+    return keys;
   }
 }
