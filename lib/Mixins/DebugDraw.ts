@@ -59,8 +59,8 @@
    * Draw a point. Meant for debugging purposes only.
    */
   public drawPoint(x: number, y: number, color: number = 0xff0000): void {
-    this.drawLine(x, 0, x, this._target.stage.height, color);
-    this.drawLine(0, y, this._target.stage.width, y, color);
+    this.drawLine(x, 0, x, Globals.stage.height, color);
+    this.drawLine(0, y, Globals.stage.width, y, color);
   }
 
   /**
@@ -87,8 +87,8 @@
     let white = 0xffffff;
     let alpha = .2;
 
-    let stageWidth = this._target.stage.width;
-    let stageHeight = this._target.stage.height;
+    let stageWidth = Globals.stage.width;
+    let stageHeight = Globals.stage.height;
 
     /*
           (1)        (2)

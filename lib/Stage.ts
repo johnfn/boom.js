@@ -29,9 +29,9 @@ class Stage extends Sprite {
   */
   public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
 
-/**
- * Stage is the Sprite at the top of the display hierarchy.
- */
+  /**
+   * Stage is the Sprite at the top of the display hierarchy.
+   */
   constructor(width: number, height: number, debug: boolean = false) {
     super();
 

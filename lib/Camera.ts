@@ -16,6 +16,10 @@
     this._stage.y = this._stage.height / 2 - value;
   }
 
+  public get top(): number { return this._x - this._stage.width / 2; }
+
+  public get left(): number { return this._y - this._stage.height / 2; }
+
   constructor(stage: Stage) {
     this._stage = stage;
 

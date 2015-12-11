@@ -103,23 +103,6 @@ class Sprite {
     }
   }
 
-  get stage(): Stage {
-    let sprite: Sprite = this;
-
-    // If we keep going up, we'll either hit the Stage, or we're an orphaned 
-    // Sprite. 
-
-    while (sprite.parent != null) {
-      sprite = sprite.parent;
-    }
-
-    if (sprite instanceof Stage) {
-      return sprite;
-    } else {
-      return null;
-    }
-  }
-
   /**
     Position of this sprite relative to its parent.
   */

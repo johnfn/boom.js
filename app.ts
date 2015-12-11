@@ -42,8 +42,6 @@ class Ship extends Sprite {
 
       bullet.x = this.x;
       bullet.y = this.y - 40;
-
-      console.log(Sprites.all(Bullet).length());
     }
   }
 }
