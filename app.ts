@@ -1,7 +1,5 @@
 ﻿/// <reference path="lib/lib.d.ts"/>
 
-// TODO: parse map json (better than phaser -_-)
-
 @component(new PhysicsComponent({
   solid: true,
   immovable: true
@@ -183,7 +181,7 @@ class Box extends Sprite {
 
 class MyGame extends Game {
   constructor() {
-    super(600, 400, document.getElementById("main"), true);
+    super(600, 400, document.getElementById("main"), 0x000000, true);
 
     const ship = new Ship();
 
@@ -191,6 +189,8 @@ class MyGame extends Game {
 
     let tmp = new TiledMapParser("assets/map.json");
     tmp.z = -10;
+
+    tmp.parse();
 
     Globals.stage.addChild(tmp);
 

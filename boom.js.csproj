@@ -36,6 +36,8 @@
     <TypeScriptCompile Include="lib\Components\DestroyWhenOffscreen.ts" />
     <TypeScriptCompile Include="lib\Components\components.d.ts" />
     <TypeScriptCompile Include="lib\Components\FixedToCamera.ts" />
+    <TypeScriptCompile Include="lib\Components\FollowWithCamera.ts" />
+    <TypeScriptCompile Include="lib\Components\TweenComponent.ts" />
     <TypeScriptCompile Include="lib\datastructures.d.ts" />
     <TypeScriptCompile Include="lib\DataStructures\Group.ts" />
     <TypeScriptCompile Include="lib\DataStructures\MagicArray.ts" />
@@ -72,12 +74,14 @@
     <TypeScriptCompile Include="lib\Mixins\DebugDraw.ts" />
     <TypeScriptCompile Include="lib\Mixins\Evented.ts" />
     <TypeScriptCompile Include="lib\Mixins\MixinUtil.ts" />
+    <TypeScriptCompile Include="lib\ParallaxLayer.ts" />
+    <TypeScriptCompile Include="lib\Particles.ts" />
     <TypeScriptCompile Include="lib\Physics.ts" />
     <TypeScriptCompile Include="lib\PixiExtensions\PointExtensions.ts" />
     <TypeScriptCompile Include="lib\Root.tsx" />
     <TypeScriptCompile Include="lib\Sprite.ts" />
     <TypeScriptCompile Include="lib\Stage.ts" />
-    <TypeScriptCompile Include="lib\Text.ts" />
+    <TypeScriptCompile Include="lib\TextField.ts" />
     <TypeScriptCompile Include="lib\TiledMapParser.ts" />
     <TypeScriptCompile Include="lib\Util.ts" />
     <TypeScriptCompile Include="mixins.d.ts" />
