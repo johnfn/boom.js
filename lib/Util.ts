@@ -109,6 +109,76 @@
   }
 
   /**
+   * Returns a random number between min and max.
+   * 
+   * @param min
+   * @param max
+   */
+  static RandomRange(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
+  }
+
+  /**
+   * Choose a random element of the provided array.
+   * @param arr
+   */
+  static RandomElement<T>(arr: T[]): T {
+    return arr[Math.floor(Util.RandomRange(0, arr.length))];
+  }
+
+  /**
+   * Generate a point selected randomly from all points on the unit circle.
+   * 
+   * Handy for all sorts of things. If you can't of a thing this is handy for,
+   * then you suck.
+   */
+  static RandomPointOnUnitCircle(): PIXI.Point {
+    const theta = 2 * Math.PI * Math.random();
+
+    return new PIXI.Point(Math.sin(theta), Math.cos(theta));
+  }
+
+  /**
+   * Linearly interpolate value (expected to be between 0-1) in between from and to.
+   * @param from
+   * @param to
+   * @param value
+   */
+  static Lerp(from: number, to: number, value: number): number {
+    return from + (to - from) * value;
+  }
+
+  /**
+   * Return the percentage that value is between from and to.
+   * 
+   * TODO: I'm sure there's a better name for this LOL
+   * @param from
+   * @param to
+   * @param value
+   */
+  static AntiLerp(from: number, to: number, value: number): number {
+    return (value - from) / (to - from);
+  }
+
+  /**
+   * Returns whether two rectangles are touching.
+   * @param r1
+   * @param r2
+   */
+  static RectRectIntersection(r1: PIXI.Rectangle, r2: PIXI.Rectangle): boolean {
+    return !(r2.x > r1.x + r1.width ||
+      r2.x + r2.width < r1.x ||
+      r2.y > r1.y + r1.height ||
+      r2.y + r2.height < r1.y);
+  }
+
+  static Sign(val: number): number {
+    if (val > 0) return 1;
+    if (val < 0) return -1;
+    return 0;
+  }
+
+  /**
    * Returns the point of collision of a ray and a rectangle that is closest
    * to the start of the ray, if there is one. 
    * @param ray 
@@ -151,13 +221,22 @@
       return "[object]";
     }
 
+    if ((target as any).__className) {
+      return (target as any).__className;
+    }
+
     let constructor = ("" + target.constructor);
+    let result: string;
 
     if (constructor.indexOf("function ") !== -1) {
-      return ("" + target.constructor).split("function ")[1].split("(")[0];
+      result = ("" + target.constructor).split("function ")[1].split("(")[0];
     } else {
-      return "[stubborn builtin]"
+      result = "[stubborn builtin]"
     }
+
+    (target as any).__className = result;
+
+    return result;
   }
 
   static StartsWith(str: string, prefix: string): boolean {

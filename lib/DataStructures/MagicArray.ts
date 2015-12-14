@@ -1,10 +1,14 @@
 ﻿class MagicArray<T> extends Array<T> {
-  constructor(contents: T[] = undefined) {
+  constructor(contents: T | T[] = undefined) {
     super();
 
     if (contents) {
-      for (var a of contents) {
-        this.push(a);
+      if (contents instanceof Array) {
+        for (var a of contents) {
+          this.push(a);
+        }
+      } else {
+        this.push(contents as any);
       }
     }
   }

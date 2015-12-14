@@ -1,4 +1,11 @@
-﻿class Game {
+﻿/**
+ * Main Game object.
+ *
+ * Put everything that needs to be loaded in the constructor. When loading is finished,
+ * loadingComplete() will be called.
+ * 
+ */
+class Game {
   private _width: number;
   get width(): number { return this._width; }
 
@@ -9,6 +16,8 @@
   private debug: Debug;
   private _renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 
+  private static _ticks: number = 0;
+
   public stage: Stage;
 
   /**
@@ -16,11 +25,13 @@
    */
   public fixedStage: Sprite;
 
-  constructor(width: number, height: number, element: HTMLElement, debug: boolean = false) {
+  constructor(width: number, height: number, element: HTMLElement, backgroundColor: number = 0x000000, debug: boolean = false) {
     this._width = width;
     this._height = height;
 
-    this._renderer = PIXI.autoDetectRenderer(width, height);
+    this._renderer = PIXI.autoDetectRenderer(width, height, {
+      backgroundColor
+    });
 
     this.fixedStage = new Sprite();
 
@@ -39,6 +50,14 @@
 
     this.fixedStage.addChild(this.stage);
 
+    Globals.events.on(GlobalEvents.LoadingIsDone, () => this.loadingComplete());
+  }
+
+  static EveryNthFrame(n: number): boolean {
+    return Game._ticks % n === 0;
+  }
+
+  loadingComplete(): void {
     // Kick off the main game loop.
     requestAnimationFrame(() => this.update());
   }
@@ -47,10 +66,9 @@
    * The core update loop.
   */
   update(): void {
-    let children = this.fixedStage.children
-    children.push(this.fixedStage)
+    let children = Sprites.all().items();
 
-    children.addAll(this.stage.children);
+    Game._ticks++;
 
     Globals.keyboard.update();
 
@@ -68,15 +86,15 @@
       }
     }
 
+    Globals.physicsManager.update();
+
     for (const sprite of children) {
+      sprite.postUpdate();
+
       for (const c of sprite.components) {
         c.postUpdate();
       }
     }
-
-    Globals.physicsManager.update();
-
-    this._renderer.render(this.fixedStage.displayObject); 
 
     for (const sprite of Globals._destroyList) {
       for (const c of sprite.components) {
@@ -88,6 +106,10 @@
     }
 
     Globals._destroyList = [];
+
+    Globals.camera.update();
+
+    this._renderer.render(this.fixedStage.displayObject); 
 
     requestAnimationFrame(this.update.bind(this));
   }

@@ -20,77 +20,114 @@ class Ray {
     this.y1 = y1;
   }
 
+  public add(x: number, y: number): this {
+    this.x0 += x;
+    this.x1 += x;
+
+    this.y0 += y;
+    this.y1 += y;
+
+    return this;
+  }
+
   public static FromPoints(start: Point, end: Point): Ray {
     return new Ray(start.x, start.y, end.x, end.y);
   }
 }
 
 interface ResolveVelocityResult {
-  newVelocity: number;
+  newPosition: number;
   collision: boolean;
+  collidedWith: MagicArray<Sprite>;
 }
 
 class PhysicsManager {
   private _sprites = new MagicArray<Sprite>();
 
   private static SKIN_WIDTH = 1;
-  private static RAY_SPACING = 8;
+  private static NUM_RAYS = 3;
 
   constructor() {
     
   }
 
   private moveSpriteX(sprite: Sprite, dx: number): ResolveVelocityResult {
-    const spriteSideX = sprite.x + (dx > 0 ? sprite.width : 0);
-    const rayStartX   = spriteSideX + (dx > 0 ? -PhysicsManager.SKIN_WIDTH : PhysicsManager.SKIN_WIDTH);
-    const rayEndX     = rayStartX + dx;
+    const SW = PhysicsManager.SKIN_WIDTH;
 
-    let result = {
-      newVelocity: dx,
-      collision  : false
+    const spritePos   = sprite.globalXY;
+
+    const spriteSideX = spritePos.x + (dx > 0 ? sprite.width: 0);
+    const rayStartX   = spriteSideX + (dx > 0 ? -SW : SW);
+    const rayEndX     = rayStartX + (dx > 0 ? SW : -SW) + dx;
+    const raySpacing  = (sprite.height - SW * 2)/ (PhysicsManager.NUM_RAYS - 1)
+
+    let result: ResolveVelocityResult = {
+      newPosition  : sprite.x + dx,
+      collision    : false,
+      collidedWith : new MagicArray<Sprite>()
     }
+    let closestCollisionDistance: number = Number.POSITIVE_INFINITY;
 
-    for (let y = sprite.y; y < sprite.y + sprite.height; y += PhysicsManager.RAY_SPACING) {
+    for (let i = 0; i < PhysicsManager.NUM_RAYS; i++) {
+      let y = spritePos.y + SW + raySpacing * i;
       const ray = new Ray(rayStartX, y, rayEndX, y);
 
-      this.raycast(ray, sprite.physics.collidesWith).then(hit => {
-        const newVelocity = spriteSideX - hit.position.x;
+      const hit = this.raycast(ray, sprite.physics.collidesWith);
+      if (!hit) continue;
 
-        if (!result.collision || newVelocity < result.newVelocity) {
-          result = {
-            collision: true,
-            newVelocity
-          };
-        }
-      });
+      const dist = spriteSideX - hit.position.x;
+
+      if (!result.collision || dist < closestCollisionDistance) {
+        closestCollisionDistance = dist;
+        const blergh = hit.position.x - (dx > 0 ? sprite.width : 0) - spritePos.x + sprite.x;
+
+        result = {
+          collision: true,
+          newPosition: blergh,
+          collidedWith: new MagicArray(hit.sprite)
+        };
+      }
     }
 
     return result;
   }
 
   private moveSpriteY(sprite: Sprite, dy: number): ResolveVelocityResult {
-    const spriteSideY = sprite.y + (dy > 0 ? sprite.height : 0);
-    const rayStartY   = spriteSideY + (dy > 0 ? -PhysicsManager.SKIN_WIDTH : PhysicsManager.SKIN_WIDTH);
-    const rayEndY     = rayStartY + dy;
+    const SW = PhysicsManager.SKIN_WIDTH;
 
-    let result = {
-      newVelocity: dy,
-      collision  : false
+    const spritePos   = sprite.globalXY;
+
+    const spriteSideY = spritePos.y + (dy > 0 ? sprite.height : 0);
+    const rayStartY   = spriteSideY + (dy > 0 ? -SW : SW);
+    const rayEndY     = rayStartY + (dy > 0 ? SW : -SW) + dy;
+    const raySpacing  = (sprite.width - SW * 2) / (PhysicsManager.NUM_RAYS - 1)
+
+    let result: ResolveVelocityResult = {
+      newPosition: sprite.y + dy,
+      collision: false,
+      collidedWith: new MagicArray<Sprite>()
     }
+    let closestCollisionDistance = Number.POSITIVE_INFINITY;
 
-    for (let x = sprite.x; x < sprite.x + sprite.width; x += PhysicsManager.RAY_SPACING) {
+    for (let i = 0; i < PhysicsManager.NUM_RAYS; i++) {
+      let x = spritePos.x + SW + raySpacing * i;
       const ray = new Ray(x, rayStartY, x, rayEndY);
 
-      this.raycast(ray, sprite.physics.collidesWith).then(hit => {
-        const newVelocity = hit.position.y - spriteSideY;
+      const hit = this.raycast(ray, sprite.physics.collidesWith);
+      if (!hit) continue;
 
-        if (!result.collision || newVelocity < result.newVelocity) {
-          result = {
-            collision: true,
-            newVelocity
-          };
-        }
-      });
+      const dist = spriteSideY - hit.position.y;
+
+      if (!result.collision || dist < closestCollisionDistance) {
+        const blergh = hit.position.y - (dy > 0 ? sprite.height : 0) - spritePos.y + sprite.y;
+        closestCollisionDistance = dist;
+
+        result = {
+          collision: true,
+          newPosition: blergh,
+          collidedWith: new MagicArray(hit.sprite)
+        };
+      }
     }
 
     return result;
@@ -100,24 +137,45 @@ class PhysicsManager {
     if (dx != 0) {
       const result = this.moveSpriteX(sprite, dx);
 
-      sprite.x += result.newVelocity;
+      sprite.x = result.newPosition;
 
       if (result.collision) {
         sprite.physics.touchingLeft  = dx < 0;
         sprite.physics.touchingRight = dx > 0;
+
+        sprite.physics.touching      = sprite.physics.touching || dx != 0;
+
+        sprite.physics.collidedWith.addAll(result.collidedWith)
       }
     }
 
     if (dy != 0) {
       const result = this.moveSpriteY(sprite, dy);
 
-      sprite.y += result.newVelocity;
+      sprite.y = result.newPosition;
 
       if (result.collision) {
         sprite.physics.touchingTop    = dy < 0;
         sprite.physics.touchingBottom = dy > 0;
+
+        sprite.physics.touching       = sprite.physics.touching || dy != 0;
+
+        sprite.physics.collidedWith.addAll(result.collidedWith)
       }
     }
+  }
+
+  touches<T extends Sprite, U extends Sprite>(sprite: T, group: Group<U>): MagicArray<U> {
+    const items = group.items();
+    const result = new MagicArray<U>();
+
+    for (const item of items) {
+      if (Util.RectRectIntersection(sprite.rect, item.rect)) {
+        result.push(item);
+      }
+    }
+
+    return result;
   }
 
   update(): void {
@@ -155,23 +213,23 @@ class PhysicsManager {
    * @param ray 
    * @returns {} 
    */
-  raycast(ray: Ray, against: Group<Sprite>): Maybe<RaycastResult> {
+  raycast(ray: Ray, against: Group<Sprite>): RaycastResult {
     // TODO could (should) use a quadtree or something
 
-    if (!against) return new Maybe<RaycastResult>();
+    if (!against) return null;
 
-    const againstList = against.all();
-    let result: RaycastResult = undefined;
+    const againstList = against.items();
+    let result: RaycastResult = null;
 
     // TODO: could update var in a later version of TS.
     for (var sprite of againstList) { 
-      if (Util.RectPointIntersection(sprite.bounds, ray.start)) {
+      if (Util.RectPointIntersection(sprite.globalBounds, ray.start)) {
         // The ray started in this sprite; disregard
         continue;
       }
 
-      Util.RayRectIntersection(ray, sprite.bounds).then(position => {
-        if (result === undefined ||
+      Util.RayRectIntersection(ray, sprite.globalBounds).then(position => {
+        if (result === null ||
             ray.start.distance(position) < ray.start.distance(result.position)) {
 
           result = {
@@ -182,12 +240,19 @@ class PhysicsManager {
       });
     }
 
-    return new Maybe(result);
+    return result;
   }
 }
 
 interface RaycastResult {
+  /**
+   * The sprite that you hit.
+   */
   sprite: Sprite;
+
+  /**
+   * The position of the collision in global coordinates.
+   */
   position: Point;
 }
 
@@ -195,6 +260,7 @@ class PhysicsComponent extends Component<Sprite> {
   public dx: number = 0;
   public dy: number = 0;
 
+  public touching       : boolean = false;
   public touchingBottom : boolean = false;
   public touchingTop    : boolean = false;
   public touchingRight  : boolean = false;
@@ -203,7 +269,15 @@ class PhysicsComponent extends Component<Sprite> {
   public solid    : boolean;
   public immovable: boolean;
 
+  /**
+   * The things that this object can actually hit.
+   */
   public collidesWith : Group<Sprite>;
+
+  /**
+   * The things that this object just hit this frame.
+   */
+  public collidedWith = new MagicArray<Sprite>();
 
   constructor(physics: Physics) {
     super();
@@ -219,23 +293,42 @@ class PhysicsComponent extends Component<Sprite> {
   }
 
   moveBy(dx: number, dy: number): void {
-    this.dx = dx;
-    this.dy = dy;
+    this.dx += dx;
+    this.dy += dy;
   }
 
   /**
    * Resets any physics changes the attached Sprite would have received on this turn.
+   * Called right after a physics update.
    */
   reset(): void {
     this.dx = 0;
     this.dy = 0;
   }
 
+  /**
+   * Returns any sprites in the provided group that this sprite is touching.
+   * 
+   * TODO: Not the best name...
+   * 
+   * @param group
+   */
+  touches<T extends Sprite>(group: Group<T>): MagicArray<T> {
+    return Globals.physicsManager.touches(this._sprite, group);
+  }
+
+  /**
+   * Called right before a physics update.
+   */
   resetFlags(): void {
+    this.touching       = false;
+
     this.touchingBottom = false;
     this.touchingTop    = false;
     this.touchingLeft   = false;
     this.touchingRight  = false;
+
+    this.collidedWith = new MagicArray<Sprite>();
   }
 
   postUpdate(): void { }

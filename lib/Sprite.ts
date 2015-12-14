@@ -43,11 +43,20 @@ class Sprite {
 
   public texture: PIXI.Texture;
 
-  protected _z: number;
+  public tags: string[] = [];
+
+  protected _z: number = 0;
 
   public components: Component<Sprite>[];
 
   public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};
+
+  private _hash: string;
+
+  public get hash(): string {
+    if (this._hash) return this._hash;
+    return this._hash = "" + Math.random();
+  }
 
   physics: PhysicsComponent;
 
@@ -55,6 +64,11 @@ class Sprite {
    * Debug draw object. Useful to draw lines and shapes for debugging.
    */
   public debug: DebugDraw;
+
+  /**
+   * Tween object. Useful for animations.
+   */
+  public tween: TweenComponent;
 
   private static sprites: { [key: string]: Group<Sprite> };
 
@@ -132,14 +146,79 @@ class Sprite {
   get rotation(): number { return this.displayObject.rotation; }
   set rotation(val: number) { this.displayObject.rotation = val; }
 
+  get scale(): PIXI.Point { return this.displayObject.scale; }
+  set scale(val: PIXI.Point) { this.displayObject.scale = val; }
+
   get alpha(): number { return this.displayObject.alpha; }
   set alpha(val: number) { this.displayObject.alpha = val; }
 
   get visible(): boolean { return this.displayObject.visible; }
   set visible(val: boolean) { this.displayObject.visible = val; }
 
+  /**
+   * Bounding rectangle for this Sprite.
+   * 
+   * TODO: This should really be a Vector or something, as the x, y properties are unused.
+   * @returns {} 
+   */
   get bounds(): PIXI.Rectangle { return this.displayObject.getBounds(); }
 
+  /**
+   * Rectangle for this sprite (x, y, width and height of Sprite).
+   * 
+   * @returns {} 
+   */
+  get rect(): PIXI.Rectangle {
+    return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
+  }
+
+  private _globalXYCache: Point = undefined;
+
+  /**
+   * Get the screen-space x and y coordinates of this object (not relative to anything).
+   * @returns {} 
+   */
+  get globalXY(): Point {
+    if (this._globalXYCache) return this._globalXYCache;
+
+    let x = this.displayObject.x;
+    let y = this.displayObject.y;
+
+    let parent = this.parent;
+
+    while (parent) {
+      x += parent.x;
+      y += parent.y;
+
+      parent = parent.parent;
+    }
+
+    return this._globalXYCache = new Point(x, y);
+  }
+
+  get globalX(): number {
+    return this.globalXY.x
+  }
+
+  get globalY(): number {
+    return this.globalXY.y
+  }
+
+  /**
+   * Get bounds of this Sprite in terms of global coordinates.
+   * @returns {} 
+   */
+  get globalBounds(): PIXI.Rectangle {
+    const globalxy = this.globalXY
+    const bounds = this.bounds
+
+    return new PIXI.Rectangle(globalxy.x, globalxy.y, bounds.width, bounds.height);
+  }
+
+  /**
+   * Gets all children of this Sprite.
+   * @returns {} 
+   */
   public get children() {
     return new MagicArray(this.displayObject.children)
       // The reason we filter by .contains here is because the children of displayObject
@@ -194,12 +273,19 @@ class Sprite {
 
   private initComponents(g: PIXI.Graphics): void {
     this.components = this.components.map(c => Util.Clone(c));
+
+    // Add default sprite components
+    // TODO: Should probably just decorate Sprite
+
     this.components.push(new DebugDraw(this, g));
+    this.components.push(new TweenComponent())
 
     for (const c of this.components) {
       // Make easy-to-access references to common components.
+
       if (c instanceof PhysicsComponent) this.physics = c;
       if (c instanceof DebugDraw)        this.debug = c;
+      if (c instanceof TweenComponent)   this.tween = c;
 
       c.init(this);
     }
@@ -230,6 +316,38 @@ class Sprite {
     return this;
   }
 
+  /**
+   * Sets z for those of us who like chainable interfaces. Higher numbers are on top
+   * of lower numbers.
+   * 
+   * @param z
+   */
+  public setZ(z: number): this {
+    this.z = z;
+
+    return this;
+  }
+
+  public setDimensions(width: number, height: number): this {
+    this.width = width;
+    this.height = height;
+
+    return this;
+  }
+
+  public addTo(sprite: Sprite): this {
+    sprite.addChild(this);
+
+    return this;
+  }
+
+  /**
+   * Adds a child to this Sprite
+   * 
+   * TODO: returning the child seems incorrect here.
+
+   * @param child
+   */
   public addChild<T extends Sprite>(child: T): T {
     this.displayObject.addChild(child.displayObject);
     this.sortDepths();
@@ -238,6 +356,12 @@ class Sprite {
     child.events.emit(SpriteEvents.ChangeParent, this);
 
     return child;
+  }
+
+  public addDO(child: PIXI.DisplayObject): this {
+    this.displayObject.addChild(child);
+      
+    return this;
   }
 
   public removeChild(child: Sprite) {
@@ -251,8 +375,10 @@ class Sprite {
   }
 
   public update(): void {
-
+    this._globalXYCache = undefined;
   }
+
+  public postUpdate(): void { }
 
   /**
    * Get every sprite that is nested under this sprite.
