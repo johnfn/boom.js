@@ -201,6 +201,8 @@ class MyGame extends Game {
     Globals.stage.addChild(new EnemySpawner(Globals.stage));
 
     new FPSCounter();
+
+    const test = new TextField("This is [a test](red) and [this should be blue](blue)")
   }
 }
 

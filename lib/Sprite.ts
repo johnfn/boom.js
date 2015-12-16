@@ -179,21 +179,16 @@ class Sprite {
    * @returns {} 
    */
   get globalXY(): Point {
-    if (this._globalXYCache) return this._globalXYCache;
-
-    let x = this.displayObject.x;
-    let y = this.displayObject.y;
-
-    let parent = this.parent;
-
-    while (parent) {
-      x += parent.x;
-      y += parent.y;
-
-      parent = parent.parent;
+    if (!this.parent) {
+      return this.position;
     }
 
-    return this._globalXYCache = new Point(x, y);
+    if (!this._globalXYCache) {
+      this._globalXYCache = new Point(this.x + this.parent.globalXY.x,
+                                      this.y + this.parent.globalXY.y);
+    }
+
+    return this._globalXYCache;
   }
 
   get globalX(): number {
