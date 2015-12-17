@@ -16,6 +16,16 @@
    * @returns {} 
    */
   public set text(val: string) {
+    // TODO: I am thinking of a more versatile (and easier to code!) approach - something
+    // like this: text`blah blah ${{ fill: red, font: "comic sans" }}${ "blah blah " }`.
+    // 
+    // It could almost be typed!
+    // 
+    // Or even better?
+    //
+    // text`bla blah ${{ fill: red, font: "comic sans", text:  "this is a test!" }}`;
+    //
+
     enum State {
       Normal,
       AccumulatingText,
@@ -93,6 +103,7 @@
 
             coloredText.push({ text: currentColoredText, color: currentColor });
             currentColoredText = currentColor = "";
+            break;
           }
 
           currentColor += char();
@@ -101,9 +112,23 @@
       }
     }
 
-    console.log(coloredText);
+    let assembledText: string = "";
+    let styleRules: { [key: string]: PIXI.TextStyle } = {}
+    let j = 0; 
 
-    this._textField.text = val;
+    for (const chunk of coloredText) {
+      if (chunk.color) {
+        const uid = `rule${ j++ }`;
+
+        assembledText += `<${ uid }>${ chunk.text }</${ uid }>`
+        styleRules[uid] = { fill: chunk.color };
+      } else {
+        assembledText += chunk.text;
+      }
+    }
+
+    this._textField.setTextStyles(styleRules);
+    this._textField.text = assembledText;
   }
 
   public get text(): string {
