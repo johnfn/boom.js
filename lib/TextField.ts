@@ -112,7 +112,7 @@
       }
     }
 
-    let assembledText: string = "";
+    let assembledText: string = text; // anything left over
     let styleRules: { [key: string]: PIXI.TextStyle } = {}
     let j = 0; 
 

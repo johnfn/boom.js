@@ -202,9 +202,9 @@ class MyGame extends Game {
 
     new FPSCounter();
 
-    const test = new TextField("This is [a test](red)xand [this should be blue](blue)")
+    // const test = new TextField("This is [a test](red)xand [this should be blue](blue)")
 
-    Globals.stage.addChild(test);
+    // Globals.stage.addChild(test);
   }
 }
 
