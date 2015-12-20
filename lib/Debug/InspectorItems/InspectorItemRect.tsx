@@ -15,9 +15,7 @@
   }
 
   mouseEnter() {
-    if (this.rect) {
-      this.props.debugSprite.debug.draw(this.rect);
-    }
+    this.props.debugSprite.debug.draw(this.rect);
   }
 
   render() {
