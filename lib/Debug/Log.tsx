@@ -19,7 +19,6 @@ enum LogItemType {
 
 class LogProps {
   stage: Stage;
-  debugLayer: DebugLayer;
   root: Root;
 }
 

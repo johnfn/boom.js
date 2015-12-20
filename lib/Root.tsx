@@ -88,7 +88,7 @@ class Root extends React.Component<RootProps, RootState> {
       inspector = <Inspector debugLayer={ this.state.debugLayer } target={ this.state.target } />;
     }
 
-    log = <Log stage={ this.props.stage } debugLayer={ this.state.debugLayer } root={ this } />;
+    log = <Log stage={ this.props.stage } root={ this } />;
 
     return (
       <div>
