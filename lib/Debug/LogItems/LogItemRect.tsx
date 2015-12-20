@@ -1,13 +1,10 @@
 ﻿type RectState = { rect: PIXI.Rectangle, expanded: boolean };
-type RectProps = { rect: PIXI.Rectangle, debug: DebugLayer };
+type RectProps = { rect: PIXI.Rectangle, debugSprite: Sprite };
 
 class LogItemRect extends React.Component<RectProps, RectState> {
-  debug: DebugLayer;
-
   constructor(props: RectProps) {
     super(props);
 
-    this.debug = props.debug;
     this.state = {
       rect: new PIXI.Rectangle(props.rect.x, props.rect.y, props.rect.width, props.rect.height),
       expanded: false
@@ -23,11 +20,11 @@ class LogItemRect extends React.Component<RectProps, RectState> {
   }
 
   mouseOver(e: React.MouseEvent) {
-    this.debug.drawRect(this.state.rect, "rect");
+    this.props.debugSprite.debug.draw(this.state.rect);
   }
 
   mouseOut(e: React.MouseEvent) {
-    this.debug.clear("rect");
+    this.props.debugSprite.debug.clear();
   }
 
   render() {

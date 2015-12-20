@@ -95,10 +95,15 @@ class DebugLayer {
 }
 
 class Log extends React.Component<LogProps, LogState> {
+  debugSprite: Sprite;
+
   constructor(props: LogProps) {
     super(props);
 
     this.state = { contents: consoleCache };
+
+    this.debugSprite = new Sprite().addTo(this.props.stage);
+    this.debugSprite.z = Number.POSITIVE_INFINITY;
 
     this.overrideConsoleLog();
   }
@@ -231,27 +236,27 @@ class Log extends React.Component<LogProps, LogState> {
     }
   }
 
-  public static loggableToHTML(content: Loggable, debugLayer: DebugLayer, root: Root): JSX.Element {
+  public loggableToHTML(content: Loggable, debugLayer: DebugLayer): JSX.Element {
     if (typeof content === "string") {
       return <LogItemString content={ content } />;
     } else if (typeof content === "number") {
       return <span> { content.toString() } </span>;
     } else if (content instanceof Array) {
-      var items = content.map(o => Log.loggableToHTML(o as Loggable, debugLayer, root));
+      var items = content.map(o => this.loggableToHTML(o as Loggable, debugLayer));
 
       return <span> [{ items }] </span>
     } else if (content instanceof PIXI.Rectangle) {
-      return <LogItemRect rect={ content } debug={ debugLayer } />;
+      return <LogItemRect rect={ content } debugSprite={ this.debugSprite } />;
     } else if (content instanceof PIXI.Point) {
       return <LogItemPoint point={ content.clone() } debugLayer={ debugLayer } />;
     } else if (content instanceof PIXI.Texture) {
       return <LogItemTexture texture={ content } debugLayer={ debugLayer } />;
     } else if (content instanceof Sprite) {
-      return <LogItemSprite sprite={ content } root={ root } debugLayer={ debugLayer } />;
+      return <LogItemSprite sprite={ content } root={ this.props.root } debugLayer={ debugLayer } />;
     } else if (typeof content === "object") {
       // Note - this check should definitely come last.
 
-      return <LogItemObject object={ content } debugLayer={ debugLayer } root={ root } />;
+      return <LogItemObject object={ content } debugLayer={ debugLayer } root={ this.props.root } />;
     }
 
     return <span>???????{ content } </span>
@@ -264,7 +269,7 @@ class Log extends React.Component<LogProps, LogState> {
         className="log-entry">
         <span className="number less-important">{ index } </span>
         <span className={ item.logItemType == LogItemType.Normal ? "log-normal" : "log-error" }>
-          { item.content.map(content => Log.loggableToHTML(content, this.props.debugLayer, this.props.root)) }
+          { item.content.map(content => this.loggableToHTML(content, this.props.debugLayer)) }
           <span className="count">
             { item.count > 1 ? `(${item.count})` : `` }
           </span>
