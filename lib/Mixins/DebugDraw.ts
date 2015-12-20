@@ -3,13 +3,19 @@
  * on Sprites.
  *
  * DebugDraw will clear itself right before you start drawing on it for
- * the first time in a particular frame.
+ * the first time in a particular frame. This is meant to allow two different
+ * use cases:
  *
+ * 1) calling draw() from the update() function of a sprite.
+ * 2) calling draw() from an event that triggers occasionally.
+ *
+ * The idea is that DebugDraw will clear when you expect it to clear.
  */
 class DebugDraw extends Component<Sprite> {
   public events: Events<SpriteEvents> = new Events<SpriteEvents>(true);
 
-  private _clickableShapes = new MagicArray<Polygon>();
+  private _clickableShapes   = new MagicArray<Polygon>();
+  private _hasDrawnThisFrame = false;
 
   constructor(private _target: Sprite,
               public _graphics: PIXI.Graphics) {
@@ -128,6 +134,12 @@ class DebugDraw extends Component<Sprite> {
   }
 
   public draw(item: Ray | Point | Polygon | PIXI.Rectangle, color: number = 0xff0000, alpha: number = 1) {
+    if (!this._hasDrawnThisFrame) {
+      this._hasDrawnThisFrame = true;
+
+      this.clear();
+    }
+
     if (item instanceof Ray) {
       this._drawLine(item.x0, item.y0, item.x1, item.y1, color, alpha)
     } else if (item instanceof Point) {
@@ -149,7 +161,7 @@ class DebugDraw extends Component<Sprite> {
   }
 
   public preUpdate(): void {
-    this.clear();
+    this._hasDrawnThisFrame = false;
   }
 
   public postUpdate(): void {

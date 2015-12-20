@@ -11,7 +11,7 @@ class Game {
   private root         : React.Component<any, {}>;
   private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 
-  private static _ticks: number = 0;
+  public static ticks  : number = 0;
 
   /**
    * Turns on a bunch of debugging-only features.
@@ -52,7 +52,7 @@ class Game {
   }
 
   static EveryNthFrame(n: number): boolean {
-    return Game._ticks % n === 0;
+    return Game.ticks % n === 0;
   }
 
   loadingComplete(): void {
@@ -66,7 +66,7 @@ class Game {
   update(): void {
     let children = Sprites.all().items();
 
-    Game._ticks++;
+    Game.ticks++;
 
     Globals.keyboard.update();
 
