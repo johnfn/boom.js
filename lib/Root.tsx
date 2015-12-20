@@ -73,6 +73,8 @@ class Root extends React.Component<RootProps, RootState> {
 
       this.transformWidget.x = target.width / 2;
       this.transformWidget.y = target.height / 2;
+
+      target.debug.draw(target);
     }
   }
 
@@ -82,7 +84,7 @@ class Root extends React.Component<RootProps, RootState> {
         log      : JSX.Element = null;
 
     if (Game.DEBUG_MODE) {
-      hierarchy = <Hierarchy root={ this } target={ this.props.stage } debugLayer={ this.state.debugLayer } focus={ this.state.target } />;
+      hierarchy = <Hierarchy root={ this } target={ this.props.stage } focus={ this.state.target } />;
       inspector = <Inspector debugLayer={ this.state.debugLayer } target={ this.state.target } />;
     }
 

@@ -133,7 +133,7 @@ class DebugDraw extends Component<Sprite> {
     this._drawLine(x0, y1, x1, y1);
   }
 
-  public draw(item: Ray | Point | Polygon | PIXI.Rectangle, color: number = 0xff0000, alpha: number = 1) {
+  public draw(item: Ray | Point | Polygon | PIXI.Rectangle | Sprite, color: number = 0xff0000, alpha: number = 1) {
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
@@ -148,6 +148,8 @@ class DebugDraw extends Component<Sprite> {
       this._drawShape(item, color);
     } else if (item instanceof PIXI.Rectangle) {
       this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
+    } else if (item instanceof Sprite) {
+      this.drawRectangle(item.x, item.y, item.width, item.height);
     } else {
       console.error("I don't know how to draw that shape.")
     }

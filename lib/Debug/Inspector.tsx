@@ -25,22 +25,8 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
     Inspector.instance = this;
   }
 
-  componentDidUpdate(): void {
-    this.drawDebugBox();
-  }
-
   innerPropChange(): void {
-    this.drawDebugBox();
-
     Inspector.instance.forceUpdate();
-  }
-
-  private drawDebugBox(): void {
-    this.props.debugLayer.clear("root");
-
-    if (this.props.target) {
-      this.props.debugLayer.drawSprite(this.props.target, "root");
-    }
   }
 
   public static valueToElem(value: any, propName: string, sprite: Sprite, interactive: boolean, debugLayer: DebugLayer): JSX.Element {
@@ -100,8 +86,6 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
         immutablePropList.push(node);
       }
     }
-
-    this.drawDebugBox();
 
     return (
       <div id="inspector">

@@ -1,5 +1,4 @@
 ﻿type HierarchyProps = {
-  debugLayer: DebugLayer;
   root: Root;
 
   /**
@@ -47,7 +46,6 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
             { this.props.target.children.map(o =>
               <Hierarchy
                 target={ o }
-                debugLayer={ this.props.debugLayer }
                 root={ this.props.root }
                 focus={ this.props.focus }/>).arr()
             }

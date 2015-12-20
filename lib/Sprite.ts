@@ -373,6 +373,10 @@ class Sprite {
     return child;
   }
 
+  /**
+   * Adds a display object to this Sprite.
+   *
+   */
   public addDO(child: PIXI.DisplayObject): this {
     this.displayObject.addChild(child);
 

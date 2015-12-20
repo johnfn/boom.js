@@ -8,15 +8,15 @@
 class Game {
   public  stage        : Stage;
 
-  private root         : React.Component<any, {}>;
-  private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-
   public static ticks  : number = 0;
 
   /**
    * Turns on a bunch of debugging-only features.
    */
   public static DEBUG_MODE: boolean = false;
+
+  private root         : React.Component<any, {}>;
+  private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 
   private _width: number;
   get width(): number { return this._width; }
