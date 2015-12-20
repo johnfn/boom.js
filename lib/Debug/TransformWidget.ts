@@ -42,11 +42,12 @@
       new Point(70, 0)
     ]);
 
-    this.debug.drawLine(0, 0, 0, 50, 0xffffff, 1);
-    this.debug.drawLine(0, 0, 50, 0, 0xffffff, 1);
+    const ray1 = new Ray(0, 0, 0, 50);
+    const ray2 = new Ray(0, 0, 50, 0);
 
-    this.debug.drawShape(this._downArrow, Color.Red);
-
-    this.debug.drawShape(this._rightArrow, Color.Red);
+    this.debug.draw(ray1, 0xffffff, 1);
+    this.debug.draw(ray2, 0xffffff, 1);
+    this.debug.draw(this._downArrow, Color.Red);
+    this.debug.draw(this._rightArrow, Color.Red);
   }
 }

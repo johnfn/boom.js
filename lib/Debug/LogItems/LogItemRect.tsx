@@ -23,12 +23,7 @@ class LogItemRect extends React.Component<RectProps, RectState> {
   }
 
   mouseOver(e: React.MouseEvent) {
-    this.debug.drawRect(
-      this.state.rect.x,
-      this.state.rect.y,
-      this.state.rect.x + this.state.rect.width,
-      this.state.rect.y + this.state.rect.height,
-      "rect");
+    this.debug.drawRect(this.state.rect, "rect");
   }
 
   mouseOut(e: React.MouseEvent) {

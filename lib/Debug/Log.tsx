@@ -1,7 +1,7 @@
 ﻿declare var consoleCache: LogItemState[];
 declare var sourceMaps: { [key: string]: sourceMap.RawSourceMap };
 
-// Object[] should really be Loggable[] - but Typescript doesn't currently 
+// Object[] should really be Loggable[] - but Typescript doesn't currently
 // allow recursive types.
 type Loggable = string
   | number
@@ -66,22 +66,19 @@ class DebugLayer {
   drawPoint<T, U>(x: number, y: number, identifier: string) {
     let layer = this.getLayerForComponent(identifier);
 
-    layer.debug.drawPoint(x, y);
+    layer.debug.draw(new Point(x, y));
   }
 
-  drawRect<T, U>(x0: number, y0: number, x1: number, y1: number, identifier: string) {
+  drawRect<T, U>(rect: PIXI.Rectangle, identifier: string) {
     let layer = this.getLayerForComponent(identifier);
 
-    layer.debug.drawRectangle(x0, y0, x1, y1);
+    layer.debug.draw(rect);
   }
 
   drawSprite<T, U>(sprite: Sprite, identifier: string) {
     let layer = this.getLayerForComponent(identifier);
 
-    var x0 = sprite.absolutePosition.x;
-    var y0 = sprite.absolutePosition.y;
-
-    layer.debug.drawRectangle(x0, y0, x0 + sprite.width, y0 + sprite.height);
+    layer.debug.draw(sprite.bounds);
   }
 
   clear<T, U>(identifier: string) {
@@ -107,8 +104,8 @@ class Log extends React.Component<LogProps, LogState> {
   }
 
   overrideConsoleLog() {
-    // setTimeout is necessary so we don't call setState within a render function - we want to 
-    // be able to console.log from anywhere. 
+    // setTimeout is necessary so we don't call setState within a render function - we want to
+    // be able to console.log from anywhere.
 
     console.log = (...s: any[]) => {
       let caller = this.getCallingFunction();
@@ -127,10 +124,10 @@ class Log extends React.Component<LogProps, LogState> {
   //
   // Will get the function that called the function that you call GetCallingFunction() inside.
   // Only tested on IE.
-  // 
+  //
   // For example:
   //
-  // foo() { 
+  // foo() {
   //   console.log(GetCallingFunction()); // bar
   // }
   //
@@ -218,7 +215,7 @@ class Log extends React.Component<LogProps, LogState> {
       return prev;
     });
   }
-  
+
   shouldScrollBottom: boolean;
 
   componentWillUpdate() {
@@ -226,7 +223,7 @@ class Log extends React.Component<LogProps, LogState> {
 
     this.shouldScrollBottom = node.scrollTop + (node as any).offsetHeight >= node.scrollHeight;
   }
- 
+
   componentDidUpdate() {
     if (this.shouldScrollBottom) {
       var node = React.findDOMNode(this);
@@ -261,7 +258,7 @@ class Log extends React.Component<LogProps, LogState> {
   }
 
   render() {
-    var logContent = this.state.contents.map((item: LogItemState, index: number) => 
+    var logContent = this.state.contents.map((item: LogItemState, index: number) =>
       <div className="log-entry">
         <span className="number less-important">{ index } </span>
         <span className={ item.logItemType == LogItemType.Normal ? "log-normal" : "log-error" }>

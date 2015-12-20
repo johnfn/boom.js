@@ -16,7 +16,7 @@
 
   mouseEnter() {
     if (this.rect) {
-      this.props.debugLayer.drawRect(this.rect.x, this.rect.y, this.rect.x + this.rect.width, this.rect.y + this.rect.height, this.props.propName);
+      this.props.debugLayer.drawRect(this.rect, this.props.propName);
     }
   }
 
