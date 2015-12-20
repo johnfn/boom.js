@@ -37,8 +37,8 @@
 
   /**
    * Converts a single word to Title Case.
-   * @param s 
-   * @returns {} 
+   * @param s
+   * @returns {}
    */
   static ToTitleCase(s: string): string {
     return s[0].toUpperCase() + s.slice(1).toLowerCase();
@@ -66,10 +66,10 @@
 
   /**
    * Returns the point of intersection, or null if there wasn't one.
-   * 
-   * @param ray1 
-   * @param ray2 
-   * @returns {} 
+   *
+   * @param ray1
+   * @param ray2
+   * @returns {}
    */
   static RayRayIntersection(ray0: Ray, ray1: Ray): Maybe<Point> {
     const p0_x = ray0.x0;
@@ -98,19 +98,8 @@
   }
 
   /**
-   * Returns whether the given point is inside the given rect.
-   * @param rect 
-   * @param point 
-   * @returns {} 
-   */
-  static RectPointIntersection(rect: PIXI.Rectangle, point: Point): boolean {
-    return rect.x <= point.x && rect.x + rect.width  >= point.x &&
-           rect.y <= point.y && rect.y + rect.height >= point.y;
-  }
-
-  /**
    * Returns a random number between min and max.
-   * 
+   *
    * @param min
    * @param max
    */
@@ -128,7 +117,7 @@
 
   /**
    * Generate a point selected randomly from all points on the unit circle.
-   * 
+   *
    * Handy for all sorts of things. If you can't of a thing this is handy for,
    * then you suck.
    */
@@ -150,7 +139,7 @@
 
   /**
    * Return the percentage that value is between from and to.
-   * 
+   *
    * TODO: I'm sure there's a better name for this LOL
    * @param from
    * @param to
@@ -179,11 +168,22 @@
   }
 
   /**
+   * Returns whether the given point is inside the given rect.
+   * @param rect
+   * @param point
+   * @returns {}
+   */
+  static RectPointIntersection(rect: PIXI.Rectangle, point: Point): boolean {
+    return rect.x <= point.x && rect.x + rect.width  >= point.x &&
+           rect.y <= point.y && rect.y + rect.height >= point.y;
+  }
+
+  /**
    * Returns the point of collision of a ray and a rectangle that is closest
-   * to the start of the ray, if there is one. 
-   * @param ray 
-   * @param rect 
-   * @returns {} 
+   * to the start of the ray, if there is one.
+   * @param ray
+   * @param rect
+   * @returns {}
    */
   static RayRectIntersection(ray: Ray, rect: PIXI.Rectangle): Maybe<Point> {
     const lines: Ray[] = [

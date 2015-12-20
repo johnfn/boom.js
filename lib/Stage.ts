@@ -57,31 +57,6 @@
     this.root.setTarget(target);
   }
 
-  private currentMousedObject: Sprite = null;
-
-  private mousemove(e: PIXI.interaction.InteractionEvent): void {
-    let point = e.data.global;
-
-    if (point.x < 0 || point.x > this.width || point.y < 0 || point.y > this.height) {
-      return;
-    }
-
-    if (Game.DEBUG_MODE) {
-      let newMousedObject = this.findTopmostSpriteAt(point, true);
-
-      if (newMousedObject != this.currentMousedObject) {
-        if (newMousedObject != null) {
-          newMousedObject.alpha = 0.9;
-        }
-
-        if (this.currentMousedObject != null) {
-          this.currentMousedObject.alpha = 1.0;
-        }
-        this.currentMousedObject = newMousedObject;
-      }
-    }
-  }
-
   public removeChild(sprite: Sprite) {
     this.displayObject.removeChild(sprite.displayObject);
   }

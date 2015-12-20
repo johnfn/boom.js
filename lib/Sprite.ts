@@ -4,6 +4,7 @@ enum SpriteEvents {
   AddChild,
   MouseDown,
   MouseUp,
+  MouseMove,
   ChangeParent
 }
 
@@ -281,6 +282,7 @@ class Sprite {
     this.displayObject.interactive = true;
 
     this.displayObject.on('mousedown', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseDown, e), this);
+    this.displayObject.on('mousemove', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseMove, e), this);
     this.displayObject.on('mouseup',   (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseUp, e), this);
   }
 
@@ -297,8 +299,8 @@ class Sprite {
       // Make easy-to-access references to common components.
 
       if (c instanceof PhysicsComponent) this.physics = c;
-      if (c instanceof DebugDraw)        this.debug = c;
-      if (c instanceof TweenComponent)   this.tween = c;
+      if (c instanceof DebugDraw)        this.debug   = c;
+      if (c instanceof TweenComponent)   this.tween   = c;
 
       c.init(this);
     }
@@ -462,6 +464,10 @@ class Sprite {
     this.parent.displayObject.removeChild(this.displayObject);
 
     this.displayObject = null;
+  }
+
+  public contains(p: Point): boolean {
+    return Util.RectPointIntersection(this.bounds, p);
   }
 }
 

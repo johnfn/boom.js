@@ -7,11 +7,12 @@ interface RootState {
   debugLayer: DebugLayer;
 }
 
-
 /**
  * Root is the react component at the base of the HTML hierarchy.
  */
 class Root extends React.Component<RootProps, RootState> {
+  private _currentMousedObject: Sprite;
+
   public transformWidget = new TransformWidget();
 
   constructor(props: RootProps) {
@@ -21,9 +22,36 @@ class Root extends React.Component<RootProps, RootState> {
       target: null,
       debugLayer: new DebugLayer(this.props.stage)
     };
+
+    this.props.stage.events.on(SpriteEvents.MouseMove, e => this.trackMousedObject(e));
+  }
+
+  trackMousedObject(e: PIXI.interaction.InteractionEvent): void {
+    let point = Point.From(e.data.global);
+
+    if (!this.props.stage.contains(point)) {
+      return;
+    }
+
+    if (Game.DEBUG_MODE) {
+      let newMousedObject = this.props.stage.findTopmostSpriteAt(point, true);
+
+      if (newMousedObject != this._currentMousedObject) {
+        if (newMousedObject != null) {
+          newMousedObject.alpha = 0.9;
+        }
+
+        if (this._currentMousedObject != null) {
+          this._currentMousedObject.alpha = 1.0;
+        }
+        this._currentMousedObject = newMousedObject;
+      }
+    }
   }
 
   setTarget(target: Sprite) {
+    console.log("Yo")
+
     this.setState(state => {
       state.target = target;
 

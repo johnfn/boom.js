@@ -18,33 +18,28 @@ class Game {
    */
   public static DEBUG_MODE: boolean = false;
 
-
   private _width: number;
   get width(): number { return this._width; }
 
   private _height: number;
   get height(): number { return this._height; }
 
-
   /**
-   *  Just a convenient place to attach things so they don't move when the camera does.
+   *  A convenient place to attach things so they don't move when the camera does.
    */
   public fixedStage: Sprite;
 
   constructor(width: number, height: number, element: HTMLElement, backgroundColor: number = 0x000000, debugging: boolean = false) {
-    this._width = width;
-    this._height = height;
-
-    this._renderer = PIXI.autoDetectRenderer(width, height, {
-      backgroundColor
-    });
+    this._width     = width;
+    this._height    = height;
+    this._renderer  = PIXI.autoDetectRenderer(width, height, { backgroundColor });
 
     this.fixedStage = new Sprite();
+    this.stage      = new Stage(width, height);
 
-    this.stage = new Stage(width, height);
     Globals.initialize(this.stage, this.fixedStage);
 
-    this.root = React.render(<Root stage={ this.stage } />, element);
+    this.root       = React.render(<Root stage={ this.stage } />, element);
 
     this.stage.setRoot(this.root as any);
 

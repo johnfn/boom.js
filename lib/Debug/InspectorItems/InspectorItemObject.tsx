@@ -26,7 +26,7 @@ class InspectorItemObject extends React.Component<InspectorItemProps, InspectorO
     let expandedObject = this.state.target[this.props.propName];
     let expandButton = (
       <a href="#" onClick={ e => this.toggle(e) }>
-        { this.state.expanded ? "[-]" : "[+]" }
+        { this.state.expanded ? "-" : "+" }
       </a>
     );
 
