@@ -42,7 +42,6 @@ class LogItemRect extends React.Component<RectProps, RectState> {
         className="rect"
         onMouseOver={ e => this.mouseOver(e) }
         onClick={ (e) => this.toggle(e) }
-        onMouseOut={ e => this.mouseOut(e) }
       >
         { inner }
       </span>

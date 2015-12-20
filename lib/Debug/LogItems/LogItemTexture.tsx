@@ -1,5 +1,5 @@
 ﻿type TextureState = { }
-type TextureProps = { texture: PIXI.Texture, debugLayer: DebugLayer}
+type TextureProps = { texture: PIXI.Texture }
 
 class TextureCanvas extends Game {
   constructor(texture: PIXI.Texture, element: HTMLElement) {

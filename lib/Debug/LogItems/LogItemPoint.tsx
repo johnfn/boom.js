@@ -40,7 +40,6 @@ class LogItemPoint extends React.Component<PointProps, PointState> {
       <span
         className="point"
         onMouseOver={ e => this.mouseOver(e) }
-        onMouseOut={ e => this.mouseOut(e) }
         onClick={ e => this.toggle(e) }
       >
         { inner }

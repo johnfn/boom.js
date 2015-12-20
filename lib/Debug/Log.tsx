@@ -250,7 +250,7 @@ class Log extends React.Component<LogProps, LogState> {
     } else if (content instanceof PIXI.Point) {
       return <LogItemPoint point={ content.clone() } debugSprite={ this.debugSprite } />;
     } else if (content instanceof PIXI.Texture) {
-      return <LogItemTexture texture={ content } debugLayer={ debugLayer } />;
+      return <LogItemTexture texture={ content } />;
     } else if (content instanceof Sprite) {
       return <LogItemSprite sprite={ content } root={ this.props.root } debugLayer={ debugLayer } />;
     } else if (typeof content === "object") {
