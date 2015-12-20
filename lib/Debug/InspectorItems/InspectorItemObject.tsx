@@ -3,7 +3,11 @@
   expanded: boolean;
 };
 
-class InspectorItemObject extends React.Component<InspectorItemProps, InspectorObjectState> {
+interface InspectorObjectProps extends InspectorItemProps {
+  open?: boolean;
+}
+
+class InspectorItemObject extends React.Component<InspectorObjectProps, InspectorObjectState> {
   constructor(props: InspectorItemProps) {
     super(props);
 

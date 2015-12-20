@@ -11,23 +11,17 @@
   }
 
   render() {
-    var propValue: string = "" + this.props.target[this.props.propName];
-    var value: JSX.Element;
-
-    if (this.props.interactive) {
-      value = (
-        <input
-          type="text"
-          onChange={ e => this.changed(e) }
-          value={ propValue }
-          />);
-    } else {
-      value = <span> { propValue } </span>;
-    }
+    const propValue: string = "" + this.props.target[this.props.propName];
 
     return (
       <div className="mutableProp">
-        <span className="prop-name">{ this.props.propName }</span>: <span className="prop">{ value }</span>
+        <span className="prop-name">{ this.props.propName }</span>:
+        <span className="prop">
+          <input
+            type="text"
+            onChange={ e => this.changed(e) }
+            value={ propValue } />;
+        </span>
       </div>);
   }
 }

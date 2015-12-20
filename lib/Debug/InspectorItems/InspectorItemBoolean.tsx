@@ -15,12 +15,7 @@
     var propValue: string = "" + this.props.target[this.props.propName];
     var value: JSX.Element;
 
-    // TODO... lol 
-    if (this.props.interactive) {
-      value = <span> { propValue } </span>;
-    } else {
-      value = <span> { propValue } </span>;
-    }
+    value = <span> { propValue } </span>;
 
     return (
       <div className="mutableProp">

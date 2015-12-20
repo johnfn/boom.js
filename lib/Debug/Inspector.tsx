@@ -1,9 +1,26 @@
-﻿type InspectorItemProps = {
+﻿interface InspectorItemProps {
+  /**
+   * Name of the property that we are inspecting
+   * @type {string}
+   */
   propName: string,
+
+  /**
+   * Object that the property we are inspecting is on.
+   * @type {any}
+   */
   target: any,
+
+  /**
+   * Call this function when the property changes.
+   */
   onPropsChange: () => void,
-  debugSprite: Sprite,
-  interactive: boolean
+
+  /**
+   * Sprite we can use to render debugging information to the stage.
+   * @type {Sprite}
+   */
+  debugSprite: Sprite
 };
 
 type InspectorProps = {
@@ -48,7 +65,7 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
             propName={ "target" }
             onPropsChange={ () => this.innerPropChange() }
             debugSprite={ this.debugSprite }
-            interactive={ true } />
+            open={ true } />
         </div>
       </div>
     );
