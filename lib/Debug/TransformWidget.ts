@@ -23,10 +23,6 @@
         this._target.x += 10;
       }
     });
-
-    this.debug.events.on(SpriteEvents.MouseUp, () => {
-      console.log("goodbye");
-    });
   }
 
   private draw() {

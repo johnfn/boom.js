@@ -151,7 +151,7 @@ class DebugDraw extends Component<Sprite> {
     } else if (item instanceof PIXI.Rectangle) {
       this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
     } else if (item instanceof Sprite) {
-      this.drawRectangle(item.x, item.y, item.width, item.height);
+      this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
     } else {
       console.error("I don't know how to draw that shape.")
     }

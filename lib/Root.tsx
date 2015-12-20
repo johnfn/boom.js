@@ -11,6 +11,7 @@ interface RootState {
  */
 class Root extends React.Component<RootProps, RootState> {
   private _currentMousedObject: Sprite;
+  private _stageDebug         : Sprite;
 
   public transformWidget = new TransformWidget();
 
@@ -19,9 +20,10 @@ class Root extends React.Component<RootProps, RootState> {
 
     const stage = props.stage;
 
-    this.state = {
-      target: null
-    };
+    this.state = { target: null };
+
+    this._stageDebug = new Sprite().addTo(props.stage);
+    this._stageDebug.z = Number.POSITIVE_INFINITY;
 
     stage.events.on(SpriteEvents.MouseMove, e => this.trackMousedObject(e));
     stage.events.on(SpriteEvents.MouseDown, e => {
@@ -72,7 +74,7 @@ class Root extends React.Component<RootProps, RootState> {
       this.transformWidget.x = target.width / 2;
       this.transformWidget.y = target.height / 2;
 
-      target.debug.draw(target);
+      this._stageDebug.debug.draw(target);
     }
   }
 
