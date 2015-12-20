@@ -8,7 +8,7 @@ Rationale: It's good to have a set of standards. tslint even catches a few bugs.
 
 #### Private methods annotated with an underscore
 
-Rationale: Inevitably people are going to use this project from JavaScript. If they do so, it should be Obvious and Ugly that they are doing the wrong thing.
+Rationale: Inevitably people are going to use this project from JavaScript. If they do so, it should be Obvious and Ugly that they are doing the wrong thing (and by that, I mean using private methods, not using JavaScript... though that works, too. :-)
 
 #### Prefer `const` over `let`, even for arrays and objects where inner values change
 
