@@ -60,11 +60,11 @@
     return result;
   }
 
-  map<U>(fn: (o: T) => U): MagicArray<U> {
+  map<U>(fn: (o: T, i: number) => U): MagicArray<U> {
     var result = new MagicArray<U>();
-    
+
     for (var i = 0; i < this.length; i++) {
-      result.push(fn(this[i]));
+      result.push(fn(this[i], i));
     }
 
     return result;
@@ -87,7 +87,7 @@
     for (var i = 0; i < this.length; i++) {
       result.push(this[i]);
     }
-    
+
     return result;
   }
 

@@ -259,7 +259,9 @@ class Log extends React.Component<LogProps, LogState> {
 
   render() {
     var logContent = this.state.contents.map((item: LogItemState, index: number) =>
-      <div className="log-entry">
+      <div
+        key={ index }
+        className="log-entry">
         <span className="number less-important">{ index } </span>
         <span className={ item.logItemType == LogItemType.Normal ? "log-normal" : "log-error" }>
           { item.content.map(content => Log.loggableToHTML(content, this.props.debugLayer, this.props.root)) }

@@ -110,6 +110,8 @@ class Game {
     this._renderer.render(this.fixedStage.displayObject);
 
     requestAnimationFrame(this.update.bind(this));
+
+    console.log(new PIXI.Rectangle(20, 20, 100, 100))
   }
 
   onAddChild(): void {

@@ -43,11 +43,13 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
     if (!this.state.collapsed) {
       subNodes = (
         <div className="prop-list">
-            { this.props.target.children.map(o =>
-              <Hierarchy
-                target={ o }
-                root={ this.props.root }
-                focus={ this.props.focus }/>).arr()
+            { this.props.target.children.map((o, i) =>
+              <span key={ o.name }>
+                <Hierarchy
+                  target={ o }
+                  root={ this.props.root }
+                  focus={ this.props.focus }/>
+              </span>).arr()
             }
         </div>);
     }
