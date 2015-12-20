@@ -133,7 +133,7 @@ class DebugDraw extends Component<Sprite> {
     this._drawLine(x0, y1, x1, y1);
   }
 
-  public draw(item: Ray | Point | Polygon | PIXI.Rectangle | Sprite, color: number = 0xff0000, alpha: number = 1) {
+  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color: number = 0xff0000, alpha: number = 1) {
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
@@ -143,6 +143,8 @@ class DebugDraw extends Component<Sprite> {
     if (item instanceof Ray) {
       this._drawLine(item.x0, item.y0, item.x1, item.y1, color, alpha)
     } else if (item instanceof Point) {
+      this._drawPoint(item.x, item.y, color);
+    } else if (item instanceof PIXI.Point) {
       this._drawPoint(item.x, item.y, color);
     } else if (item instanceof Polygon) {
       this._drawShape(item, color);

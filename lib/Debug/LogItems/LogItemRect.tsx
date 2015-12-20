@@ -23,10 +23,6 @@ class LogItemRect extends React.Component<RectProps, RectState> {
     this.props.debugSprite.debug.draw(this.state.rect);
   }
 
-  mouseOut(e: React.MouseEvent) {
-    this.props.debugSprite.debug.clear();
-  }
-
   render() {
     var inner: JSX.Element;
 

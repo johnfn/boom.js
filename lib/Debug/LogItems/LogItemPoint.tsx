@@ -1,5 +1,5 @@
 ﻿type PointState = { expanded: boolean };
-type PointProps = { point: PIXI.Point, debugLayer: DebugLayer };
+type PointProps = { point: PIXI.Point, debugSprite: Sprite };
 
 class LogItemPoint extends React.Component<PointProps, PointState> {
   // Uid
@@ -21,11 +21,7 @@ class LogItemPoint extends React.Component<PointProps, PointState> {
   }
 
   mouseOver(e: React.MouseEvent) {
-    this.props.debugLayer.drawPoint(this.props.point.x, this.props.point.y, "point");
-  }
-
-  mouseOut(e: React.MouseEvent) {
-    this.props.debugLayer.clear("point");
+    this.props.debugSprite.debug.draw(this.props.point)
   }
 
   render() {
