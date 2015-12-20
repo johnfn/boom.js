@@ -2,12 +2,12 @@
   propName: string,
   target: Sprite,
   onPropsChange: () => void,
-  debugLayer: DebugLayer,
+  debugSprite: Sprite,
   interactive: boolean
 };
 
 type InspectorProps = {
-  debugLayer: DebugLayer,
+  stage: Stage,
   target: Sprite
 };
 
@@ -15,12 +15,16 @@ class InspectorState {
 }
 
 class Inspector extends React.Component<InspectorProps, InspectorState> {
+  debugSprite: Sprite;
+
   public static instance: Inspector;
 
   constructor(props: InspectorProps) {
     super(props);
 
     this.state = { };
+    this.debugSprite = new Sprite().addTo(this.props.stage);
+    this.debugSprite.z = Number.POSITIVE_INFINITY;
 
     Inspector.instance = this;
   }
@@ -29,14 +33,14 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
     Inspector.instance.forceUpdate();
   }
 
-  public static valueToElem(value: any, propName: string, sprite: Sprite, interactive: boolean, debugLayer: DebugLayer): JSX.Element {
+  public static valueToElem(value: any, propName: string, sprite: Sprite, interactive: boolean, debugSprite: Sprite): JSX.Element {
     let node: JSX.Element;
 
     const itemArgs = {
       propName: propName,
+      debugSprite: debugSprite,
       target: sprite,
       interactive: interactive,
-      debugLayer: debugLayer,
       onPropsChange: () => Inspector.instance.innerPropChange()
     };
 
@@ -76,7 +80,7 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
     for (var prop in this.props.target) {
       let value = this.props.target[prop];
       let modifiable = this.props.target.inspectableProperties.indexOf(prop) !== -1
-      let node: JSX.Element = Inspector.valueToElem(value, prop, this.props.target, modifiable, this.props.debugLayer);
+      let node: JSX.Element = Inspector.valueToElem(value, prop, this.props.target, modifiable, this.debugSprite);
 
       if (!node) continue;
 

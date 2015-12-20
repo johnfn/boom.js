@@ -4,7 +4,6 @@
 
 interface RootState {
   target: Sprite;
-  debugLayer: DebugLayer;
 }
 
 /**
@@ -21,8 +20,7 @@ class Root extends React.Component<RootProps, RootState> {
     const stage = props.stage;
 
     this.state = {
-      target: null,
-      debugLayer: new DebugLayer(stage)
+      target: null
     };
 
     stage.events.on(SpriteEvents.MouseMove, e => this.trackMousedObject(e));
@@ -85,7 +83,7 @@ class Root extends React.Component<RootProps, RootState> {
 
     if (Game.DEBUG_MODE) {
       hierarchy = <Hierarchy root={ this } target={ this.props.stage } focus={ this.state.target } />;
-      inspector = <Inspector debugLayer={ this.state.debugLayer } target={ this.state.target } />;
+      inspector = <Inspector stage={ this.props.stage } target={ this.state.target } />;
     }
 
     log = <Log stage={ this.props.stage } root={ this } />;

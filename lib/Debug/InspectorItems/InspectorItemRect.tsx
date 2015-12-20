@@ -16,12 +16,8 @@
 
   mouseEnter() {
     if (this.rect) {
-      this.props.debugLayer.drawRect(this.rect, this.props.propName);
+      this.props.debugSprite.debug.draw(this.rect);
     }
-  }
-
-  mouseLeave() {
-    this.props.debugLayer.clear(this.props.propName);
   }
 
   render() {
@@ -37,7 +33,6 @@
     return (
       <div className="mutableProp"
         onMouseEnter={ () => this.mouseEnter() }
-        onMouseLeave={ () => this.mouseLeave() }
         >
         <span className="prop-name">{ this.props.propName }: </span>
 

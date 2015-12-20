@@ -33,66 +33,6 @@ class LogState {
   public contents: LogItemState[];
 }
 
-class DebugLayer {
-  private _layers: MagicDict<string, Sprite>;
-  private _stage: Stage;
-  private _container: Sprite;
-
-  constructor(stage: Stage) {
-    this._layers = new MagicDict<string, Sprite>();
-    this._stage = stage;
-
-    this._stage.addChild(this._container = new Sprite());
-
-    this._container.baseName = "Debug";
-    this._container.z = Number.POSITIVE_INFINITY; // force debugging info to top of screen
-  }
-
-  private getLayerForComponent<T, U>(identifier: string) {
-    let result: Sprite;
-
-    if (!this._layers.contains(identifier)) {
-      result = this._container.addChild(this._layers.put(identifier, new Sprite()));
-
-      result.baseName = identifier;
-    } else {
-      result = this._layers.get(identifier);
-    }
-
-    return result;
-  }
-
-  drawPoint<T, U>(x: number, y: number, identifier: string) {
-    let layer = this.getLayerForComponent(identifier);
-
-    layer.debug.draw(new Point(x, y));
-  }
-
-  drawRect<T, U>(rect: PIXI.Rectangle, identifier: string) {
-    let layer = this.getLayerForComponent(identifier);
-
-    layer.debug.draw(rect);
-  }
-
-  drawSprite<T, U>(sprite: Sprite, identifier: string) {
-    let layer = this.getLayerForComponent(identifier);
-
-    layer.debug.draw(sprite.bounds);
-  }
-
-  clear<T, U>(identifier: string) {
-    let layer = this.getLayerForComponent(identifier);
-
-    if (!layer) {
-      // TODO - could use fancy console logging here for sprites... IF I HAD IT
-      console.error("Um, that layer doesn't exist...");
-      return;
-    }
-
-    layer.debug.clear();
-  }
-}
-
 class Log extends React.Component<LogProps, LogState> {
   debugSprite: Sprite;
 

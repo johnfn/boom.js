@@ -34,7 +34,7 @@ class InspectorItemObject extends React.Component<InspectorItemProps, InspectorO
 
       for (var prop in expandedObject){
         let value = expandedObject[prop];
-        let node: JSX.Element = Inspector.valueToElem(value, prop, expandedObject, true, this.props.debugLayer);
+        let node: JSX.Element = Inspector.valueToElem(value, prop, expandedObject, true, this.props.debugSprite);
 
         if (!node) continue;
 

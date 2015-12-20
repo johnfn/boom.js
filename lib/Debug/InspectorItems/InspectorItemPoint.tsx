@@ -15,11 +15,7 @@
   }
 
   mouseEnter() {
-    this.props.debugLayer.drawPoint(this.point.x, this.point.y, this.props.propName);
-  }
-
-  mouseLeave() {
-    this.props.debugLayer.clear(this.props.propName);
+    this.props.debugSprite.debug.draw(this.point);
   }
 
   render() {
@@ -29,7 +25,6 @@
     return (
       <div className="mutableProp"
         onMouseEnter={ () => this.mouseEnter() }
-        onMouseLeave={ () => this.mouseLeave() }
         >
         <span className="prop-name">{ this.props.propName }: </span>
 
