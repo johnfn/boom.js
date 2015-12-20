@@ -236,13 +236,13 @@ class Log extends React.Component<LogProps, LogState> {
     }
   }
 
-  public loggableToHTML(content: Loggable, debugLayer: DebugLayer): JSX.Element {
+  public loggableToHTML(content: Loggable): JSX.Element {
     if (typeof content === "string") {
       return <LogItemString content={ content } />;
     } else if (typeof content === "number") {
       return <span> { content.toString() } </span>;
     } else if (content instanceof Array) {
-      var items = content.map(o => this.loggableToHTML(o as Loggable, debugLayer));
+      var items = content.map(o => this.loggableToHTML(o as Loggable));
 
       return <span> [{ items }] </span>
     } else if (content instanceof PIXI.Rectangle) {
@@ -252,11 +252,11 @@ class Log extends React.Component<LogProps, LogState> {
     } else if (content instanceof PIXI.Texture) {
       return <LogItemTexture texture={ content } />;
     } else if (content instanceof Sprite) {
-      return <LogItemSprite sprite={ content } root={ this.props.root } debugLayer={ debugLayer } />;
+      return <LogItemSprite sprite={ content } root={ this.props.root } debugSprite={ this.debugSprite } />;
     } else if (typeof content === "object") {
       // Note - this check should definitely come last.
 
-      return <LogItemObject object={ content } debugLayer={ debugLayer } root={ this.props.root } />;
+      return <LogItemObject object={ content } root={ this.props.root } />;
     }
 
     return <span>???????{ content } </span>
@@ -269,7 +269,7 @@ class Log extends React.Component<LogProps, LogState> {
         className="log-entry">
         <span className="number less-important">{ index } </span>
         <span className={ item.logItemType == LogItemType.Normal ? "log-normal" : "log-error" }>
-          { item.content.map(content => this.loggableToHTML(content, this.props.debugLayer)) }
+          { item.content.map(content => this.loggableToHTML(content)) }
           <span className="count">
             { item.count > 1 ? `(${item.count})` : `` }
           </span>

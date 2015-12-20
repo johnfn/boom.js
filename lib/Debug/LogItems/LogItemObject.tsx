@@ -3,7 +3,6 @@
 type ObjectState = { expanded: boolean };
 type ObjectProps = {
   object: Obj,
-  debugLayer: DebugLayer,
   root: Root
 };
 

@@ -1,5 +1,5 @@
 ﻿type SpriteState = { expanded: boolean };
-type SpriteProps = { sprite: Sprite, debugLayer: DebugLayer, root: Root };
+type SpriteProps = { sprite: Sprite, debugSprite: Sprite, root: Root };
 
 class SpriteCanvas extends Game {
   constructor(sprite: Sprite, element: HTMLElement) {
@@ -41,11 +41,7 @@ class LogItemSprite extends React.Component<SpriteProps, SpriteState> {
   }
 
   showSpriteDebugRectangle(): void {
-    this.props.debugLayer.drawSprite(this.props.sprite, "logsprite");
-  }
-
-  hideSpriteDebugRectangle(): void {
-    this.props.debugLayer.clear("logsprite");
+    this.props.debugSprite.debug.draw(this.props.sprite);
   }
 
   setAsTarget(): void {
@@ -55,7 +51,6 @@ class LogItemSprite extends React.Component<SpriteProps, SpriteState> {
   render() {
     return <span
       onMouseOver={ () => this.showSpriteDebugRectangle() }
-      onMouseOut={ () => this.hideSpriteDebugRectangle() }
       onMouseDown={ () => this.setAsTarget() }
       > </span>;
   }
