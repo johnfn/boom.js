@@ -6,10 +6,10 @@
  *
  */
 class Game {
+  public  stage        : Stage;
+
   private root         : React.Component<any, {}>;
-  private debug        : Debug;
   private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-  public stage         : Stage;
 
   private static _ticks: number = 0;
 
@@ -44,7 +44,6 @@ class Game {
     this.stage = new Stage(width, height);
     Globals.initialize(this.stage, this.fixedStage);
 
-    this.debug = new Debug();
     this.root = React.render(<Root stage={ this.stage } />, element);
 
     this.stage.setRoot(this.root as any);

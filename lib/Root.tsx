@@ -12,14 +12,14 @@ interface RootState {
  * Root is the react component at the base of the HTML hierarchy.
  */
 class Root extends React.Component<RootProps, RootState> {
+  public transformWidget = new TransformWidget();
+
   constructor(props: RootProps) {
     super(props);
 
-    let debugLayer = new DebugLayer(this.props.stage);
-
     this.state = {
       target: null,
-      debugLayer: debugLayer
+      debugLayer: new DebugLayer(this.props.stage)
     };
   }
 
@@ -30,7 +30,16 @@ class Root extends React.Component<RootProps, RootState> {
       return state;
     });
 
-    Debug.instance.events.emit(DebugEvents.ChangeTarget, target);
+    if (target == null) {
+      if (this.transformWidget.parent) {
+        this.transformWidget.parent.removeChild(this.transformWidget);
+      }
+    } else {
+      target.addChild(this.transformWidget);
+
+      this.transformWidget.x = target.width / 2;
+      this.transformWidget.y = target.height / 2;
+    }
   }
 
   render() {
