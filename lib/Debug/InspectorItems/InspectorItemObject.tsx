@@ -13,7 +13,7 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
 
     this.state = {
       target: props.target,
-      expanded: false
+      expanded: !!this.props.open
     };
   }
 
