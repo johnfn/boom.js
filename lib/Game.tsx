@@ -6,26 +6,32 @@
  *
  */
 class Game {
+  private root         : React.Component<any, {}>;
+  private debug        : Debug;
+  private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
+  public stage         : Stage;
+
+  private static _ticks: number = 0;
+
+  /**
+   * Turns on a bunch of debugging-only features.
+   */
+  public static DEBUG_MODE: boolean = false;
+
+
   private _width: number;
   get width(): number { return this._width; }
 
   private _height: number;
   get height(): number { return this._height; }
 
-  private root: React.Component<any, {}>;
-  private debug: Debug;
-  private _renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-
-  private static _ticks: number = 0;
-
-  public stage: Stage;
 
   /**
    *  Just a convenient place to attach things so they don't move when the camera does.
    */
   public fixedStage: Sprite;
 
-  constructor(width: number, height: number, element: HTMLElement, backgroundColor: number = 0x000000, debug: boolean = false) {
+  constructor(width: number, height: number, element: HTMLElement, backgroundColor: number = 0x000000, debugging: boolean = false) {
     this._width = width;
     this._height = height;
 
@@ -39,7 +45,7 @@ class Game {
     Globals.initialize(this.stage, this.fixedStage);
 
     this.debug = new Debug();
-    this.root = React.render(<Root stage={ this.stage } debug={ debug } />, element);
+    this.root = React.render(<Root stage={ this.stage } />, element);
 
     this.stage.setRoot(this.root as any);
 

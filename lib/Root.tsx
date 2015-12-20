@@ -1,6 +1,5 @@
 ﻿interface RootProps {
   stage: Stage;
-  debug?: boolean;
 }
 
 interface RootState {
@@ -39,14 +38,12 @@ class Root extends React.Component<RootProps, RootState> {
         inspector: JSX.Element = null,
         log      : JSX.Element = null;
 
-    if (this.props.debug && Debug.DEBUG_MODE) {
+    if (Game.DEBUG_MODE) {
       hierarchy = <Hierarchy root={ this } target={ this.props.stage } debugLayer={ this.state.debugLayer } focus={ this.state.target } />;
       inspector = <Inspector debugLayer={ this.state.debugLayer } target={ this.state.target } />;
     }
 
-    if (this.props.debug) {
-      log = <Log stage={ this.props.stage } debugLayer={ this.state.debugLayer } root={ this } />;
-    }
+    log = <Log stage={ this.props.stage } debugLayer={ this.state.debugLayer } root={ this } />;
 
     return (
       <div>

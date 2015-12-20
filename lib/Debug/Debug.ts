@@ -1,6 +1,4 @@
-﻿/// <reference path="../../mixins.d.ts"/>
-
-enum DebugEvents {
+﻿enum DebugEvents {
   ChangeTarget
 }
 
@@ -16,7 +14,7 @@ class Debug {
     this.transformWidget = new TransformWidget();
     Debug.instance = this;
 
-    if (Debug.DEBUG_MODE) {
+    if (Game.DEBUG_MODE) {
       this.configureEvents();
     }
   }
@@ -35,11 +33,6 @@ class Debug {
       }
     });
   }
-
-  /**
-   * Are we currently debugging, or not? Turns on a bunch of debugging-only features.
-   */
-  public static DEBUG_MODE: boolean = false;
 
   /**
    * Get the current Sprite that the debug mode is focused on.

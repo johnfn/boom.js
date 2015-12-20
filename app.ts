@@ -205,7 +205,7 @@ class MyGame extends Game {
 }
 
 Util.RunOnStart(() => {
-  Debug.DEBUG_MODE = true;
+  Game.DEBUG_MODE = true;
 
   new MyGame();
 });

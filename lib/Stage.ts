@@ -66,7 +66,7 @@
       return;
     }
 
-    if (Debug.DEBUG_MODE) {
+    if (Game.DEBUG_MODE) {
       let newMousedObject = this.findTopmostSpriteAt(point, true);
 
       if (newMousedObject != this.currentMousedObject) {
