@@ -16,4 +16,6 @@ Rationale: Stop reading `const` as "constant value." Start reading it as "single
 
 "Single assignment" is pretty useful once you get used to it.
 
-(And, obviously, never use `var`! The only case I've had to use it is when TypeScript refuses to capture a let/const in a function in a loop but when I know that it is fine - but they should be fixing that case in 1.8.)
+#### Never use `var`
+
+The only case I've found that it's necessary is when TypeScript refuses to capture a let/const in a function in a loop but when I know that it is fine - but they should be fixing that case in 1.8.
