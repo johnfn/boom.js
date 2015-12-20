@@ -3,7 +3,7 @@
  *
  * Put everything that needs to be loaded in the constructor. When loading is finished,
  * loadingComplete() will be called.
- * 
+ *
  */
 class Game {
   private _width: number;
@@ -35,12 +35,12 @@ class Game {
 
     this.fixedStage = new Sprite();
 
-    this.stage = new Stage(width, height, debug);
+    this.stage = new Stage(width, height);
     Globals.initialize(this.stage, this.fixedStage);
 
     this.debug = new Debug();
     this.root = React.render(<Root stage={ this.stage } debug={ debug } />, element);
-    
+
     this.stage.setRoot(this.root as any);
 
     const canvasContainer = React.findDOMNode(this.root).getElementsByClassName("content").item(0) as HTMLElement;
@@ -109,7 +109,7 @@ class Game {
 
     Globals.camera.update();
 
-    this._renderer.render(this.fixedStage.displayObject); 
+    this._renderer.render(this.fixedStage.displayObject);
 
     requestAnimationFrame(this.update.bind(this));
   }

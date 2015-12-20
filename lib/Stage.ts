@@ -1,16 +1,14 @@
-﻿enum SpriteEvents {
-  AddChild,
-  MouseDown,
-  MouseUp,
-  ChangeParent
-}
-
-class Stage extends Sprite {
+﻿class Stage extends Sprite {
   public baseName: string = "Stage";
-  public root: Root;
+  public root    : Root;
 
-  private _width: number;
+  private _width : number;
   private _height: number;
+
+  /**
+    Maps DisplayObjects to Sprites associated to those DisplayObjects.
+  */
+  public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
 
   /**
    * The width of the Stage. (readonly)
@@ -25,14 +23,9 @@ class Stage extends Sprite {
   set height(val: number) { this._height = val; }
 
   /**
-    Maps DisplayObjects to Sprites associated to those DisplayObjects.
-  */
-  public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
-
-  /**
    * Stage is the Sprite at the top of the display hierarchy.
    */
-  constructor(width: number, height: number, debug: boolean = false) {
+  constructor(width: number, height: number) {
     super();
 
     this.width  = width;
@@ -41,10 +34,7 @@ class Stage extends Sprite {
     this.displayObject.hitArea = new PIXI.Rectangle(0, 0, width, height);
     this.displayObject.interactive = true;
 
-    if (debug) {
-      this.displayObject.on('mousedown', this.mousedown, this);
-      // this.displayObject.on('mousemove', this.mousemove, this);
-    }
+    this.events.on(SpriteEvents.MouseDown, (e: PIXI.interaction.InteractionEvent) => this.mousedown(e));
   }
 
   setRoot(root: Root) {

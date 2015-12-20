@@ -15,10 +15,9 @@
 
     <script src="external/pixi.js"></script>
     <script src="external/pixi.multistyletext.js"> </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="source-map.js"></script>
-    <script src="./lib/tiledjson.js"></script>
+    <script src="external/react-with-addons.js"></script>
+    <script src="external/jquery-2.1.4.min.js"></script>
+    <script src="external/source-map.js"></script>
     <script>
         window.sourceMaps = {};
 
@@ -40,7 +39,7 @@
                 try {
                     window.sourceMaps[path] = JSON.parse(client.responseText);
                 } catch (e) {
-                    
+
                 }
             }
             client.send();
@@ -63,7 +62,7 @@
     </div>
 
     <div id="itty-test">
-        
+
     </div>
 
     <script>

@@ -1,5 +1,12 @@
 ﻿/// <reference path="./datastructures.d.ts"/>
 
+enum SpriteEvents {
+  AddChild,
+  MouseDown,
+  MouseUp,
+  ChangeParent
+}
+
 class Sprite {
   /**
     Allow traversal of our own keys. Useful for metaprogramming.
@@ -157,16 +164,16 @@ class Sprite {
 
   /**
    * Bounding rectangle for this Sprite.
-   * 
+   *
    * TODO: This should really be a Vector or something, as the x, y properties are unused.
-   * @returns {} 
+   * @returns {}
    */
   get bounds(): PIXI.Rectangle { return this.displayObject.getBounds(); }
 
   /**
    * Rectangle for this sprite (x, y, width and height of Sprite).
-   * 
-   * @returns {} 
+   *
+   * @returns {}
    */
   get rect(): PIXI.Rectangle {
     return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
@@ -176,7 +183,7 @@ class Sprite {
 
   /**
    * Get the screen-space x and y coordinates of this object (not relative to anything).
-   * @returns {} 
+   * @returns {}
    */
   get globalXY(): Point {
     if (!this.parent) {
@@ -201,7 +208,7 @@ class Sprite {
 
   /**
    * Get bounds of this Sprite in terms of global coordinates.
-   * @returns {} 
+   * @returns {}
    */
   get globalBounds(): PIXI.Rectangle {
     const globalxy = this.globalXY
@@ -212,7 +219,7 @@ class Sprite {
 
   /**
    * Gets all children of this Sprite.
-   * @returns {} 
+   * @returns {}
    */
   public get children() {
     return new MagicArray(this.displayObject.children)
@@ -251,8 +258,12 @@ class Sprite {
     this.displayObject = new PIXI.Sprite(this.texture);
     Stage.doToSprite.put(this.displayObject, this);
 
+    this._setUpEvents();
+
     this.x = 0;
     this.y = 0;
+
+    // this is the graphics for the debug object.
 
     let _graphics = this.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
     this.displayObject.interactive = true;
@@ -264,6 +275,13 @@ class Sprite {
 
     // Removed in the main game loop.
     Sprites.add(this);
+  }
+
+  private _setUpEvents(): void {
+    this.displayObject.interactive = true;
+
+    this.displayObject.on('mousedown', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseDown, e), this);
+    this.displayObject.on('mouseup',   (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseUp, e), this);
   }
 
   private initComponents(g: PIXI.Graphics): void {
@@ -288,9 +306,9 @@ class Sprite {
 
   private sortDepths(): void {
     this.displayObject.children.sort((a, b) => {
-      /* 
+      /*
         Our children are either other Sprites, or PIXI.Graphics.
-        PIXI.Graphics won't have a z index, so we just put them as high as 
+        PIXI.Graphics won't have a z index, so we just put them as high as
         possible.
       */
 
@@ -314,7 +332,7 @@ class Sprite {
   /**
    * Sets z for those of us who like chainable interfaces. Higher numbers are on top
    * of lower numbers.
-   * 
+   *
    * @param z
    */
   public setZ(z: number): this {
@@ -338,7 +356,7 @@ class Sprite {
 
   /**
    * Adds a child to this Sprite
-   * 
+   *
    * TODO: returning the child seems incorrect here.
 
    * @param child
@@ -355,7 +373,7 @@ class Sprite {
 
   public addDO(child: PIXI.DisplayObject): this {
     this.displayObject.addChild(child);
-      
+
     return this;
   }
 
@@ -405,7 +423,7 @@ class Sprite {
 
     return result;
   }
-  
+
   public findTopmostSpriteAt(point: PIXI.Point, interactable: boolean): Sprite {
     var sprites = this.getAllSprites();
 

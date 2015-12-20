@@ -194,22 +194,18 @@ class MyGame extends Game {
 
     Globals.stage.addChild(tmp);
 
-    let someText = new TextField("This is a text test! ")
-
-    Globals.stage.addChild(someText);
-
     Globals.stage.addChild(new EnemySpawner(Globals.stage));
 
     new FPSCounter();
 
-    // const test = new TextField("This is [a test](red)xand [this should be blue](blue)")
+    const test = new TextField("This is [a test](red)xand [this should be blue](blue)")
 
-    // Globals.stage.addChild(test);
+    Globals.stage.addChild(test);
   }
 }
 
 Util.RunOnStart(() => {
-  Debug.DEBUG_MODE = false;
+  Debug.DEBUG_MODE = true;
 
   new MyGame();
 });

@@ -56,7 +56,6 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
 
     return (
       <div>
-        { /* test */ }
         <a href="#"
            onClick={ () => this.click() }
            className={ this.props.target === this.props.root.state.target ? "target-element" : null }>
@@ -64,7 +63,7 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
         </a>
         <span
           onClick={ () => this.toggle() }
-          > { this.props.target.children.length > 0 ? (this.state.collapsed ? "[+]" : "[-]") : "" }
+          > { this.props.target.children.length > 0 ? (this.state.collapsed ? "[" + this.props.target.children.length  + "+]" : "[-]") : "" }
         </span>
         { subNodes }
       </div>);

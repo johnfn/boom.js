@@ -1,4 +1,6 @@
 ﻿/// <reference path="ExternalTypings/external.d.ts"/>
+
+/// <reference path="DataStructures/defs.d.ts"/>
 /// <reference path="Components/components.d.ts"/>
 
 /// <reference path="TiledMapParser.ts"/>
