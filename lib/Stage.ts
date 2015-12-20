@@ -5,11 +5,6 @@
   private _height: number;
 
   /**
-    Maps DisplayObjects to Sprites associated to those DisplayObjects.
-  */
-  public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
-
-  /**
    * The width of the Stage. (readonly)
    */
   get width(): number { return this._width; }

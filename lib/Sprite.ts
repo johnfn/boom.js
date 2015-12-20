@@ -40,7 +40,7 @@ class Sprite {
 
   /**
    * This just maps sprite names to number of that type of sprite that we have
-   * seen. Only really used for _derivedObjectCount.
+   * seen. Only really used for name.
    */
   private static _derivedObjectCount: { [key: string]: number; } = {};
 
@@ -52,6 +52,11 @@ class Sprite {
   public texture: PIXI.Texture;
 
   public tags: string[] = [];
+
+  /**
+    Maps DisplayObjects to Sprites associated to those DisplayObjects.
+  */
+  public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
 
   protected _z: number = 0;
 
