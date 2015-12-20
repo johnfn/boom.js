@@ -7,7 +7,7 @@ type EventCB = (...args: any[]) => void;
 class Events<T> {
   public metaEvents: Events<MetaEvents> = null;
 
-  private _events = new MagicDict<T, MagicArray<EventCB>>(() => new MagicArray<EventCB>());
+  private _events    = new MagicDict<T, MagicArray<EventCB>>(() => new MagicArray<EventCB>());
   private _numEvents = 0;
 
   constructor(dispatchMetaEvents: boolean = false) {

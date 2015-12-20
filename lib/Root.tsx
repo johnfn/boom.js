@@ -22,8 +22,9 @@ class DebugSprite extends Sprite {
  * Root is the react component at the base of the HTML hierarchy.
  */
 class Root extends React.Component<RootProps, RootState> {
-  private _currentMousedObject: Sprite;
-  private _stageDebug         : Sprite;
+  private _currentMousedObject : Sprite;
+  private _currentClickedObject: Sprite;
+  private _stageDebug          : Sprite;
 
   public transformWidget = new TransformWidget();
 
@@ -68,6 +69,14 @@ class Root extends React.Component<RootProps, RootState> {
     }
   }
 
+  /**
+   * We bind this function inline so that we can use it as an event and
+   * clean it up later.
+   */
+  debugDraw = (target: Sprite) => {
+    this._stageDebug.debug.draw(target);
+  }
+
   setTarget(target: Sprite) {
     this.setState(state => {
       state.target = target;
@@ -85,11 +94,15 @@ class Root extends React.Component<RootProps, RootState> {
       this.transformWidget.x = target.width / 2;
       this.transformWidget.y = target.height / 2;
 
-      this._stageDebug.debug.draw(target);
+      this.debugDraw(target);
 
-      this.state.target.events.on(SpriteEvents.Move, () => {
-        this._stageDebug.debug.draw(target);
-      });
+      this.state.target.events.on(SpriteEvents.Move, this.debugDraw);
+
+      if (this._currentClickedObject) {
+        this._currentClickedObject.events.off(SpriteEvents.Move, this.debugDraw);
+      }
+
+      this._currentClickedObject = target;
     }
   }
 
