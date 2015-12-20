@@ -18,12 +18,20 @@ class Root extends React.Component<RootProps, RootState> {
   constructor(props: RootProps) {
     super(props);
 
+    const stage = props.stage;
+
     this.state = {
       target: null,
-      debugLayer: new DebugLayer(this.props.stage)
+      debugLayer: new DebugLayer(stage)
     };
 
-    this.props.stage.events.on(SpriteEvents.MouseMove, e => this.trackMousedObject(e));
+    stage.events.on(SpriteEvents.MouseMove, e => this.trackMousedObject(e));
+    stage.events.on(SpriteEvents.MouseDown, e => {
+      const point  = new Point(e.data.global.x, e.data.global.y);
+      const target = stage.findTopmostSpriteAt(point, true);
+
+      this.setTarget(target);
+    })
   }
 
   trackMousedObject(e: PIXI.interaction.InteractionEvent): void {
@@ -50,8 +58,6 @@ class Root extends React.Component<RootProps, RootState> {
   }
 
   setTarget(target: Sprite) {
-    console.log("Yo")
-
     this.setState(state => {
       state.target = target;
 

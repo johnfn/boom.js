@@ -1,6 +1,5 @@
 ﻿class Stage extends Sprite {
   public baseName: string = "Stage";
-  public root    : Root;
 
   private _width : number;
   private _height: number;
@@ -33,12 +32,6 @@
 
     this.displayObject.hitArea = new PIXI.Rectangle(0, 0, width, height);
     this.displayObject.interactive = true;
-
-    this.events.on(SpriteEvents.MouseDown, (e: PIXI.interaction.InteractionEvent) => this.mousedown(e));
-  }
-
-  setRoot(root: Root) {
-    this.root = root;
   }
 
   findSpritesAt(point: Point): Sprite[] {
@@ -48,13 +41,6 @@
       return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
              point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
     });
-  }
-
-  private mousedown(e: PIXI.interaction.InteractionEvent): void {
-    let point  = new Point(e.data.global.x, e.data.global.y);
-    let target = this.findTopmostSpriteAt(point, true);
-
-    this.root.setTarget(target);
   }
 
   public removeChild(sprite: Sprite) {

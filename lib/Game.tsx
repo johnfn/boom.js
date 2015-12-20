@@ -41,8 +41,6 @@ class Game {
 
     this.root       = React.render(<Root stage={ this.stage } />, element);
 
-    this.stage.setRoot(this.root as any);
-
     const canvasContainer = React.findDOMNode(this.root).getElementsByClassName("content").item(0) as HTMLElement;
     canvasContainer.appendChild(this._renderer.view)
 
