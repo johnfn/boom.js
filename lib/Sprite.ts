@@ -5,6 +5,17 @@ enum SpriteEvents {
   MouseDown,
   MouseUp,
   MouseMove,
+
+  /**
+   * Sprite changes position.
+   * @type {[type]}
+   */
+  Move,
+
+  /**
+   * Sprite changes parent.
+   * @type {[type]}
+   */
   ChangeParent
 }
 
@@ -117,10 +128,18 @@ class Sprite {
   }
 
   get x(): number { return this.displayObject.position.x; }
-  set x(val: number) { this.displayObject.position.x = val; }
+  set x(val: number) {
+    this.displayObject.position.x = val;
+
+    this.events.emit(SpriteEvents.Move);
+  }
 
   get y(): number { return this.displayObject.y; }
-  set y(val: number) { this.displayObject.y = val; }
+  set y(val: number) {
+    this.displayObject.y = val;
+
+    this.events.emit(SpriteEvents.Move);
+  }
 
   get parent(): Sprite {
     if (this.displayObject.parent) {
@@ -436,9 +455,7 @@ class Sprite {
   }
 
   public findTopmostSpriteAt(point: PIXI.Point, interactable: boolean): Sprite {
-    var sprites = this.getAllSprites();
-
-    return sprites.filter(o => {
+    return this.getAllSprites().filter(o => {
       if (interactable && !o.inspectable) return false;
 
       return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
@@ -469,10 +486,11 @@ class Sprite {
    * Actually destroys the sprite. (I don't recommend using this method
    * unless you know what you're doing.)
    */
-  public actuallyDestroy(): void {
+  public _actuallyDestroy(): void {
     this.parent.displayObject.removeChild(this.displayObject);
 
     this.displayObject = null;
+    this.events = null;
   }
 
   public contains(p: Point): boolean {

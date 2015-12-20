@@ -10,7 +10,7 @@ interface RootState {
  * A sprite purely used for rendering debugging graphics.
  */
 class DebugSprite extends Sprite {
-  constructor(): void {
+  constructor() {
     super();
 
     this.z           = Number.POSITIVE_INFINITY;
@@ -86,6 +86,10 @@ class Root extends React.Component<RootProps, RootState> {
       this.transformWidget.y = target.height / 2;
 
       this._stageDebug.debug.draw(target);
+
+      this.state.target.events.on(SpriteEvents.Move, () => {
+        this._stageDebug.debug.draw(target);
+      });
     }
   }
 

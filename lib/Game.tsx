@@ -100,7 +100,7 @@ class Game {
       }
 
       Sprites.remove(sprite);
-      sprite.actuallyDestroy();
+      sprite._actuallyDestroy();
     }
 
     Globals._destroyList = [];
