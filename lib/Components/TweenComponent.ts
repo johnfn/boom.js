@@ -4,7 +4,7 @@ interface TweenEvent {
   (tweenProps: Tween): void;
 }
 
-interface Tween{
+interface Tween {
   /**
    * Name of the tween.
    */
@@ -41,7 +41,7 @@ class TweenComponent extends Component<Sprite> {
     this._tweens = {};
   }
 
-  update(): void {
+  public update(): void {
     const tweenNames = Object.keys(this._tweens);
     const tweensToDelete: string[] = [];
 
@@ -65,18 +65,18 @@ class TweenComponent extends Component<Sprite> {
 
   /**
    * Add tween to tween list.
-   * 
+   *
    * @param name
    * @param duration
    * @param onTick
    */
-  addTween(name: string, duration: number, onTick: TweenEvent) {
+  public addTween(name: string, duration: number, onTick: TweenEvent): void {
     this._tweens[name] = {
+      currentFrame: 0,
       name,
       duration,
       onTick,
       percentage: 0,
-      currentFrame: 0,
     };
   }
 }

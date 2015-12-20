@@ -21,33 +21,26 @@ enum SpriteEvents {
 
 class Sprite {
   /**
-    Allow traversal of our own keys. Useful for metaprogramming.
-  */
+   * Allow traversal of our own keys. Useful for metaprogramming.
+   */
   [key: string]: any;
 
   /**
-   * The first part of this sprite's name.
+   * Maps DisplayObjects to Sprites associated to those DisplayObjects.
    */
-  public baseName: string;
+  public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
+
+  public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};
+
+  public static defaultInspectableProperties = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
 
   /**
-    Name for this sprite. Only used for debugging.
-  */
-  public get name(): string { return `${this.baseName} (${this._objectNumber})`; }
-
-  public events = new Events<SpriteEvents>();
-
-  /**
-    PIXI-backed Display Object for this Sprite.
-  */
-  public displayObject: PIXI.Sprite;
-
-  /**
-    Whether this Sprite will show up in the Inspector.
-  */
-  public inspectable: boolean = true;
-
-  private _destroyed: boolean = false;
+   * Mapping of class names to inspectable properties of that class.
+   *
+   * TODO: Should probably make a whole property type so that this seems less
+   * odd.
+   */
+  public static inspectableProperties: { [key: string]: string[]; } = {};
 
   /**
    * This just maps sprite names to number of that type of sprite that we have
@@ -55,69 +48,92 @@ class Sprite {
    */
   private static _derivedObjectCount: { [key: string]: number; } = {};
 
+  //
+  //          COMPONENTS
+  //
+
   /**
-   * This is the _objectNumber-th Sprite-subclass created.
+   * Physics component. Used for collisions and movement.
+   *
+   * @type {PhysicsComponent}
    */
-  private _objectNumber: number;
+  public physics: PhysicsComponent;
+
+  /**
+   * Debug draw component. Used to draw rays, lines etc for debugging.
+   */
+  public debug: DebugDraw;
+
+  /**
+   * Tween component. Useful for animations.
+   */
+  public tween: TweenComponent;
+
+  /**
+   * The first part of this sprite's name.
+   */
+  public baseName: string;
+
+  public components: Component<Sprite>[];
+
+  /**
+   * Name for this sprite. Only used for debugging.
+   */
+  public get name(): string { return `${this.baseName} (${this._objectNumber})`; }
+
+  public events = new Events<SpriteEvents>();
+
+  /**
+   * PIXI-backed Display Object for this Sprite.
+   */
+  public displayObject: PIXI.Sprite;
+
+  /**
+   * Whether this Sprite will show up in the Inspector.
+   */
+  public inspectable: boolean = true;
 
   public texture: PIXI.Texture;
 
   public tags: string[] = [];
 
+  private _z: number = 0;
+
+  private _destroyed: boolean = false;
+
   /**
-    Maps DisplayObjects to Sprites associated to those DisplayObjects.
-  */
-  public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
-
-  protected _z: number = 0;
-
-  public components: Component<Sprite>[];
-
-  public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};
+   * This is the _objectNumber-th Sprite-subclass created.
+   */
+  private _objectNumber: number;
 
   private _hash: string;
 
+  private _globalXYCache: Point = undefined;
+
   public get hash(): string {
-    if (this._hash) return this._hash;
-    return this._hash = "" + Math.random();
+    if (this._hash) { return this._hash; }
+    return this._hash = '' + Math.random();
   }
-
-  physics: PhysicsComponent;
-
-  /**
-   * Debug draw object. Useful to draw lines and shapes for debugging.
-   */
-  public debug: DebugDraw;
-
-  /**
-   * Tween object. Useful for animations.
-   */
-  public tween: TweenComponent;
-
-  private static sprites: { [key: string]: Group<Sprite> };
 
   public get textureUrl(): string {
     return this.texture.baseTexture.imageUrl;
   }
 
-  public static defaultInspectableProperties = ["x", "y", "width", "height", "rotation", "alpha"];
-
-  public static inspectableProperties: { [key: string]: string[]; } = {};
   get inspectableProperties(): string[] {
-    var className = Util.GetClassName(this);
+    const className = Util.GetClassName(this);
 
     Sprite.inspectableProperties[className] = Sprite.inspectableProperties[className] || Sprite.defaultInspectableProperties.slice(0);
     return Sprite.inspectableProperties[className];
   }
 
-  public addInspectableProperty(className: string, propName: string) {
+  public addInspectableProperty(className: string, propName: string): void {
     Sprite.inspectableProperties[className] = Sprite.inspectableProperties[className] || Sprite.defaultInspectableProperties.slice(0);
     Sprite.inspectableProperties[className].push(propName);
   }
 
   /**
-    * Z-ordering. Higher numbers are on top of lower numbers.
-    */
+   * Z-ordering. Higher numbers are on top of lower numbers.
+   */
   get z(): number { return this._z; }
   set z(val: number) {
     this._z = val;
@@ -145,22 +161,22 @@ class Sprite {
     if (this.displayObject.parent) {
       return Stage.doToSprite.get(this.displayObject.parent);
     } else {
-      return null;
+      return undefined;
     }
   }
 
   /**
-    Position of this sprite relative to its parent.
-  */
+   * Position of this sprite relative to its parent.
+   */
   get position(): Point {
     return new Point(this.displayObject.position.x, this.displayObject.position.y);
   }
 
   /**
-    Position of this sprite relative to the world.
-  */
+   * Position of this sprite relative to the world.
+   */
   get absolutePosition(): Point {
-    if (this.parent == null) {
+    if (this.parent === undefined) {
       return this.position;
     }
 
@@ -204,8 +220,6 @@ class Sprite {
     return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
   }
 
-  private _globalXYCache: Point = undefined;
-
   /**
    * Get the screen-space x and y coordinates of this object (not relative to anything).
    * @returns {}
@@ -246,7 +260,7 @@ class Sprite {
    * Gets all children of this Sprite.
    * @returns {}
    */
-  public get children() {
+  public get children(): MagicArray<Sprite> {
     return new MagicArray(this.displayObject.children)
       // The reason we filter by .contains here is because the children of displayObject
       // could be things that are not official Sprites. A good example is PIXI.Graphics
@@ -259,24 +273,18 @@ class Sprite {
     return 1 + Util.Sum(this.children.map(o => o.totalNumSubChildren));
   }
 
-  /**
-   * In the case where Sprites are created before the Stage is created, we enqueue them here
-   * so we can add them to the Stage when it is finally created.
-   */
-  private static enqueuedSprites = new MagicArray<Sprite>();
-
-  constructor(texture: PIXI.Texture | string = null) {
+  constructor(texture: PIXI.Texture | string = undefined) {
     let className = Util.GetClassName(this);
 
-    if (!this.baseName) this.baseName = Util.GetClassName(this);
+    if (!this.baseName) { this.baseName = Util.GetClassName(this); }
 
     this._objectNumber = Sprite._derivedObjectCount[className] = (Sprite._derivedObjectCount[className] || 0) + 1;
 
     if (texture instanceof PIXI.Texture) {
       this.texture = texture;
-    } else if (typeof texture === "string") {
+    } else if (typeof texture === 'string') {
       this.texture = PIXI.Texture.fromImage(texture);
-    } else if (texture === null) {
+    } else if (texture === undefined) {
       this.texture = PIXI.Texture.EMPTY;
     }
 
@@ -296,56 +304,10 @@ class Sprite {
 
     this.components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
 
-    this.initComponents(_graphics);
+    this._initComponents(_graphics);
 
     // Removed in the main game loop.
     Sprites.add(this);
-  }
-
-  private _setUpEvents(): void {
-    this.displayObject.interactive = true;
-
-    this.displayObject.on('mousedown', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseDown, e), this);
-    this.displayObject.on('mousemove', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseMove, e), this);
-    this.displayObject.on('mouseup',   (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseUp, e), this);
-  }
-
-  private initComponents(g: PIXI.Graphics): void {
-    this.components = this.components.map(c => Util.Clone(c));
-
-    // Add default sprite components
-    // TODO: Should probably just decorate Sprite
-
-    this.components.push(new DebugDraw(this, g));
-    this.components.push(new TweenComponent())
-
-    for (const c of this.components) {
-      // Make easy-to-access references to common components.
-
-      if (c instanceof PhysicsComponent) this.physics = c;
-      if (c instanceof DebugDraw)        this.debug   = c;
-      if (c instanceof TweenComponent)   this.tween   = c;
-
-      c.init(this);
-    }
-  }
-
-  private sortDepths(): void {
-    this.displayObject.children.sort((a, b) => {
-      /*
-        Our children are either other Sprites, or PIXI.Graphics.
-        PIXI.Graphics won't have a z index, so we just put them as high as
-        possible.
-      */
-
-      let spriteForA = Stage.doToSprite.get(a);
-      let spriteForB = Stage.doToSprite.get(b);
-
-      let aZ = spriteForA ? spriteForA.z : Number.POSITIVE_INFINITY;
-      let bZ = spriteForB ? spriteForB.z : Number.POSITIVE_INFINITY;
-
-      return aZ - bZ;
-    });
   }
 
   public moveTo(x: number, y: number): this {
@@ -384,7 +346,7 @@ class Sprite {
    * Adds a child to this Sprite
    *
    * TODO: returning the child seems incorrect here.
-
+   *
    * @param child
    */
   public addChild<T extends Sprite>(child: T): T {
@@ -407,14 +369,12 @@ class Sprite {
     return this;
   }
 
-  public removeChild(child: Sprite) {
+  public removeChild(child: Sprite): void {
     this.displayObject.removeChild(child.displayObject);
   }
 
   public clone(): Sprite {
-    var newSprite = new Sprite(this.texture);
-
-    return newSprite;
+    return new Sprite(this.texture);
   }
 
   public update(): void {
@@ -438,25 +398,9 @@ class Sprite {
     return result;
   }
 
-  private getAllSpritesHelper(root: Sprite): MagicArray<Sprite> {
-    let result = new MagicArray<Sprite>();
-
-    result.push(root);
-
-    for (let child of root.children) {
-      let innerSprites = this.getAllSpritesHelper(child);
-
-      for (let inner of innerSprites) {
-        result.push(inner);
-      }
-    }
-
-    return result;
-  }
-
   public findTopmostSpriteAt(point: PIXI.Point, interactable: boolean): Sprite {
     return this.getAllSprites().filter(o => {
-      if (interactable && !o.inspectable) return false;
+      if (interactable && !o.inspectable) { return false; }
 
       return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
              point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
@@ -473,7 +417,7 @@ class Sprite {
     // we would run into problems.
 
     if (this._destroyed) {
-      console.error("Sprite destroyed multiple times. THIS IS REALLY BAD PPL.")
+      console.error('Sprite destroyed multiple times. THIS IS REALLY BAD PPL.')
 
       return;
     }
@@ -489,23 +433,86 @@ class Sprite {
   public _actuallyDestroy(): void {
     this.parent.displayObject.removeChild(this.displayObject);
 
-    this.displayObject = null;
-    this.events = null;
+    this.displayObject = undefined;
+    this.events = undefined;
   }
 
   public contains(p: Point): boolean {
     return Util.RectPointIntersection(this.bounds, p);
   }
+
+  private _setUpEvents(): void {
+    this.displayObject.interactive = true;
+
+    this.displayObject.on('mousedown', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseDown, e), this);
+    this.displayObject.on('mousemove', (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseMove, e), this);
+    this.displayObject.on('mouseup',   (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseUp, e), this);
+  }
+
+  private _initComponents(g: PIXI.Graphics): void {
+    this.components = this.components.map(c => Util.Clone(c));
+
+    // Add default sprite components
+    // TODO: Should probably just decorate Sprite
+
+    this.components.push(new DebugDraw(this, g));
+    this.components.push(new TweenComponent())
+
+    for (const c of this.components) {
+      // Make easy-to-access references to common components.
+
+      if (c instanceof PhysicsComponent) { this.physics = c; }
+      if (c instanceof DebugDraw)        { this.debug = c;   }
+      if (c instanceof TweenComponent)   { this.tween = c;   }
+
+      c.init(this);
+    }
+  }
+
+  private sortDepths(): void {
+    this.displayObject.children.sort((a, b) => {
+      /*
+        Our children are either other Sprites, or PIXI.Graphics.
+        PIXI.Graphics won't have a z index, so we just put them as high as
+        possible.
+      */
+
+      let spriteForA = Stage.doToSprite.get(a);
+      let spriteForB = Stage.doToSprite.get(b);
+
+      let aZ = spriteForA ? spriteForA.z : Number.POSITIVE_INFINITY;
+      let bZ = spriteForB ? spriteForB.z : Number.POSITIVE_INFINITY;
+
+      return aZ - bZ;
+    });
+  }
+
+  private getAllSpritesHelper(root: Sprite): MagicArray<Sprite> {
+    let result = new MagicArray<Sprite>();
+
+    result.push(root);
+
+    for (let child of root.children) {
+      let innerSprites = this.getAllSpritesHelper(child);
+
+      for (let inner of innerSprites) {
+        result.push(inner);
+      }
+    }
+
+    return result;
+  }
+
 }
 
-function component<T extends Sprite>(component: Component<Sprite>) {
+const component = function<T extends Sprite>(comp: Component<Sprite>): (target: any) => void {
   return (target: any) => { // TODO: Idk how to type this!
     const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
     let comps  = Sprite.componentsForClasses[name];
 
-    if (!comps) comps = Sprite.componentsForClasses[name] = [];
+    if (!comps) { comps = Sprite.componentsForClasses[name] = []; }
 
-    comps.push(component);
+    comps.push(comp);
   }
 }
 

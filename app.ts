@@ -34,7 +34,9 @@ class Ship extends Sprite {
     }
 
     if (Globals.keyboard.justDown.Spacebar) {
-      const bullet = new Bullet(new Point(0, -5));
+      console.log("hello?");
+
+      const bullet = new Bullet(new Point(0, -1));
 
       Globals.stage.addChild(bullet);
 
@@ -49,7 +51,7 @@ class MovingComponent extends Component<Bullet> {
   postUpdate(): void { }
   preUpdate() : void { }
   update(): void {
-    this._sprite.physics.moveBy(0, -5);
+    this._sprite.physics.moveBy(0, -1);
   }
 }
 
@@ -201,6 +203,8 @@ class MyGame extends Game {
     const test = new TextField("This is [a test](red)xand [this should be blue](blue)")
 
     Globals.stage.addChild(test);
+
+    console.log(new Point(20, 20))
   }
 }
 

@@ -43,7 +43,7 @@
 
     this.debug.draw(ray1, 0xffffff, 1);
     this.debug.draw(ray2, 0xffffff, 1);
-    this.debug.draw(this._downArrow, Color.Red);
-    this.debug.draw(this._rightArrow, Color.Red);
+    this.debug.draw(this._downArrow, Color.RED);
+    this.debug.draw(this._rightArrow, Color.RED);
   }
 }

@@ -4,7 +4,7 @@
 
     if (contents) {
       if (contents instanceof Array) {
-        for (var a of contents) {
+        for (const a of contents) {
           this.push(a);
         }
       } else {
@@ -14,12 +14,12 @@
   }
 
   /**
-    Returns a new array with all o removed.
-  */
-  remove(o: T): MagicArray<T> {
-    var result = new MagicArray<T>();
+   * Returns a new array with all o removed.
+   */
+  public remove(o: T): MagicArray<T> {
+    const result = new MagicArray<T>();
 
-    for (var i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
       if (this[i] !== o) {
         result.push(this[i]);
       }
@@ -28,36 +28,36 @@
     return result;
   }
 
-  each(fn: (o: T) => void): void {
-    for (var a of this) {
+  public each(fn: (o: T) => void): void {
+    for (const a of this) {
       fn(a);
     }
   }
 
   /**
-   * Finds the first object in the array that matches the predicate, or null
+   * Finds the first object in the array that matches the predicate, or undefined
    * if there isn't one.
    *
    * @param  {key}
    * @return {T}
    */
-  find(key: (o: T) => boolean): T {
-    for (var a of this) {
-      if (key(a)) return a;
+  public find(key: (o: T) => boolean): T {
+    for (const a of this) {
+      if (key(a)) { return a; }
     }
 
-    return null;
+    return undefined;
   }
 
   /**
-   * Finds the maximum object in the array by the given function, or null
+   * Finds the maximum object in the array by the given function, or undefined
    * if the array is empty.
    *
    * @param  {max}
    * @return {T}
    */
-  max(fn: (o: T) => number): T {
-    let best: T = null;
+  public max(fn: (o: T) => number): T {
+    let best: T = undefined;
     let bestNumber: number = Number.NEGATIVE_INFINITY;
 
     for (const a of this) {
@@ -73,14 +73,14 @@
   }
 
   /**
-   * Finds the minimum object in the array by the given function, or null
+   * Finds the minimum object in the array by the given function, or undefined
    * if the array is empty.
    *
    * @param  {min}
    * @return {T}
    */
-  min(fn: (o: T) => number): T {
-    let best: T = null;
+  public min(fn: (o: T) => number): T {
+    let best: T = undefined;
     let bestNumber: number = Number.POSITIVE_INFINITY;
 
     for (const a of this) {
@@ -100,14 +100,14 @@
    *
    * @return {}
    */
-  clear(): MagicArray<T> {
+  public clear(): MagicArray<T> {
     return new MagicArray<T>();
   }
 
-  filter(fn: (o: T) => boolean): MagicArray<T> {
-    var result = new MagicArray<T>();
+  public filter(fn: (o: T) => boolean): MagicArray<T> {
+    const result = new MagicArray<T>();
 
-    for (var i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
       let val = this[i];
 
       if (fn(val)) {
@@ -118,10 +118,10 @@
     return result;
   }
 
-  map<U>(fn: (o: T, i: number) => U): MagicArray<U> {
-    var result = new MagicArray<U>();
+  public map<U>(fn: (o: T, i: number) => U): MagicArray<U> {
+    const result = new MagicArray<U>();
 
-    for (var i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
       result.push(fn(this[i], i));
     }
 
@@ -131,26 +131,26 @@
   /**
    * Sorts by provided key. Returns newly sorted array.
    */
-  sortByKey(key: (o: T) => number): MagicArray<T> {
-    var result = this
+  public sortByKey(key: (o: T) => number): MagicArray<T> {
+    const result = this
       .slice()
       .sort((a: T, b: T) => key(a) - key(b));
 
     return new MagicArray<T>(result);
   }
 
-  arr(): T[] {
-    var result: T[] = [];
+  public arr(): T[] {
+    const result: T[] = [];
 
-    for (var i = 0; i < this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
       result.push(this[i]);
     }
 
     return result;
   }
 
-  addAll(o: MagicArray<T>): void {
-    for (const item of o) {
+  public addAll(o: MagicArray<T>): void {
+    for (let item of o) {
       this.push(item);
     }
   }

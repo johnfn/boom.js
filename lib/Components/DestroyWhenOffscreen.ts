@@ -1,7 +1,7 @@
 ﻿/// <reference path="../Component.ts"/>
 
 class DestroyWhenOffscreen extends Component<Sprite> {
-  update(): void {
+  public update(): void {
     const stage = Globals.stage;
 
     if (this._sprite.x < 0 || this._sprite.x > stage.width ||

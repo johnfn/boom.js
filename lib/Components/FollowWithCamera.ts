@@ -2,13 +2,13 @@
 
 /**
  * Follow the target with the camera.
- * 
+ *
  * Could eventually build better camera behaviors etc.
  */
 class FollowWithCamera extends Component<Sprite> {
-  update(): void {}
+  public update(): void {}
 
-  postUpdate(): void {
+  public postUpdate(): void {
     Globals.camera.x = this._sprite.x;
     Globals.camera.y = this._sprite.y;
   }

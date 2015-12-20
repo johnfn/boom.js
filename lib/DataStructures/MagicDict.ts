@@ -4,49 +4,18 @@ class MagicDict<Key, Value> {
 
   private _hashToKey: { [key: string]: Key; } = {};
 
-  private _defaultValue: () => Value = null;
+  private _defaultValue: () => Value = undefined;
 
   private _length: number = 0;
 
   private _keys: Key[] = [];
 
-  constructor(defaultValue: () => Value = null) {
+  constructor(defaultValue: () => Value = undefined) {
     this._defaultValue = defaultValue;
   }
 
-  private getHashCode(obj: any): string {
-    /*
-      The following things in JavaScript are not objects:
-
-      * Strings
-      * Numbers
-      * Booleans
-      * null
-      * undefined
-    */
-
-    let type: string = typeof obj;
-
-    if (type === "string"  ||
-        type === "number"  ||
-        type === "boolean" ||
-        type === "null"    ||
-        type == "undefined") {
-      return String(obj);
-    }
-
-    if (!obj.__hashcode) {
-      Object.defineProperty(obj, '__hashcode', {
-        value: "" + Math.random(),
-        enumerable: false
-      });
-    }
-
-    return obj.__hashcode;
-  }
-
-  put(key: Key, value: Value): Value {
-    const hash = this.getHashCode(key);
+  public put(key: Key, value: Value): Value {
+    const hash = this._getHashCode(key);
 
     /*
     Uh...this test is wrong.
@@ -71,24 +40,24 @@ class MagicDict<Key, Value> {
     return value;
   }
 
-  length(): number {
+  public length(): number {
     return this._length;
   }
 
-  get(key: Key): Value {
-    if (this._defaultValue !== null && !this.contains(key)) {
+  public get(key: Key): Value {
+    if (this._defaultValue !== undefined && !this.contains(key)) {
       return this.put(key, this._defaultValue());
-    } 
+    }
 
-    return this._map[this.getHashCode(key)];
+    return this._map[this._getHashCode(key)];
   }
 
-  contains(key: Key): boolean {
-    return this._map[this.getHashCode(key)] !== undefined;
+  public contains(key: Key): boolean {
+    return this._map[this._getHashCode(key)] !== undefined;
   }
 
-  remove(key: Key): void {
-    let hash = this.getHashCode(key);
+  public remove(key: Key): void {
+    let hash = this._getHashCode(key);
 
     if (this.contains(key)) {
       this._length--;
@@ -98,11 +67,42 @@ class MagicDict<Key, Value> {
 
       this._keys.splice(this._keys.indexOf(key), 1);
     } else {
-      console.error(key, " not found in MagicDict#remove");
+      console.error(key, ' not found in MagicDict#remove');
     }
   }
 
-  keys(): Key[] {
+  public keys(): Key[] {
     return this._keys;
+  }
+
+  private _getHashCode(obj: any): string {
+    /*
+      The following things in JavaScript are not objects:
+
+      * Strings
+      * Numbers
+      * Booleans
+      * null
+      * undefined
+    */
+
+    let type: string = typeof obj;
+
+    if (type === 'string'  ||
+        type === 'number'  ||
+        type === 'boolean' ||
+        type === 'null'    ||
+        type === 'undefined') {
+      return String(obj);
+    }
+
+    if (!obj.__hashcode) {
+      Object.defineProperty(obj, '__hashcode', {
+        enumerable: false,
+        value: '' + Math.random(),
+      });
+    }
+
+    return obj.__hashcode;
   }
 }
