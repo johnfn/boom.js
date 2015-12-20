@@ -20,7 +20,7 @@
           <input
             type="text"
             onChange={ e => this.changed(e) }
-            value={ propValue } />;
+            value={ propValue } />
         </span>
       </div>);
   }

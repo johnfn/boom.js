@@ -8,6 +8,10 @@ interface InspectorObjectProps extends InspectorItemProps {
 }
 
 class InspectorItemObject extends React.Component<InspectorObjectProps, InspectorObjectState> {
+  get obj(): any {
+    return this.props.target[this.props.propName];
+  }
+
   constructor(props: InspectorItemProps) {
     super(props);
 
@@ -25,15 +29,14 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
     });
   }
 
-  public valueToElem(value: any, propName: string, sprite: Sprite, interactive: boolean, debugSprite: Sprite): JSX.Element {
+  public valueToElem(value: any, propName: string, debugSprite: Sprite): JSX.Element {
     let node: JSX.Element;
 
     const itemArgs = {
-      propName: propName,
-      debugSprite: debugSprite,
-      target: sprite,
-      interactive: interactive,
-      onPropsChange: () => Inspector.instance.innerPropChange()
+      propName      : propName,
+      debugSprite   : debugSprite,
+      target        : this.obj,
+      onPropsChange : () => Inspector.instance.innerPropChange()
     };
 
     if (typeof value === "string") {
@@ -64,7 +67,6 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
 
   render() {
     let propList: JSX.Element[] = [];
-    let expandedObject = this.state.target[this.props.propName];
     let expandButton = (
       <a href="#" onClick={ e => this.toggle(e) }>
         { this.state.expanded ? "-" : "+" }
@@ -72,9 +74,8 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
     );
 
     if (this.state.expanded) {
-      for (var prop in expandedObject){
-        let value = expandedObject[prop];
-        let node  = this.valueToElem(value, prop, expandedObject, true, this.props.debugSprite);
+      for (const prop in this.obj){
+        const node  = this.valueToElem(this.obj[prop], prop, this.props.debugSprite);
 
         if (!node) continue;
 
@@ -84,7 +85,7 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
 
     return (
       <div className="mutableProp">
-        <div className="prop-name"> { expandButton } { Util.GetClassName(expandedObject) } <span className="prop">{ this.props.propName }</span> </div>
+        <div className="prop-name"> { expandButton } { Util.GetClassName(this.obj) } <span className="prop">{ this.props.propName }</span> </div>
         <div className="prop-list">
           { propList }
         </div>

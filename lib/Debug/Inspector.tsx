@@ -28,8 +28,7 @@ type InspectorProps = {
   target: Sprite
 };
 
-class InspectorState {
-}
+class InspectorState { }
 
 class Inspector extends React.Component<InspectorProps, InspectorState> {
   debugSprite: Sprite;

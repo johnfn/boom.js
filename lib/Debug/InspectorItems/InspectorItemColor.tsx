@@ -24,7 +24,7 @@
   static fromNum(num: number): Color {
     var b = num % 256; num = Math.floor(num / 256);
     var g = num % 256; num = Math.floor(num / 256);
-    var r = num % 256; 
+    var r = num % 256;
 
     return new Color(r, g, b);
   }
@@ -32,10 +32,9 @@
 
 interface InspectorColorState { expanded: boolean, color: Color }
 interface InspectorColorProps {
-  propName: string;
-  target: Sprite;
-  interactive: boolean;
-  onPropsChange: () => void;
+  propName      : string;
+  target        : any;
+  onPropsChange : () => void;
 }
 
 class InspectorItemColor extends React.Component<InspectorColorProps, InspectorColorState> {
@@ -80,7 +79,7 @@ class InspectorItemColor extends React.Component<InspectorColorProps, InspectorC
   }
 }
 
-interface ColorSquareProps { color: Color, onClick: () => void } 
+interface ColorSquareProps { color: Color, onClick: () => void }
 class ColorSquare extends React.Component<ColorSquareProps, {}> {
   render() {
     var square: React.CSSProperties = {
@@ -96,7 +95,7 @@ class ColorSquare extends React.Component<ColorSquareProps, {}> {
 }
 
 interface ColorSliderProps { color: Color, whichColor: string, onChange: (color: Color) => void }
-interface ColorSliderState { value: number } 
+interface ColorSliderState { value: number }
 class ColorSlider extends React.Component<ColorSliderProps, ColorSliderState> {
   mouseDown: boolean = false;
 
