@@ -41,8 +41,7 @@ class Log extends React.Component<LogProps, LogState> {
 
     this.state = { contents: consoleCache };
 
-    this.debugSprite = new Sprite().addTo(this.props.stage);
-    this.debugSprite.z = Number.POSITIVE_INFINITY;
+    this.debugSprite = new DebugSprite().addTo(this.props.stage);
 
     this.overrideConsoleLog();
   }

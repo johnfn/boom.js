@@ -438,12 +438,12 @@ class Sprite {
   public findTopmostSpriteAt(point: PIXI.Point, interactable: boolean): Sprite {
     var sprites = this.getAllSprites();
 
-    return sprites.find(o => {
-      if (interactable && !o.inspectable) return;
+    return sprites.filter(o => {
+      if (interactable && !o.inspectable) return false;
 
       return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
              point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
-    });
+    }).max(o => o.z);
   }
 
   /**

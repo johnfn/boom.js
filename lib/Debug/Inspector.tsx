@@ -39,8 +39,7 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
     super(props);
 
     this.state = { };
-    this.debugSprite = new Sprite().addTo(this.props.stage);
-    this.debugSprite.z = Number.POSITIVE_INFINITY;
+    this.debugSprite = new DebugSprite().addTo(this.props.stage);
 
     Inspector.instance = this;
   }

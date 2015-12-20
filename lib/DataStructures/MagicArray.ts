@@ -34,6 +34,13 @@
     }
   }
 
+  /**
+   * Finds the first object in the array that matches the predicate, or null
+   * if there isn't one.
+   *
+   * @param  {key}
+   * @return {T}
+   */
   find(key: (o: T) => boolean): T {
     for (var a of this) {
       if (key(a)) return a;
@@ -42,6 +49,57 @@
     return null;
   }
 
+  /**
+   * Finds the maximum object in the array by the given function, or null
+   * if the array is empty.
+   *
+   * @param  {max}
+   * @return {T}
+   */
+  max(fn: (o: T) => number): T {
+    let best: T = null;
+    let bestNumber: number = Number.NEGATIVE_INFINITY;
+
+    for (const a of this) {
+      const val = fn(a);
+
+      if (val > bestNumber) {
+        bestNumber = val;
+        best = a;
+      }
+    }
+
+    return best;
+  }
+
+  /**
+   * Finds the minimum object in the array by the given function, or null
+   * if the array is empty.
+   *
+   * @param  {min}
+   * @return {T}
+   */
+  min(fn: (o: T) => number): T {
+    let best: T = null;
+    let bestNumber: number = Number.POSITIVE_INFINITY;
+
+    for (const a of this) {
+      const val = fn(a);
+
+      if (val < bestNumber) {
+        bestNumber = val;
+        best = a;
+      }
+    }
+
+    return best;
+  }
+
+  /**
+   * Uh... TODO?!?
+   *
+   * @return {}
+   */
   clear(): MagicArray<T> {
     return new MagicArray<T>();
   }

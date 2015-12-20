@@ -7,6 +7,18 @@ interface RootState {
 }
 
 /**
+ * A sprite purely used for rendering debugging graphics.
+ */
+class DebugSprite extends Sprite {
+  constructor(): void {
+    super();
+
+    this.z           = Number.POSITIVE_INFINITY;
+    this.inspectable = false;
+  }
+}
+
+/**
  * Root is the react component at the base of the HTML hierarchy.
  */
 class Root extends React.Component<RootProps, RootState> {
@@ -22,8 +34,7 @@ class Root extends React.Component<RootProps, RootState> {
 
     this.state = { target: null };
 
-    this._stageDebug = new Sprite().addTo(props.stage);
-    this._stageDebug.z = Number.POSITIVE_INFINITY;
+    this._stageDebug = new DebugSprite().addTo(props.stage);
 
     stage.events.on(SpriteEvents.MouseMove, e => this.trackMousedObject(e));
     stage.events.on(SpriteEvents.MouseDown, e => {
