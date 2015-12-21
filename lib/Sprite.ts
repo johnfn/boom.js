@@ -1,4 +1,5 @@
 ﻿/// <reference path="./datastructures.d.ts"/>
+/// <reference path="./Mixins/DebugDraw.ts"/>
 
 enum SpriteEvents {
   AddChild,
@@ -17,6 +18,7 @@ enum SpriteEvents {
   ChangeParent
 }
 
+// @component(new DebugDraw())
 class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
@@ -298,7 +300,7 @@ class Sprite extends Composite {
     // TODO: Should probably just decorate Sprite
     // Add default sprite components
 
-    this.addComponent(new DebugDraw()); // Note - can't be decorated!
+    // this.addComponent(new DebugDraw()); // Note - can't be decorated!
     this.addComponent(new TweenComponent());
 
    // Make easy-to-access references to common components.
@@ -358,10 +360,10 @@ class Sprite extends Composite {
   }
 
   /**
-   * Adds a display object to this Sprite.
-   *
+   * Adds a display object to this Sprite. You probably should never
+   * have to use this method.
    */
-  public addDO(child: PIXI.DisplayObject): this {
+  public _addDO(child: PIXI.DisplayObject): this {
     this.displayObject.addChild(child);
 
     return this;

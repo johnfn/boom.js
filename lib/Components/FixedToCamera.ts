@@ -16,7 +16,5 @@ class FixedToCamera extends Component<Sprite> {
     Globals.fixedStage.addChild(this._sprite.moveTo(this._x, this._y));
   }
 
-  public update(): void {
-    super.update();
-  }
+  public update(): void { }
 }

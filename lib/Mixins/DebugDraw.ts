@@ -1,4 +1,11 @@
-﻿/**
+﻿/// <reference path="./Evented.ts"/>
+
+enum DebugEvents {
+  MouseDown,
+  MouseUp
+}
+
+/**
  * A handy component for drawing debugging shapes (lines, rectangles)
  * on Sprites.
  *
@@ -12,7 +19,7 @@
  * The idea is that DebugDraw will clear when you expect it to clear.
  */
 class DebugDraw extends Component<Sprite> {
-  public events: Events<SpriteEvents> = new Events<SpriteEvents>(true);
+  public events = new Events<DebugEvents>(true);
 
   private _graphics: PIXI.Graphics;
   private _clickableShapes   = new MagicArray<Polygon>();
@@ -20,12 +27,18 @@ class DebugDraw extends Component<Sprite> {
 
   constructor() {
     super()
+  }
+
+  public init(): void {
+    this._graphics = new PIXI.Graphics();
+    this._sprite._addDO(this._graphics);
+    this._sprite.displayObject.interactive = true;
+    this._graphics.interactive = true;
 
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
-    this.events.metaEvents.on(MetaEvents.AddFirstEvent, () => {
-      return;
 
+    this.events.metaEvents.on(MetaEvents.AddFirstEvent, () => {
       const dObj = this._sprite.displayObject;
 
       dObj.interactive = true;
@@ -35,7 +48,7 @@ class DebugDraw extends Component<Sprite> {
         let pos = e.data.getLocalPosition(dObj, e.data.global.clone());
 
         if (this._areCoordsInBounds(pos)) {
-          this.events.emit(SpriteEvents.MouseDown, pos);
+          this.events.emit(DebugEvents.MouseDown, pos);
 
           e.stopPropagation();
         }
@@ -44,22 +57,14 @@ class DebugDraw extends Component<Sprite> {
       dObj.on('mouseup', (e: PIXI.interaction.InteractionEvent) => {
         let pos = e.data.getLocalPosition(dObj, e.data.global.clone());
 
-        this.events.emit(SpriteEvents.MouseUp, pos);
+        this.events.emit(DebugEvents.MouseUp, pos);
 
         e.stopPropagation();
       });
     });
   }
 
-  public init(): void {
-    this._graphics = this._sprite.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
-    this._sprite.displayObject.interactive = true;
-    this._graphics.interactive = true;
-  }
-
   public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color = 0xff0000, alpha = 1): void {
-    if (!this._graphics) { return; }
-
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
@@ -100,9 +105,7 @@ class DebugDraw extends Component<Sprite> {
 
   }
 
-  public update(): void {
-    super.update();
-  }
+  public update(): void { }
 
   private _areCoordsInBounds(point: PIXI.Point): boolean {
     for (const polygon of this._clickableShapes) {

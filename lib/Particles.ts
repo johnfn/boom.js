@@ -215,7 +215,7 @@ class Particles extends Sprite {
       onCreate: (): Particle => {
         const p = new Particle(particleWidth, particleHeight);
 
-        this.addDO(p);
+        this._addDO(p);
         p.particleEvents.on(ParticleEvents.Died, () => {
           this._recycler.remove(p);
         });

@@ -50,16 +50,14 @@
    * you to need to call it.
    */
   public _initializeComponents(): void {
-
+    for (const comp of this.components) {
+      comp.setTarget(this);
+      comp.init();
+    }
   }
 }
 
 const component = function<T extends Composite>(comp: Component<Composite>): (target: any) => void {
-  /*
-  return (cons: any) => { // TODO: Idk how to type this!
-    return cons;
-  }
-  */
 
   const renameFunction = function(name: any, fn: any): any {
     return (new Function('return function (call) { return function ' + name +
@@ -78,13 +76,23 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
 
 
     // the new constructor behaviour
+
     const f: any = function(...args: any[]): any {
       const c: any = function(): void {
         return constructor.apply(this, args);
       }
 
       c.prototype = constructor.prototype;
-      return new c();
+
+      const obj = new c();
+      obj._initializeComponents();
+      if (obj.init) {
+        obj.init();
+      } else {
+        console.log('consider adding init to ' + name + ' class.')
+      }
+
+      return obj;
     }
 
     // copy prototype so intanceof operator still works

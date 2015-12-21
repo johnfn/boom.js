@@ -1,4 +1,8 @@
-﻿class TransformWidget extends Sprite {
+﻿@component(new PhysicsComponent({
+  immovable: true,
+  solid: true,
+}))
+class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;
   private _target: Sprite;
@@ -8,13 +12,15 @@
 
     this.displayObject.interactive = true;
 
-    this._draw();
-
     this.events.on(SpriteEvents.ChangeParent, (parent: Sprite) => {
       this._target = parent;
     })
+  }
 
-    this.debug.events.on(SpriteEvents.MouseDown, (point: PIXI.Point) => {
+  public init(): void {
+    this._draw();
+
+    this.debug.events.on(DebugEvents.MouseDown, (point: PIXI.Point) => {
       if (this._downArrow.contains(point)) {
         this._target.y += 10;
       }

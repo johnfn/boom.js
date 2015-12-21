@@ -330,7 +330,7 @@ class PhysicsComponent extends Component<Sprite> {
 
   public postUpdate(): void { }
   public preUpdate() : void { }
-  public update()    : void { super.update(); }
+  public update()    : void { }
 
   public destroy(): void {
     Globals.physicsManager.remove(this._sprite);
