@@ -31,41 +31,41 @@ type InspectorProps = {
 class InspectorState { }
 
 class Inspector extends React.Component<InspectorProps, InspectorState> {
-  debugSprite: Sprite;
-
   public static instance: Inspector;
+
+  private _debugSprite: Sprite;
 
   constructor(props: InspectorProps) {
     super(props);
 
     this.state = { };
-    this.debugSprite = new DebugSprite().addTo(this.props.stage);
+    this._debugSprite = new DebugSprite().addTo(this.props.stage);
 
     Inspector.instance = this;
   }
 
-  innerPropChange(): void {
-    Inspector.instance.forceUpdate();
-  }
-
-  render(): JSX.Element {
-    if (this.props.target == null) {
+  public render(): JSX.Element {
+    if (this.props.target === undefined) {
       return <div> Nothing to inspect. </div>;
     }
 
     return (
-      <div id="inspector">
-        <div className="title"> Inspecting: { this.props.target.name } </div>
+      <div id='inspector'>
+        <div className='title'> Inspecting: { this.props.target.name } </div>
 
-        <div className="prop-list">
+        <div className='prop-list'>
           <InspectorItemObject
             target={ this.props }
-            propName={ "target" }
+            propName={ 'target' }
             onPropsChange={ () => this.innerPropChange() }
-            debugSprite={ this.debugSprite }
+            debugSprite={ this._debugSprite }
             open={ true } />
         </div>
       </div>
     );
+  }
+
+  public innerPropChange(): void {
+    Inspector.instance.forceUpdate();
   }
 }

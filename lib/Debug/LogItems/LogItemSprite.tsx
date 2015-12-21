@@ -19,39 +19,39 @@ class LogItemSprite extends React.Component<SpriteProps, SpriteState> {
     this._oldSprite = props.sprite
   }
 
-  shouldComponentUpdate(): boolean {
-    let result = this.props.sprite !== this._oldSprite;
+  public shouldComponentUpdate(): boolean {
+    const result = this.props.sprite !== this._oldSprite;
 
     this._oldSprite = this.props.sprite;
     return result;
   }
 
-  renderSprite(): void {
-    new SpriteCanvas(this.props.sprite, React.findDOMNode(this) as HTMLElement);
-  }
-
   // Called after first render.
-  componentDidMount(): void {
-    this.renderSprite();
+  public componentDidMount(): void {
+    this._renderSprite();
   }
 
   // Called after every render except first.
-  componentDidUpdate(prevProps: TextureProps, prevState: TextureState): void {
-    this.renderSprite();
+  public componentDidUpdate(prevProps: TextureProps, prevState: TextureState): void {
+    this._renderSprite();
   }
 
-  showSpriteDebugRectangle(): void {
+  public render(): JSX.Element {
+    return <span
+      onMouseOver={ () => this._showSpriteDebugRectangle() }
+      onMouseDown={ () => this._setAsTarget() }
+      > </span>;
+  }
+
+  private _showSpriteDebugRectangle(): void {
     this.props.debugSprite.debug.draw(this.props.sprite);
   }
 
-  setAsTarget(): void {
+  private _setAsTarget(): void {
     this.props.root.setTarget(this.props.sprite);
   }
 
-  render() {
-    return <span
-      onMouseOver={ () => this.showSpriteDebugRectangle() }
-      onMouseDown={ () => this.setAsTarget() }
-      > </span>;
+  private _renderSprite(): void {
+    new SpriteCanvas(this.props.sprite, React.findDOMNode(this) as HTMLElement);
   }
 }

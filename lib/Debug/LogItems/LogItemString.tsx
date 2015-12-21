@@ -7,7 +7,7 @@ class LogItemString extends React.Component<StringState, StringState> {
     this.state = { content: props.content };
   }
 
-  render() {
+  public render(): JSX.Element {
     return <span> { this.state.content } </span>;
   }
 }

@@ -25,24 +25,12 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
     };
   }
 
-  click() {
-    this.props.root.setTarget(this.props.target);
-  }
-
-  toggle() {
-    this.setState(state => {
-      state.collapsed = !state.collapsed;
-
-      return state;
-    });
-  }
-
-  render(): JSX.Element {
+  public render(): JSX.Element {
     let subNodes: JSX.Element;
 
     if (!this.state.collapsed) {
       subNodes = (
-        <div className="prop-list">
+        <div className='prop-list'>
             { this.props.target.children.map((o, i) =>
               <span key={ o.name }>
                 <Hierarchy
@@ -56,16 +44,28 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
 
     return (
       <div>
-        <a href="#"
-           onClick={ () => this.click() }
-           className={ this.props.target === this.props.root.state.target ? "target-element" : null }>
+        <a href='#'
+           onClick={ () => this._click() }
+           className={ this.props.target === this.props.root.state.target ? 'target-element' : undefined }>
           { this.props.target.name }
         </a>
         <span
-          onClick={ () => this.toggle() }
-          > { this.props.target.children.length > 0 ? (this.state.collapsed ? "[" + this.props.target.children.length  + "+]" : "[-]") : "" }
+          onClick={ () => this._toggle() }
+          > { this.props.target.children.length > 0 ? (this.state.collapsed ? '[' + this.props.target.children.length  + '+]' : '[-]') : '' }
         </span>
         { subNodes }
       </div>);
+  }
+
+  private _click(): void {
+    this.props.root.setTarget(this.props.target);
+  }
+
+  private _toggle(): void {
+    this.setState(state => {
+      state.collapsed = !state.collapsed;
+
+      return state;
+    });
   }
 }

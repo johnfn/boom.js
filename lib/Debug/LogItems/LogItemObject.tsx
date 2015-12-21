@@ -13,27 +13,21 @@ class LogItemObject extends React.Component<ObjectProps, ObjectState> {
     this.state = { expanded: false };
   }
 
-  toggle(e: React.MouseEvent) {
-    this.setState(state => {
-      state.expanded = !state.expanded;
-
-      return state;
-    });
-  }
-
-  render() {
-    var inner: JSX.Element[] = [];
+  public render(): JSX.Element {
+    const inner: JSX.Element[] = [];
 
     for (const key in this.props.object) {
+      if (!this.props.object.hasOwnProperty(key)) { continue; }
+
       const item = this.props.object[key]
 
       inner.push(<div>
-        <b>{ key }</b>: { item ? item.toString() : "<null>" }
+        <b>{ key }</b>: { item ? item.toString() : '<null>' }
       </div>);
     }
 
     return (
-      <span className="object">
+      <span className='object'>
         { inner }
       </span>
     );
