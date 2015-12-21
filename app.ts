@@ -34,8 +34,6 @@ class Ship extends Sprite {
     }
 
     if (Globals.keyboard.justDown.Spacebar) {
-      debugger;
-
       const bullet = new Bullet(new Point(0, -1));
 
       Globals.stage.addChild(bullet);
@@ -51,8 +49,6 @@ class MovingComponent extends Component<Bullet> {
   public preUpdate() : void { }
   public update(): void {
     super.update();
-
-    debugger;
 
     this._sprite.physics.moveBy(0, -1);
   }

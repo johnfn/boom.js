@@ -24,6 +24,8 @@ class DebugDraw extends Component<Sprite> {
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
     this.events.metaEvents.on(MetaEvents.AddFirstEvent, () => {
+      return;
+
       const dObj = this._sprite.displayObject;
 
       dObj.interactive = true;

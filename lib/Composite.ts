@@ -18,6 +18,7 @@
 
    public addComponent(comp: Component<Composite>): void {
      const c = Util.Clone(comp);
+
      this.components.push(c);
      c.setTarget(this);
    }
