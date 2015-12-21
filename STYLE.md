@@ -15,3 +15,7 @@ Rationale: Inevitably people are going to use this project from JavaScript. If t
 Rationale: Stop reading `const` as "constant value." Start reading it as "single assignment." Yes, it means "constant value" in other programming languages, but JavaScript doesn't have those semantics. We should use the tool for what it was actually designed for, rather than for what we think that it should have been designed for.
 
 "Single assignment" is pretty useful once you get used to it.
+
+#### Never use `var`
+
+The only case I've found that it's necessary is when TypeScript refuses to capture a let/const in a function in a loop but when I know that it is fine - but they should be fixing that case in 1.8.
