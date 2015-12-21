@@ -4,10 +4,10 @@ class DestroyWhenOffscreen extends Component<Sprite> {
   public update(): void {
     const stage = Globals.stage;
 
-    if (this._sprite.x < 0 || this._sprite.x > stage.width ||
-        this._sprite.y < 0 || this._sprite.y > stage.height) {
+    if (this._composite.x < 0 || this._composite.x > stage.width ||
+        this._composite.y < 0 || this._composite.y > stage.height) {
 
-      this._sprite.destroy();
+      this._composite.destroy();
     }
   }
 }

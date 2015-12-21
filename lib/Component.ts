@@ -1,8 +1,10 @@
 ﻿abstract class Component<T extends Composite> {
-  protected _sprite: T;
+  protected _composite: T;
 
-  private _hasInited: boolean = false;
-
+  /**
+   * Called when we are creating the component. The Composite is not guaranteed
+   * to be fully initialized yet.
+   */
   constructor() { }
 
   /**
@@ -11,8 +13,8 @@
    */
   public init(): void { }
 
-  public setTarget(sprite: T): void {
-    this._sprite = sprite;
+  public setTarget(composite: T): void {
+    this._composite = composite;
   }
 
   public preUpdate(): void { };

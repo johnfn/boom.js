@@ -31,15 +31,15 @@ class DebugDraw extends Component<Sprite> {
 
   public init(): void {
     this._graphics = new PIXI.Graphics();
-    this._sprite._addDO(this._graphics);
-    this._sprite.displayObject.interactive = true;
+    this._composite._addDO(this._graphics);
+    this._composite.displayObject.interactive = true;
     this._graphics.interactive = true;
 
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
 
     this.events.metaEvents.on(MetaEvents.AddFirstEvent, () => {
-      const dObj = this._sprite.displayObject;
+      const dObj = this._composite.displayObject;
 
       dObj.interactive = true;
       dObj.hitArea = new PIXI.Rectangle(-50, -50, 200, 200);

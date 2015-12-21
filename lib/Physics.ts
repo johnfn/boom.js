@@ -286,7 +286,7 @@ class PhysicsComponent extends Component<Sprite> {
   }
 
   public init(): void {
-    Globals.physicsManager.add(this._sprite)
+    Globals.physicsManager.add(this._composite)
   }
 
   public moveBy(dx: number, dy: number): void {
@@ -311,7 +311,7 @@ class PhysicsComponent extends Component<Sprite> {
    * @param group
    */
   public touches<T extends Sprite>(group: Group<T>): MagicArray<T> {
-    return Globals.physicsManager.touches(this._sprite, group);
+    return Globals.physicsManager.touches(this._composite, group);
   }
 
   /**
@@ -333,6 +333,6 @@ class PhysicsComponent extends Component<Sprite> {
   public update()    : void { }
 
   public destroy(): void {
-    Globals.physicsManager.remove(this._sprite);
+    Globals.physicsManager.remove(this._composite);
   }
 }
