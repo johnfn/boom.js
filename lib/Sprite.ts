@@ -458,7 +458,7 @@ class Sprite {
     // Add default sprite components
     // TODO: Should probably just decorate Sprite
 
-    this.components.push(new DebugDraw(this));
+    this.components.push(new DebugDraw());
     this.components.push(new TweenComponent())
 
     for (const c of this.components) {

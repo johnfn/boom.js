@@ -1,5 +1,7 @@
 /**
  * An object made up of components.
+ *
+ * Note: Composite currently doesn't handle component inheritance...
  */
 class Composite {
   public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};

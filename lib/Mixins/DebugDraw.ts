@@ -14,24 +14,17 @@
 class DebugDraw extends Component<Sprite> {
   public events: Events<SpriteEvents> = new Events<SpriteEvents>(true);
 
-  private _target: Sprite;
   private _graphics: PIXI.Graphics;
   private _clickableShapes   = new MagicArray<Polygon>();
   private _hasDrawnThisFrame = false;
 
-  constructor(_target: Sprite) {
+  constructor() {
     super()
-
-    this._target = _target;
-
-    this._graphics = this._target.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
-    this._target.displayObject.interactive = true;
-    this._graphics.interactive = true;
 
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
     this.events.metaEvents.on(MetaEvents.AddFirstEvent, () => {
-      let dObj = this._target.displayObject;
+      const dObj = this._sprite.displayObject;
 
       dObj.interactive = true;
       dObj.hitArea = new PIXI.Rectangle(-50, -50, 200, 200);
@@ -56,7 +49,15 @@ class DebugDraw extends Component<Sprite> {
     });
   }
 
-  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color = 0xff0000, alpha = 1) {
+  public init(sprite: Sprite): void {
+    super.init(sprite);
+
+    this._graphics = this._sprite.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
+    this._sprite.displayObject.interactive = true;
+    this._graphics.interactive = true;
+  }
+
+  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color = 0xff0000, alpha = 1): void {
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
