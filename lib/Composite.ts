@@ -1,3 +1,8 @@
+interface ComponentInfo<T extends Composite> {
+  component  : Component<T>;
+  initialized: boolean;
+};
+
 /**
  * An object made up of components.
  *
@@ -6,7 +11,7 @@
  class Composite {
    public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
-   public components: Component<Composite>[] = [];
+   public components: ComponentInfo<Composite>[] = [];
 
    constructor() {
      const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(this)] || [];
@@ -17,16 +22,20 @@
    }
 
    public addComponent(comp: Component<Composite>): void {
-     const c = Util.Clone(comp);
+     const clone = Util.Clone(comp);
 
-     this.components.push(c);
-     c.setTarget(this);
+     this.components.push({
+       component  : clone,
+       initialized: false,
+     });
+
+     clone.setTarget(this);
    }
 
    public getComponent<T>(type: { new (...args: any[]): T } ): T {
      for (const comp of this.components) {
-       if (comp instanceof type) {
-         return (comp as any) as T;
+       if (comp.component instanceof type) {
+         return (comp.component as any) as T;
        }
      }
 
@@ -37,7 +46,7 @@
 
   public hasComponent<T>(type: { new (...args: any[]): T } ): boolean {
     for (const comp of this.components) {
-      if (comp instanceof type) {
+      if (comp.component instanceof type) {
         return true;
       }
     }
@@ -50,7 +59,11 @@
    * you to need to call it.
    */
   public _initializeComponents(): void {
-
+    for (const comp of this.components) {
+      if (!comp.initialized) {
+        comp.component.init();
+      }
+    }
   }
 }
 
@@ -62,8 +75,9 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
   */
 
   const renameFunction = function(name: any, fn: any): any {
-    return (new Function('return function (call) { return function ' + name +
-      ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));
+    const f = eval('function ' + name + '(){};' + name);
+    f.prototype = fn;
+    return new f();
   };
 
 
@@ -71,26 +85,38 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
     const name = /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
     // Deal with component
-
     let comps  = Composite.componentsForClasses[name];
     if (!comps) { comps = Composite.componentsForClasses[name] = []; }
     comps.push(comp);
 
-
-    // the new constructor behaviour
-    const f: any = function(...args: any[]): any {
+    let f: any = function(...args: any[]): any {
       const c: any = function(): void {
         return constructor.apply(this, args);
       }
 
       c.prototype = constructor.prototype;
-      return new c();
+
+      const obj = new c();
+
+      obj._initializeComponents();
+
+      return obj;
     }
+
+    f = renameFunction(name, f);
 
     // copy prototype so intanceof operator still works
     f.prototype = constructor.prototype;
 
+    const names = Object.getOwnPropertyNames(constructor).slice(5)
+
+    for (const propname of names) {
+      if (constructor.hasOwnProperty(propname)) {
+        f[propname] = constructor[propname];
+      }
+    }
+
     // return new constructor (will override original)
-    return renameFunction(name, f);
+    return f;
   }
 }

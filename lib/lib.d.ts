@@ -3,6 +3,7 @@
 /// <reference path="DataStructures/defs.d.ts"/>
 /// <reference path="Components/components.d.ts"/>
 
+/// <reference path="mixins/Evented.ts"/>
 /// <reference path="Composite.ts"/>
 /// <reference path="TiledMapParser.ts"/>
 /// <reference path="Sprite.ts"/>

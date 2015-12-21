@@ -1,4 +1,5 @@
 ﻿/// <reference path="./datastructures.d.ts"/>
+/// <reference path="./Components/components.d.ts"/>
 
 enum SpriteEvents {
   AddChild,
@@ -17,6 +18,7 @@ enum SpriteEvents {
   ChangeParent
 }
 
+@component(new DebugDraw())
 class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
@@ -298,7 +300,6 @@ class Sprite extends Composite {
     // TODO: Should probably just decorate Sprite
     // Add default sprite components
 
-    this.addComponent(new DebugDraw()); // Note - can't be decorated!
     this.addComponent(new TweenComponent());
 
    // Make easy-to-access references to common components.

@@ -48,8 +48,6 @@ class MovingComponent extends Component<Bullet> {
   public postUpdate(): void { }
   public preUpdate() : void { }
   public update(): void {
-    super.update();
-
     this._sprite.physics.moveBy(0, -1);
   }
 }

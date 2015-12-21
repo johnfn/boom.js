@@ -17,18 +17,7 @@
 
   public preUpdate(): void { };
 
-  /**
-   * God help you if you override this method and forget to call super.
-   */
-  public update(): void {
-    // If update() has been called then this object has been fully initialized. init() it.
-
-    if (!this._hasInited) {
-      this._hasInited = true;
-
-      this.init();
-    }
-  }
+  public update(): void { }
 
   public postUpdate(): void { };
 

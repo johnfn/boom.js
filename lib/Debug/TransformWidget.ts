@@ -8,8 +8,6 @@
 
     this.displayObject.interactive = true;
 
-    this._draw();
-
     this.events.on(SpriteEvents.ChangeParent, (parent: Sprite) => {
       this._target = parent;
     })
@@ -23,6 +21,10 @@
         this._target.x += 10;
       }
     });
+  }
+
+  public update(): void {
+    this._draw();
   }
 
   private _draw(): void {

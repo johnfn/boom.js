@@ -1,4 +1,6 @@
-﻿/**
+﻿/// <reference path="../lib.d.ts"/>
+
+/**
  * A handy component for drawing debugging shapes (lines, rectangles)
  * on Sprites.
  *
@@ -24,8 +26,6 @@ class DebugDraw extends Component<Sprite> {
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
     this.events.metaEvents.on(MetaEvents.AddFirstEvent, () => {
-      return;
-
       const dObj = this._sprite.displayObject;
 
       dObj.interactive = true;
@@ -52,14 +52,14 @@ class DebugDraw extends Component<Sprite> {
   }
 
   public init(): void {
+    debugger;
+
     this._graphics = this._sprite.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
     this._sprite.displayObject.interactive = true;
     this._graphics.interactive = true;
   }
 
   public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color = 0xff0000, alpha = 1): void {
-    if (!this._graphics) { return; }
-
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
@@ -96,13 +96,9 @@ class DebugDraw extends Component<Sprite> {
     this._hasDrawnThisFrame = false;
   }
 
-  public postUpdate(): void {
+  public postUpdate(): void { }
 
-  }
-
-  public update(): void {
-    super.update();
-  }
+  public update(): void { }
 
   private _areCoordsInBounds(point: PIXI.Point): boolean {
     for (const polygon of this._clickableShapes) {

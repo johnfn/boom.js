@@ -34,6 +34,8 @@ class Game {
     this._height    = height;
     this._renderer  = PIXI.autoDetectRenderer(width, height, { backgroundColor });
 
+    debugger;
+
     this.fixedStage = new Sprite();
     this.stage      = new Stage(width, height);
 
@@ -72,7 +74,7 @@ class Game {
 
     for (const sprite of children) {
       for (const c of sprite.components) {
-        c.preUpdate();
+        c.component.preUpdate();
       }
     }
 
@@ -80,7 +82,7 @@ class Game {
       sprite.update();
 
       for (const c of sprite.components) {
-        c.update();
+        c.component.update();
       }
     }
 
@@ -90,13 +92,13 @@ class Game {
       sprite.postUpdate();
 
       for (const c of sprite.components) {
-        c.postUpdate();
+        c.component.postUpdate();
       }
     }
 
     for (const sprite of Globals._destroyList) {
       for (const c of sprite.components) {
-        c.destroy();
+        c.component.destroy();
       }
 
       Sprites.remove(sprite);
