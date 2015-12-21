@@ -62,6 +62,12 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
   return (target: any) => {
     const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
 
+    // Deal with component
+
+    let comps  = Composite.componentsForClasses[name];
+    if (!comps) { comps = Composite.componentsForClasses[name] = []; }
+    comps.push(comp);
+
     // save a reference to the original constructor
     const original = target;
 
@@ -77,17 +83,8 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
 
     // the new constructor behaviour
     const f: any = function(...args: any[]): any {
-      let comps  = Composite.componentsForClasses[name];
 
-      if (!comps) { comps = Composite.componentsForClasses[name] = []; }
-
-      comps.push(comp);
-
-      console.log('New: ' + original.name);
-
-      const newObj = construct(original, args);
-
-      return newObj;
+      return construct(original, args);
     }
 
     // copy prototype so intanceof operator still works
