@@ -8,7 +8,7 @@
 
     this.displayObject.interactive = true;
 
-    this.draw();
+    this._draw();
 
     this.events.on(SpriteEvents.ChangeParent, (parent: Sprite) => {
       this._target = parent;
@@ -25,17 +25,17 @@
     });
   }
 
-  private draw() {
+  private _draw(): void {
     this._downArrow = new Polygon([
       new Point(-10, 50),
       new Point(10, 50),
-      new Point(0, 70)
+      new Point(0, 70),
     ]);
 
     this._rightArrow = new Polygon([
       new Point(50, -10),
       new Point(50, 10),
-      new Point(70, 0)
+      new Point(70, 0),
     ]);
 
     const ray1 = new Ray(0, 0, 0, 50);

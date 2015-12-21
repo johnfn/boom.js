@@ -4,16 +4,16 @@
   constructor() {
   }
 
-  public init(sprite: T) {
+  public init(sprite: T): void {
     this._sprite = sprite;
   }
 
   /**
    * These methods have not been thought through or implemented on the Sprite yet.
    */
-  public preUpdate(): void {} 
+  public preUpdate(): void { };
   public abstract update(): void;
-  public postUpdate(): void {}
+  public postUpdate(): void { };
 
   /**
    * Override to implement cleanup logic when the sprite with this component

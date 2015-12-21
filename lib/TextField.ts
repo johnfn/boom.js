@@ -4,23 +4,23 @@
   /**
    * Sets the text of this textfield. Note that this textfield has the special property
    * that you can color parts of it. For example, if you set the text to be:
-   * 
+   *
    * "Hello [world!](red) [Goodbye world.](blue)"
-   * 
-   * Then "world!" would be in red and "Goodbye world." would be in blue. (The syntax is 
+   *
+   * Then "world!" would be in red and "Goodbye world." would be in blue. (The syntax is
    * inspired by Markdown.)
-   * 
+   *
    * If you want to use a literal [, ], ( or ), double it: "This is a bracket: [[."
-   * 
-   * @param val 
-   * @returns {} 
+   *
+   * @param val
+   * @returns {}
    */
   public set text(val: string) {
     // TODO: I am thinking of a more versatile (and easier to code!) approach - something
     // like this: text`blah blah ${{ fill: red, font: "comic sans" }}${ "blah blah " }`.
-    // 
+    //
     // It could almost be typed!
-    // 
+    //
     // Or even better?
     //
     // text`bla blah ${{ fill: red, font: "comic sans", text:  "this is a test!" }}`;
@@ -30,7 +30,7 @@
       Normal,
       AccumulatingText,
       AccumulatingColor
-    };
+    }
 
     interface TextPiece {
       text: string;
@@ -39,13 +39,13 @@
 
     let currentState = State.Normal;
 
-    let text = "";
-    let currentColoredText = "";
-    let currentColor = "";
+    let text = '';
+    let currentColoredText = '';
+    let currentColor = '';
     let i = 0;
 
     const char    = () => val[i];
-    const next    = () => i + 1 < val.length ? val[i + 1] : "";
+    const next    = () => i + 1 < val.length ? val[i + 1] : '';
     const advance = (n = 1) => i += n;
 
     /**
@@ -56,18 +56,18 @@
     while (i < val.length) {
       switch (currentState) {
         case State.Normal:
-          if (char() == "]" && next() == "]") {
+          if (char() === ']' && next() === ']') {
             advance(2);
-            text += "]";
+            text += ']';
             break;
           }
 
-          if (char() == "[") {
+          if (char() === '[') {
             currentState = State.AccumulatingText;
             advance(1);
 
             coloredText.push({ text });
-            text = "";
+            text = '';
             break;
           }
 
@@ -75,15 +75,15 @@
           advance(1);
           break;
         case State.AccumulatingText:
-          if (char() == "]" && next() == "(") {
+          if (char() === ']' && next() === '(') {
             advance(2)
             currentState = State.AccumulatingColor;
             break;
           }
 
-          if (char() == "]" && next() == "]") {
+          if (char() === ']' && next() === ']') {
             advance(2);
-            currentColoredText += "]";
+            currentColoredText += ']';
             break;
           }
 
@@ -91,30 +91,32 @@
           advance(1);
           break;
         case State.AccumulatingColor:
-          if (char() == ")" && next() == ")") {
+          if (char() === ')' && next() === ')') {
             advance(2);
-            currentColor += ")";
+            currentColor += ')';
             break;
           }
 
-          if (char() == ")") {
+          if (char() === ')') {
             currentState = State.Normal;
             advance(1);
 
-            coloredText.push({ text: currentColoredText, color: currentColor });
-            currentColoredText = currentColor = "";
+            coloredText.push({ color: currentColor, text: currentColoredText });
+            currentColoredText = currentColor = '';
             break;
           }
 
           currentColor += char();
           advance(1);
           break;
+        default:
+          throw new Error('Agh!');
       }
     }
 
     let assembledText: string = text; // anything left over
     let styleRules: { [key: string]: PIXI.TextStyle } = {}
-    let j = 0; 
+    let j = 0;
 
     for (const chunk of coloredText) {
       if (chunk.color) {
@@ -135,19 +137,19 @@
     return this._textField.text;
   }
 
-  constructor(content: string = "<no content dur>") {
+  constructor(content = '<no content dur>') {
     super();
 
     /*
-    this._textField = new PIXI.MultiStyleText("<one>Testing!</one> normal <two>woo</two>", {
-      def: { font: "12px Verdana" },
-      one: { font: "12px Verdana", fill: "red" },
-      two: { font: "12px Verdana", fill: "red" }
+    this._textField = new PIXI.MultiStyleText('<one>Testing!</one> normal <two>woo</two>', {
+      def: { font: '12px Verdana' },
+      one: { font: '12px Verdana', fill: 'red' },
+      two: { font: '12px Verdana', fill: 'red' }
     });
     */
 
-    this._textField = new PIXI.MultiStyleText("", {
-      def: { font: "12px Verdana", fill: "white" },
+    this._textField = new PIXI.MultiStyleText('', {
+      def: { fill: 'white',  font: '12px Verdana' }
     });
 
     this.text = content;

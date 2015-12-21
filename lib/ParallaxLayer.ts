@@ -3,7 +3,7 @@
   private _tiles: MagicDict<Point, Sprite>;
   private _parallax: number;
 
-  constructor(texture: PIXI.Texture | string, parallax: number = .2) {
+  constructor(texture: PIXI.Texture | string, parallax = .2) {
     super();
 
     this._parallax = parallax;
@@ -11,7 +11,7 @@
 
     if (texture instanceof PIXI.Texture) {
       this._texture = texture;
-    } else if (typeof texture === "string") {
+    } else if (typeof texture === 'string') {
       this._texture = PIXI.Texture.fromImage(texture);
     }
 
@@ -20,7 +20,7 @@
     this.z = -100;
   }
 
-  update(): void {
+  public update(): void {
     const width = 256;
     const height = 256;
 

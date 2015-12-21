@@ -407,6 +407,13 @@ class Sprite {
     }).max(o => o.z);
   }
 
+  public findSpritesAt(point: Point): Sprite[] {
+    return this.getAllSprites().filter(o => {
+      return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
+             point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
+    });
+  }
+
   /**
    * Destroys this sprite.
    */

@@ -18,7 +18,7 @@
 
   /**
    * Do the particles obey the laws of gravity?
-   * 
+   *
    * Defaults to false.
    */
   gravity?: boolean;
@@ -35,7 +35,7 @@ enum ParticleEvents {
 
 class Particle extends PIXI.Sprite {
   public particleEvents: Events<ParticleEvents>;
-  
+
   private _behavior: ParticleBehavior;
   private _ticksLeft: number;
   private _effectiveDy: number;
@@ -47,7 +47,7 @@ class Particle extends PIXI.Sprite {
     this.particleEvents = new Events<ParticleEvents>();
   }
 
-  setBehavior(behavior: ParticleBehavior) {
+  public setBehavior(behavior: ParticleBehavior): void {
     this._behavior    = behavior;
     this._ticksLeft   = behavior.lifetime;
     this._effectiveDy = behavior.dy;
@@ -57,9 +57,9 @@ class Particle extends PIXI.Sprite {
   }
 
   /**
-   * Update a particle based on its ParticleBehavior. 
+   * Update a particle based on its ParticleBehavior.
    */
-  update(): void {
+  public update(): void {
     this.x += this._behavior.dx;
     this.y += this._effectiveDy;
 
@@ -85,7 +85,7 @@ interface RecycledObject<T> {
 
 /**
  * Object recycling.
- * 
+ *
  * Haha wow I totally guessed that extends syntax and got it I'm awesome
  */
 class Recycler<T extends { visible: boolean }> {
@@ -106,7 +106,7 @@ class Recycler<T extends { visible: boolean }> {
   /**
    * Get all alive items.
    */
-  items(): T[] {
+  public items(): T[] {
     const result: T[] = [];
 
     for (let i = 0; i < this._bin.length; i++) {
@@ -121,10 +121,10 @@ class Recycler<T extends { visible: boolean }> {
 
   /**
    * Flag an item as ready to be recycled.
-   * 
+   *
    * @param o
    */
-  remove(o: T): void {
+  public remove(o: T): void {
     for (let i = 0; i < this._bin.length; i++) {
       const item = this._bin[i];
 
@@ -138,12 +138,12 @@ class Recycler<T extends { visible: boolean }> {
   /**
    * Get an item from the recycling bin, (possibly evicting one that already exists).
    */
-  get(): T {
+  public get(): T {
     if (this._bin.length < this._maxSize) {
       const entry = {
-        object: this._onCreate(),
         alive: true,
-        created: +new Date
+        created: +new Date,
+        object: this._onCreate(),
       };
 
       this._onRecycle(entry.object);
@@ -196,7 +196,7 @@ class Particles extends Sprite {
 
   /**
    * Takes a particle spritesheet (TODO should make spritesheets, heh)
-   * 
+   *
    * Pass in w/h of individual particle on spritesheet
    *
    * Expected to be a single strip
@@ -212,7 +212,7 @@ class Particles extends Sprite {
     this._textures = [];
 
     this._recycler = new Recycler(100, {
-      onCreate: () => {
+      onCreate: (): Particle => {
         const p = new Particle(particleWidth, particleHeight);
 
         this.addDO(p);
@@ -222,10 +222,10 @@ class Particles extends Sprite {
 
         return p;
       },
-      onRecycle: (p: Particle) => {
+      onRecycle: (p: Particle): void => {
         p.texture = Util.RandomElement(this._textures);
         p.setBehavior(this.particleBehavior());
-      }
+      },
     });
 
     for (let i = 0; i < textureWidth; i += particleWidth) {
@@ -235,15 +235,15 @@ class Particles extends Sprite {
     }
   }
 
-  particleBehavior(): ParticleBehavior {
-    throw new Error("This should be overridden...");
+  public particleBehavior(): ParticleBehavior {
+    throw new Error('This should be overridden...');
   }
 
-  addParticle(): Particle {
+  public addParticle(): Particle {
     return this._recycler.get();
   }
 
-  addParticles(num: number): Particle[] {
+  public addParticles(num: number): Particle[] {
     const result: Particle[] = [];
 
     for (let i = 0; i < num; i++) {
@@ -253,7 +253,7 @@ class Particles extends Sprite {
     return result;
   }
 
-  update(): void {
+  public update(): void {
     super.update();
 
     const particles = this._recycler.items();
@@ -269,8 +269,8 @@ class ParticleExplosionMaker extends Particles {
     super(path, particleWidth, particleHeight, textureWidth, textureHeight);
   }
 
-  explodeAt(x: number, y: number): void {
-    this.tween.addTween("explode", 10, (e: Tween) => {
+  public explodeAt(x: number, y: number): void {
+    this.tween.addTween('explode', 10, (e: Tween) => {
       const p = this.addParticles(2);
 
       for (let i = 0; i < p.length; i++) {
@@ -280,16 +280,16 @@ class ParticleExplosionMaker extends Particles {
     });
   }
 
-  particleBehavior(): ParticleBehavior {
+  public particleBehavior(): ParticleBehavior {
     const pt = Util.RandomPointOnUnitCircle();
 
     return {
-      lifetime: Util.RandomRange(5, 20),
-      gravity: true,
-      scale: 1,
       dx: pt.x * 4,
       dy: pt.y * 4,
-      rotation: Util.RandomRange(-.5, .5)
+      gravity: true,
+      lifetime: Util.RandomRange(5, 20),
+      rotation: Util.RandomRange(-.5, .5),
+      scale: 1,
     };
   }
 }
@@ -299,7 +299,7 @@ class ParticleEmitter extends Particles {
     super(path, particleWidth, particleHeight, textureWidth, textureHeight);
   }
 
-  emitAt(x: number, y: number): void {
+  public emitAt(x: number, y: number): void {
     const p = this.addParticles(1);
 
     for (let i = 0; i < p.length; i++) {
@@ -312,7 +312,7 @@ class ParticleEmitter extends Particles {
    * Emits particles from a random location inside the rectangle.
    * @param rect
    */
-  emitIn(rect: PIXI.Rectangle): void {
+  public emitIn(rect: PIXI.Rectangle): void {
     const p = this.addParticles(1);
 
     for (let i = 0; i < p.length; i++) {
@@ -321,13 +321,13 @@ class ParticleEmitter extends Particles {
     }
   }
 
-  particleBehavior(): ParticleBehavior {
+  public particleBehavior(): ParticleBehavior {
     return {
-      lifetime: Util.RandomRange(60, 180),
-      scale: Util.RandomRange(.5, 2),
       dx: Util.RandomRange(-.4, .4),
       dy: Util.RandomRange(-.4, -.7),
-      rotation: Util.RandomRange(-.5, .5)
+      lifetime: Util.RandomRange(60, 180),
+      rotation: Util.RandomRange(-.5, .5),
+      scale: Util.RandomRange(.5, 2),
     };
   }
 }

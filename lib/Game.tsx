@@ -6,14 +6,19 @@
  *
  */
 class Game {
-  public  stage        : Stage;
-
   public static ticks  : number = 0;
 
   /**
    * Turns on a bunch of debugging-only features.
    */
   public static DEBUG_MODE: boolean = false;
+
+  public stage            : Stage;
+
+  /**
+   *  A convenient place to attach things so they don't move when the camera does.
+   */
+  public fixedStage: Sprite;
 
   private root         : React.Component<any, {}>;
   private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
@@ -24,12 +29,7 @@ class Game {
   private _height: number;
   get height(): number { return this._height; }
 
-  /**
-   *  A convenient place to attach things so they don't move when the camera does.
-   */
-  public fixedStage: Sprite;
-
-  constructor(width: number, height: number, element: HTMLElement, backgroundColor: number = 0x000000, debugging: boolean = false) {
+  constructor(width: number, height: number, element: HTMLElement, backgroundColor = 0x000000, debugging = false) {
     this._width     = width;
     this._height    = height;
     this._renderer  = PIXI.autoDetectRenderer(width, height, { backgroundColor });
@@ -41,29 +41,29 @@ class Game {
 
     this.root       = React.render(<Root stage={ this.stage } />, element);
 
-    const canvasContainer = React.findDOMNode(this.root).getElementsByClassName("content").item(0) as HTMLElement;
+    const canvasContainer = React.findDOMNode(this.root).getElementsByClassName('content').item(0) as HTMLElement;
     canvasContainer.appendChild(this._renderer.view)
 
-    this.stage.events.on(SpriteEvents.AddChild, () => this.onAddChild());
+    this.stage.events.on(SpriteEvents.AddChild, () => this._onAddChild());
 
     this.fixedStage.addChild(this.stage);
 
     Globals.events.on(GlobalEvents.LoadingIsDone, () => this.loadingComplete());
   }
 
-  static EveryNthFrame(n: number): boolean {
+  public static EveryNthFrame(n: number): boolean {
     return Game.ticks % n === 0;
   }
 
-  loadingComplete(): void {
+  protected loadingComplete(): void {
     // Kick off the main game loop.
     requestAnimationFrame(() => this.update());
   }
 
   /**
    * The core update loop.
-  */
-  update(): void {
+   */
+  public update(): void {
     let children = Sprites.all().items();
 
     Game.ticks++;
@@ -112,11 +112,11 @@ class Game {
     requestAnimationFrame(this.update.bind(this));
   }
 
-  onAddChild(): void {
+  private _onAddChild(): void {
     setTimeout(() => this.root.forceUpdate(), 0);
   }
 }
 
-function inspect<T extends Sprite>(target: T, name: string) {
+function inspect<T extends Sprite>(target: T, name: string): void {
   target.addInspectableProperty(Util.GetClassName(target), name);
 }

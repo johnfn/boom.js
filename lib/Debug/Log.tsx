@@ -212,7 +212,7 @@ class Log extends React.Component<LogProps, LogState> {
     };
   }
 
-  private _logHelper(metadata: string, content: Loggable[], logItemType: LogItemType) {
+  private _logHelper(metadata: string, content: Loggable[], logItemType: LogItemType): void {
     this.setState((prev: LogState) => {
       let last = prev.contents[prev.contents.length - 1];
 

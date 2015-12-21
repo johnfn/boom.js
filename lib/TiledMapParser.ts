@@ -115,9 +115,9 @@ class TiledMapParser extends Sprite {
   /**
    * TODO: better name
    * TODO: per-tile properties, perhaps?
-   * 
+   *
    * Add custom function to process layer.
-   * 
+   *
    * @param layerName
    * @param process
    */
@@ -139,16 +139,16 @@ class TiledMapParser extends Sprite {
   }
 
   /**
-   * Actually create the tilemap. 
-   * 
+   * Actually create the tilemap.
+   *
    * (Note: is an asynchronous process as we need to load the json. Be sure to call this
    * in Game#constructor.)
    */
   public parse(): this {
-    this._rootPath = this._path.slice(0, this._path.lastIndexOf("/") + 1);
+    this._rootPath = this._path.slice(0, this._path.lastIndexOf('/') + 1);
 
     let request = new XMLHttpRequest();
-    request.open('GET', this._path + "?" + Math.random(), true); // Cachebust the path to the map.
+    request.open('GET', this._path + '?' + Math.random(), true); // Cachebust the path to the map.
     Globals.thingsThatAreLoading++;
 
     request.onload = () => {
@@ -157,18 +157,18 @@ class TiledMapParser extends Sprite {
 
         this.process(data);
       } else {
-        this.error("Error retrieving map.");
+        this.error('Error retrieving map.');
       }
 
       Globals.thingsThatAreLoading--;
     };
 
     request.onerror = () => {
-      this.error("Error retrieving map.");
+      this.error('Error retrieving map.');
     };
 
     request.send();
-    
+
     return this;
   }
 
@@ -180,30 +180,30 @@ class TiledMapParser extends Sprite {
     }
   }
 
-  private error(msg: string) {
+  private error(msg: string): void {
     console.error(msg);
   }
 
-  private process(json: TiledMapJSON) {
-    let tilesets = new MagicArray<Tileset>();
+  private process(json: TiledMapJSON): void {
+    const tilesets = new MagicArray<Tileset>();
 
-    let tilesetsJSON = new MagicArray<TiledTilesetJSON>(json.tilesets)
+    const tilesetsJSON = new MagicArray<TiledTilesetJSON>(json.tilesets)
       .sortByKey(o => o.firstgid);
 
-    for (var i = 0; i < tilesetsJSON.length; i++) {
-      let currentTileset = tilesetsJSON[i];
-      let nextTileset = tilesetsJSON[i + 1];
+    for (let i = 0; i < tilesetsJSON.length; i++) {
+      const currentTileset = tilesetsJSON[i];
+      const nextTileset = tilesetsJSON[i + 1];
 
-      let textureUrl = this._rootPath + currentTileset.image;
-      let texture = PIXI.Texture.fromImage(textureUrl);
+      const textureUrl = this._rootPath + currentTileset.image;
+      const texture = PIXI.Texture.fromImage(textureUrl);
 
       tilesets.push({
-        texture: texture,
-        tileWidth: currentTileset.tilewidth,
-        tileHeight: currentTileset.tileheight,
-        firstGID: currentTileset.firstgid,
-        lastGID: i === tilesetsJSON.length - 1 ? Number.POSITIVE_INFINITY : nextTileset.firstgid,
-        widthInTiles: currentTileset.imagewidth / currentTileset.tilewidth
+        firstGID    : currentTileset.firstgid,
+        lastGID     : i === tilesetsJSON.length - 1 ? Number.POSITIVE_INFINITY : nextTileset.firstgid,
+        texture     : texture,
+        tileHeight  : currentTileset.tileheight,
+        tileWidth   : currentTileset.tilewidth,
+        widthInTiles: currentTileset.imagewidth / currentTileset.tilewidth,
       });
 
       this._tileWidth = currentTileset.tilewidth;
@@ -214,7 +214,7 @@ class TiledMapParser extends Sprite {
     this._objectLayers = {};
 
     for (let layerJSON of json.layers) {
-      if (layerJSON.type === "tilelayer") {
+      if (layerJSON.type === 'tilelayer') {
         const layer = this.parseTiledMapLayer(layerJSON as TiledMapLayerJSON, tilesets);
 
         this._tileLayers[layerJSON.name] = layer;
@@ -227,7 +227,7 @@ class TiledMapParser extends Sprite {
   }
 
   private gidToSomethingMoreUseful(gid: number, tilesets: MagicArray<Tileset>): PIXI.Texture {
-    if (gid === 0) return null;
+    if (gid === 0) { return undefined; }
 
     let spritesheet = tilesets.find(o => o.firstGID <= gid && o.lastGID > gid);
 
@@ -247,14 +247,14 @@ class TiledMapParser extends Sprite {
 
     for (const obj of layerJSON.objects) {
       const texture = this.gidToSomethingMoreUseful(obj.gid, tilesets);
-      if (!texture) continue;
+      if (!texture) { continue; }
 
       let tile: Sprite;
 
       if (this._objectProcessing[obj.gid]) {
         tile = this._objectProcessing[obj.gid](texture, obj);
 
-        if (tile === null) continue;
+        if (tile === undefined) { continue; }
       } else {
         tile = new Sprite(texture);
       }
@@ -280,10 +280,10 @@ class TiledMapParser extends Sprite {
     for (let i = 0; i < layerJSON.data.length; i++) {
       // Find the spritesheet that contains the tile id.
 
-      var value = layerJSON.data[i];
+      const value = layerJSON.data[i];
 
       const texture = this.gidToSomethingMoreUseful(value, tilesets);
-      if (!texture) continue;
+      if (!texture) { continue; }
 
       const destX = (i % layerJSON.width) * this._tileWidth;
       const destY = Math.floor(i / layerJSON.width) * this._tileHeight;
@@ -295,7 +295,7 @@ class TiledMapParser extends Sprite {
       if (this._layerProcessing[layerJSON.name]) {
         tile = this._layerProcessing[layerJSON.name](texture, destX, destY);
 
-        if (tile === null) continue;
+        if (tile === undefined) { continue; }
       } else {
         tile = new Sprite(texture);
 

@@ -1,5 +1,5 @@
 ﻿class Stage extends Sprite {
-  public baseName: string = "Stage";
+  public baseName: string = 'Stage';
 
   private _width : number;
   private _height: number;
@@ -27,18 +27,5 @@
 
     this.displayObject.hitArea = new PIXI.Rectangle(0, 0, width, height);
     this.displayObject.interactive = true;
-  }
-
-  findSpritesAt(point: Point): Sprite[] {
-    var sprites = this.getAllSprites();
-
-    return sprites.filter(o => {
-      return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
-             point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
-    });
-  }
-
-  public removeChild(sprite: Sprite) {
-    this.displayObject.removeChild(sprite.displayObject);
   }
 }

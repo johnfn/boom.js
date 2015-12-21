@@ -20,19 +20,6 @@ class Globals {
    */
   public static camera: Camera;
 
-  public static initialize(stage: Stage, fixedStage: Sprite) {
-    Globals.physicsManager = new PhysicsManager();
-    Globals.keyboard       = new Keyboard();
-    Globals.mouse          = new Mouse(stage);
-    Globals.camera         = new Camera(stage);
-    Globals.stage          = Globals.stage || stage;
-    Globals.fixedStage     = Globals.fixedStage || fixedStage;
-
-    Globals.camera.x = stage.width / 2;
-    Globals.camera.y = stage.height / 2;
-    Globals.camera.addParallaxLayer(Globals.stage, 1);
-  }
-
   public static events = new Events<GlobalEvents>();
 
   public static _destroyList: Sprite[] = [];
@@ -47,6 +34,19 @@ class Globals {
       Globals.events.emit(GlobalEvents.LoadingIsDone);
     }
   }
+
+  public static initialize(stage: Stage, fixedStage: Sprite): void {
+    Globals.physicsManager = new PhysicsManager();
+    Globals.keyboard       = new Keyboard();
+    Globals.mouse          = new Mouse(stage);
+    Globals.camera         = new Camera(stage);
+    Globals.stage          = Globals.stage || stage;
+    Globals.fixedStage     = Globals.fixedStage || fixedStage;
+
+    Globals.camera.x = stage.width / 2;
+    Globals.camera.y = stage.height / 2;
+    Globals.camera.addParallaxLayer(Globals.stage, 1);
+  }
 }
 
 class Sprites {
@@ -60,9 +60,9 @@ class Sprites {
    * @param type
    */
   public static all<T extends Sprite>(type: { new (...args: any[]) : T } = Sprite as any): Group<T> {
-    const typeName = ("" + type).split("function ")[1].split("(")[0];
+    const typeName = ('' + type).split('function ')[1].split('(')[0];
 
-    if (typeName === "Sprite") {
+    if (typeName === 'Sprite') {
       return Sprites.list as Group<T>;
     }
 
@@ -88,7 +88,7 @@ class Sprites {
     for (let i = 0; i < this._all.length; i++) {
       const item = this._all[i];
 
-      if (fn(item)) result.push(item);
+      if (fn(item)) { result.push(item); }
     }
 
     return new Group(result);
