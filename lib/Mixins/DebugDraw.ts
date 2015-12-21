@@ -14,12 +14,17 @@
 class DebugDraw extends Component<Sprite> {
   public events: Events<SpriteEvents> = new Events<SpriteEvents>(true);
 
+  private _target: Sprite;
+  private _graphics: PIXI.Graphics;
   private _clickableShapes   = new MagicArray<Polygon>();
   private _hasDrawnThisFrame = false;
 
-  constructor(private _target: Sprite,
-              public _graphics: PIXI.Graphics) {
+  constructor(_target: Sprite,
+              _graphics: PIXI.Graphics) {
     super()
+
+    this._target = _target;
+    this._graphics = _graphics;
 
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
@@ -29,7 +34,7 @@ class DebugDraw extends Component<Sprite> {
       dObj.interactive = true;
       dObj.hitArea = new PIXI.Rectangle(-50, -50, 200, 200);
 
-      dObj.on("mousedown", (e: PIXI.interaction.InteractionEvent) => {
+      dObj.on('mousedown', (e: PIXI.interaction.InteractionEvent) => {
         let pos = e.data.getLocalPosition(dObj, e.data.global.clone());
 
         if (this._areCoordsInBounds(pos)) {
@@ -39,7 +44,7 @@ class DebugDraw extends Component<Sprite> {
         }
       });
 
-      dObj.on("mouseup", (e: PIXI.interaction.InteractionEvent) => {
+      dObj.on('mouseup', (e: PIXI.interaction.InteractionEvent) => {
         let pos = e.data.getLocalPosition(dObj, e.data.global.clone());
 
         this.events.emit(SpriteEvents.MouseUp, pos);
@@ -49,8 +54,53 @@ class DebugDraw extends Component<Sprite> {
     });
   }
 
+  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color: number = 0xff0000, alpha: number = 1) {
+    if (!this._hasDrawnThisFrame) {
+      this._hasDrawnThisFrame = true;
+
+      this.clear();
+    }
+
+    if (item instanceof Ray) {
+      this._drawLine(item.x0, item.y0, item.x1, item.y1, color, alpha)
+    } else if (item instanceof Point) {
+      this._drawPoint(item.x, item.y, color);
+    } else if (item instanceof PIXI.Point) {
+      this._drawPoint(item.x, item.y, color);
+    } else if (item instanceof Polygon) {
+      this._drawShape(item, color);
+    } else if (item instanceof PIXI.Rectangle) {
+      this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
+    } else if (item instanceof Sprite) {
+      this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
+    } else {
+      debugger;
+
+      console.error("I don't know how to draw that shape.")
+    }
+  }
+
+  /**
+   * Removes everything on the graphics object. Meant for debugging purposes only.
+   */
+  public clear(): void {
+    this._graphics.clear();
+  }
+
+  public preUpdate(): void {
+    this._hasDrawnThisFrame = false;
+  }
+
+  public postUpdate(): void {
+
+  }
+
+  public update(): void {
+
+  }
+
   private _areCoordsInBounds(point: PIXI.Point): boolean {
-    for (var polygon of this._clickableShapes) {
+    for (const polygon of this._clickableShapes) {
       if (polygon.contains(point)) {
         return true;
       }
@@ -59,19 +109,19 @@ class DebugDraw extends Component<Sprite> {
     return false;
   }
 
-  private _drawLine(x0: number, y0: number, x1: number, y1: number, color: number = 0xffffff, alpha: number = 1): void {
+  private _drawLine(x0: number, y0: number, x1: number, y1: number, color = 0xffffff, alpha: number = 1): void {
     this._graphics.lineStyle(1, color, alpha);
 
     this._graphics.moveTo(x0, y0);
     this._graphics.lineTo(x1, y1);
   }
 
-  private _drawPoint(x: number, y: number, color: number = 0xff0000): void {
+  private _drawPoint(x: number, y: number, color = 0xff0000): void {
     this._drawLine(x, 0, x, Globals.stage.height, color);
     this._drawLine(0, y, Globals.stage.width, y, color);
   }
 
-  private _drawShape(polygon: Polygon, color: number = 0xffffff): void {
+  private _drawShape(polygon: Polygon, color = 0xffffff): void {
     let lastPoint = polygon.points[polygon.points.length - 1];
 
     this._graphics.beginFill(color);
@@ -79,7 +129,7 @@ class DebugDraw extends Component<Sprite> {
 
     this._graphics.moveTo(lastPoint.x, lastPoint.y);
 
-    for (var point of polygon.points) {
+    for (const point of polygon.points) {
       this._graphics.lineTo(point.x, point.y);
     }
 
@@ -131,48 +181,5 @@ class DebugDraw extends Component<Sprite> {
 
     this._drawLine(0, y1, stageWidth, y1, white, alpha);
     this._drawLine(x0, y1, x1, y1);
-  }
-
-  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color: number = 0xff0000, alpha: number = 1) {
-    if (!this._hasDrawnThisFrame) {
-      this._hasDrawnThisFrame = true;
-
-      this.clear();
-    }
-
-    if (item instanceof Ray) {
-      this._drawLine(item.x0, item.y0, item.x1, item.y1, color, alpha)
-    } else if (item instanceof Point) {
-      this._drawPoint(item.x, item.y, color);
-    } else if (item instanceof PIXI.Point) {
-      this._drawPoint(item.x, item.y, color);
-    } else if (item instanceof Polygon) {
-      this._drawShape(item, color);
-    } else if (item instanceof PIXI.Rectangle) {
-      this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
-    } else if (item instanceof Sprite) {
-      this.drawRectangle(item.x, item.y, item.x + item.width, item.y + item.height);
-    } else {
-      console.error("I don't know how to draw that shape.")
-    }
-  }
-
-  /**
-    Removes everything on the graphics object. Meant for debugging purposes only.
-  */
-  public clear(): void {
-    this._graphics.clear();
-  }
-
-  public preUpdate(): void {
-    this._hasDrawnThisFrame = false;
-  }
-
-  public postUpdate(): void {
-
-  }
-
-  public update(): void {
-
   }
 }

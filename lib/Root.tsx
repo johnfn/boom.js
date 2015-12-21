@@ -34,8 +34,8 @@ class Root extends React.Component<RootProps, RootState> {
    * We bind this function inline so that we can use it as an event and
    * clean it up later.
    */
-  private _debugDraw = (target: Sprite) => {
-    this._stageDebug.debug.draw(target);
+  private _debugDraw = () => {
+    this._stageDebug.debug.draw(this.state.target);
   };
 
   constructor(props: RootProps) {
@@ -61,28 +61,28 @@ class Root extends React.Component<RootProps, RootState> {
       state.target = target;
 
       return state;
+    }, () => {
+      if (target === undefined) {
+        if (this.transformWidget.parent) {
+          this.transformWidget.parent.removeChild(this.transformWidget);
+        }
+      } else {
+        target.addChild(this.transformWidget);
+
+        this.transformWidget.x = target.width / 2;
+        this.transformWidget.y = target.height / 2;
+
+        this._debugDraw();
+
+        this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
+
+        if (this._currentClickedObject) {
+          this._currentClickedObject.events.off(SpriteEvents.Move, this._debugDraw);
+        }
+
+        this._currentClickedObject = target;
+      }
     });
-
-    if (target === undefined) {
-      if (this.transformWidget.parent) {
-        this.transformWidget.parent.removeChild(this.transformWidget);
-      }
-    } else {
-      target.addChild(this.transformWidget);
-
-      this.transformWidget.x = target.width / 2;
-      this.transformWidget.y = target.height / 2;
-
-      this._debugDraw(target);
-
-      this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
-
-      if (this._currentClickedObject) {
-        this._currentClickedObject.events.off(SpriteEvents.Move, this._debugDraw);
-      }
-
-      this._currentClickedObject = target;
-    }
   }
 
   public render(): JSX.Element {
@@ -99,11 +99,11 @@ class Root extends React.Component<RootProps, RootState> {
 
     return (
       <div>
-        <div id="main-panel">
-          <div id="hierarchy">
+        <div id='main-panel'>
+          <div id='hierarchy'>
             { hierarchy }
           </div>
-          <div id="content" className="content"></div>
+          <div id='content' className='content'></div>
           { inspector }
         </div>
 

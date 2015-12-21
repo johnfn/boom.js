@@ -407,7 +407,7 @@ class Sprite {
     }).max(o => o.z);
   }
 
-  public findSpritesAt(point: Point): Sprite[] {
+  public findSpritesAt(point: Point): MagicArray<Sprite> {
     return this.getAllSprites().filter(o => {
       return point.x >= o.absolutePosition.x && point.x <= o.absolutePosition.x + o.width &&
              point.y >= o.absolutePosition.y && point.y <= o.absolutePosition.y + o.height;
@@ -509,7 +509,6 @@ class Sprite {
 
     return result;
   }
-
 }
 
 const component = function<T extends Sprite>(comp: Component<Sprite>): (target: any) => void {
@@ -522,5 +521,3 @@ const component = function<T extends Sprite>(comp: Component<Sprite>): (target: 
     comps.push(comp);
   }
 }
-
-
