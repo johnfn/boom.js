@@ -9,10 +9,16 @@
    public components: Component<Composite>[] = [];
 
    constructor() {
-     const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(this)] || [];
+     let proto = Object.getPrototypeOf(this);
 
-     for (const c of componentsToAdd) {
-       this.addComponent(c);
+     while (proto !== null) {
+       const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(this)] || [];
+
+       for (const c of componentsToAdd) {
+         this.addComponent(c);
+       }
+
+       proto = Object.getPrototypeOf(proto);
      }
    }
 
@@ -83,7 +89,6 @@ interface Constructable<T> {
 }
 
 const component = function<T extends Composite>(comp: Component<Composite>): (target: any) => void {
-
   const renameFunction = function(name: any, fn: any): any {
     return (new Function('return function (call) { return function ' + name +
       ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));
@@ -95,16 +100,13 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
 
     // Deal with component
 
-    let comps  = Composite.componentsForClasses[name];
+    let comps = Composite.componentsForClasses[name];
     if (!comps) { comps = Composite.componentsForClasses[name] = []; }
     comps.push(comp);
-
 
     // the new constructor behaviour
 
     const f: any = function(...args: any[]): any {
-      if (name === 'TransformWidget') { debugger; }
-
       const obj: any = invokeConstructor(constructor, args)
 
       obj._initializeComponents();
