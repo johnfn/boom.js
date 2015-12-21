@@ -18,7 +18,6 @@ enum SpriteEvents {
   ChangeParent
 }
 
-// @component(new DebugDraw())
 class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.

@@ -57,6 +57,31 @@
   }
 }
 
+// TODO - move this somewhere else...
+function invokeConstructor<T>(Class: Constructable<T>, args: Array<any>): T {
+  switch (args.length) {
+    case 0: return new Class();
+    case 1: return new Class(args[0]);
+    case 2: return new Class(args[0], args[1]);
+    case 3: return new Class(args[0], args[1], args[2]);
+    case 4: return new Class(args[0], args[1], args[2], args[3]);
+    case 5: return new Class(args[0], args[1], args[2], args[3], args[4]);
+    case 6: return new Class(args[0], args[1], args[2], args[3], args[4], args[5]);
+    case 7: return new Class(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+    case 8: return new Class(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+
+    default:
+      throw new Error('Unsupported number of Constructor arguments');
+  }
+}
+
+/**
+ * Identifies an object which we can call `new` on.
+ */
+interface Constructable<T> {
+  new (...args: any[]): T;
+}
+
 const component = function<T extends Composite>(comp: Component<Composite>): (target: any) => void {
 
   const renameFunction = function(name: any, fn: any): any {
@@ -78,13 +103,10 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
     // the new constructor behaviour
 
     const f: any = function(...args: any[]): any {
-      const c: any = function(): void {
-        return constructor.apply(this, args);
-      }
+      if (name === 'TransformWidget') { debugger; }
 
-      c.prototype = constructor.prototype;
+      const obj: any = invokeConstructor(constructor, args)
 
-      const obj = new c();
       obj._initializeComponents();
       if (obj.init) {
         obj.init();

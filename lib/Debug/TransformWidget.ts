@@ -1,7 +1,4 @@
-﻿@component(new PhysicsComponent({
-  immovable: true,
-  solid: true,
-}))
+﻿@component(new DebugDraw())
 class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;
