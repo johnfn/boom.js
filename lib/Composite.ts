@@ -44,6 +44,14 @@
 
     return false;
   }
+
+  /**
+   * This method is called for you. There should be no reason for
+   * you to need to call it.
+   */
+  public _initializeComponents(): void {
+
+  }
 }
 
 const component = function<T extends Composite>(comp: Component<Composite>): (target: any) => void {
@@ -59,8 +67,8 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
   };
 
 
-  return (target: any) => {
-    const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
+  return (constructor: any) => {
+    const name = /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
     // Deal with component
 
@@ -68,11 +76,9 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
     if (!comps) { comps = Composite.componentsForClasses[name] = []; }
     comps.push(comp);
 
-    // save a reference to the original constructor
-    const original = target;
 
-    // a utility function to generate instances of a class
-    function construct(constructor: any, args: any): any {
+    // the new constructor behaviour
+    const f: any = function(...args: any[]): any {
       const c: any = function(): void {
         return constructor.apply(this, args);
       }
@@ -81,14 +87,8 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
       return new c();
     }
 
-    // the new constructor behaviour
-    const f: any = function(...args: any[]): any {
-
-      return construct(original, args);
-    }
-
     // copy prototype so intanceof operator still works
-    f.prototype = original.prototype;
+    f.prototype = constructor.prototype;
 
     // return new constructor (will override original)
     return renameFunction(name, f);
