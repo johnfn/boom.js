@@ -298,13 +298,9 @@ class Sprite {
 
     // this is the graphics for the debug object.
 
-    let _graphics = this.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
-    this.displayObject.interactive = true;
-    _graphics.interactive = true;
-
     this.components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
 
-    this._initComponents(_graphics);
+    this._initComponents();
 
     // Removed in the main game loop.
     Sprites.add(this);
@@ -456,13 +452,13 @@ class Sprite {
     this.displayObject.on('mouseup',   (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseUp, e), this);
   }
 
-  private _initComponents(g: PIXI.Graphics): void {
+  private _initComponents(): void {
     this.components = this.components.map(c => Util.Clone(c));
 
     // Add default sprite components
     // TODO: Should probably just decorate Sprite
 
-    this.components.push(new DebugDraw(this, g));
+    this.components.push(new DebugDraw(this));
     this.components.push(new TweenComponent())
 
     for (const c of this.components) {

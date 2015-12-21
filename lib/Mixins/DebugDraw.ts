@@ -19,12 +19,14 @@ class DebugDraw extends Component<Sprite> {
   private _clickableShapes   = new MagicArray<Polygon>();
   private _hasDrawnThisFrame = false;
 
-  constructor(_target: Sprite,
-              _graphics: PIXI.Graphics) {
+  constructor(_target: Sprite) {
     super()
 
     this._target = _target;
-    this._graphics = _graphics;
+
+    this._graphics = this._target.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
+    this._target.displayObject.interactive = true;
+    this._graphics.interactive = true;
 
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */
@@ -54,7 +56,7 @@ class DebugDraw extends Component<Sprite> {
     });
   }
 
-  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color: number = 0xff0000, alpha: number = 1) {
+  public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color = 0xff0000, alpha = 1) {
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
@@ -109,7 +111,7 @@ class DebugDraw extends Component<Sprite> {
     return false;
   }
 
-  private _drawLine(x0: number, y0: number, x1: number, y1: number, color = 0xffffff, alpha: number = 1): void {
+  private _drawLine(x0: number, y0: number, x1: number, y1: number, color = 0xffffff, alpha = 1): void {
     this._graphics.lineStyle(1, color, alpha);
 
     this._graphics.moveTo(x0, y0);
