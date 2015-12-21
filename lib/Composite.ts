@@ -3,20 +3,54 @@
  *
  * Note: Composite currently doesn't handle component inheritance...
  */
-class Composite {
-  public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};
+ class Composite {
+   public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
-  /**
-   * Mapping of class names to inspectable properties of that class.
-   *
-   * TODO: Should probably make a whole property type so that this seems less
-   * odd.
-   */
-  public static inspectableProperties: { [key: string]: string[]; } = {};
+   public components: Component<Composite>[] = [];
 
-  private _components: Component<Sprite>[];
+   constructor() {
+     const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(this)] || [];
 
-  constructor() {
-    this._components = Composite.componentsForClasses[Util.GetClassName(this)] || [];
+     for (const c of componentsToAdd) {
+       this.addComponent(c);
+     }
+   }
+
+   public addComponent(comp: Component<Composite>): void {
+     this.components.push(comp);
+     comp.setTarget(this);
+   }
+
+   public getComponent<T>(type: { new (...args: any[]): T } ): T {
+     for (const comp of this.components) {
+       if (comp instanceof type) {
+         return (comp as any) as T;
+       }
+     }
+
+     console.error(`couldn't find component of type ${type}`);
+
+     return undefined;
+  }
+
+  public hasComponent<T>(type: { new (...args: any[]): T } ): boolean {
+    for (const comp of this.components) {
+      if (comp instanceof type) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+const component = function<T extends Composite>(comp: Component<Composite>): (target: any) => void {
+  return (target: any) => { // TODO: Idk how to type this!
+    const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
+    let comps  = Composite.componentsForClasses[name];
+
+    if (!comps) { comps = Composite.componentsForClasses[name] = []; }
+
+    comps.push(comp);
   }
 }

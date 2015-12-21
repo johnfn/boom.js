@@ -31,7 +31,7 @@ class Maybe<T> {
   }
 
   set value(value: T) {
-    if (value === undefined) {
+    if (value === null) {
       console.error('Never do this.');
     }
 

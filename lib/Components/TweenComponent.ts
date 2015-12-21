@@ -42,6 +42,8 @@ class TweenComponent extends Component<Sprite> {
   }
 
   public update(): void {
+    super.update();
+
     const tweenNames = Object.keys(this._tweens);
     const tweensToDelete: string[] = [];
 

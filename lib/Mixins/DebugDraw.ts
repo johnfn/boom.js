@@ -49,15 +49,15 @@ class DebugDraw extends Component<Sprite> {
     });
   }
 
-  public init(sprite: Sprite): void {
-    super.init(sprite);
-
+  public init(): void {
     this._graphics = this._sprite.displayObject.addChild(new PIXI.Graphics()) as PIXI.Graphics;
     this._sprite.displayObject.interactive = true;
     this._graphics.interactive = true;
   }
 
   public draw(item: Ray | PIXI.Point | Point | Polygon | PIXI.Rectangle | Sprite, color = 0xff0000, alpha = 1): void {
+    if (!this._graphics) { return; }
+
     if (!this._hasDrawnThisFrame) {
       this._hasDrawnThisFrame = true;
 
@@ -99,7 +99,7 @@ class DebugDraw extends Component<Sprite> {
   }
 
   public update(): void {
-
+    super.update();
   }
 
   private _areCoordsInBounds(point: PIXI.Point): boolean {

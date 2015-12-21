@@ -285,10 +285,8 @@ class PhysicsComponent extends Component<Sprite> {
     this.immovable    = physics.immovable;
   }
 
-  public init(sprite: Sprite): void {
-    super.init(sprite);
-
-    Globals.physicsManager.add(sprite)
+  public init(): void {
+    Globals.physicsManager.add(this._sprite)
   }
 
   public moveBy(dx: number, dy: number): void {
@@ -332,7 +330,7 @@ class PhysicsComponent extends Component<Sprite> {
 
   public postUpdate(): void { }
   public preUpdate() : void { }
-  public update()    : void { }
+  public update()    : void { super.update(); }
 
   public destroy(): void {
     Globals.physicsManager.remove(this._sprite);

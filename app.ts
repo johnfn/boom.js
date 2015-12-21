@@ -1,8 +1,8 @@
 ﻿/// <reference path="lib/lib.d.ts"/>
 
 @component(new PhysicsComponent({
+  immovable: true,
   solid: true,
-  immovable: true
 }))
 class Ship extends Sprite {
   constructor() {
@@ -48,9 +48,11 @@ class Ship extends Sprite {
 
 
 class MovingComponent extends Component<Bullet> {
-  postUpdate(): void { }
-  preUpdate() : void { }
-  update(): void {
+  public postUpdate(): void { }
+  public preUpdate() : void { }
+  public update(): void {
+    super.update();
+
     this._sprite.physics.moveBy(0, -1);
   }
 }
@@ -60,7 +62,7 @@ class MovingComponent extends Component<Bullet> {
 @component(new PhysicsComponent({ solid: true, immovable: true }))
 class Bullet extends Sprite {
   constructor(velocity: Point) {
-    super("assets/bullet.png");
+    super('assets/bullet.png');
 
     this.z = 20;
 

@@ -8,18 +8,16 @@ enum SpriteEvents {
 
   /**
    * Sprite changes position.
-   * @type {[type]}
    */
   Move,
 
   /**
    * Sprite changes parent.
-   * @type {[type]}
    */
   ChangeParent
 }
 
-class Sprite {
+class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
    */
@@ -29,8 +27,6 @@ class Sprite {
    * Maps DisplayObjects to Sprites associated to those DisplayObjects.
    */
   public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
-
-  public static componentsForClasses: {[className: string] : Component<Sprite>[]} = {};
 
   public static defaultInspectableProperties = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
 
@@ -73,8 +69,6 @@ class Sprite {
    * The first part of this sprite's name.
    */
   public baseName: string;
-
-  public components: Component<Sprite>[];
 
   /**
    * Name for this sprite. Only used for debugging.
@@ -274,7 +268,9 @@ class Sprite {
   }
 
   constructor(texture: PIXI.Texture | string = undefined) {
-    let className = Util.GetClassName(this);
+    super();
+
+    const className = Util.GetClassName(this);
 
     if (!this.baseName) { this.baseName = Util.GetClassName(this); }
 
@@ -296,14 +292,20 @@ class Sprite {
     this.x = 0;
     this.y = 0;
 
-    // this is the graphics for the debug object.
-
-    this.components = Sprite.componentsForClasses[Util.GetClassName(this)] || [];
-
-    this._initComponents();
-
-    // Removed in the main game loop.
+    // Removed in the main game loop. (TODO - why not _actuallyDestroy)
     Sprites.add(this);
+
+    // TODO: Should probably just decorate Sprite
+    // Add default sprite components
+
+    this.addComponent(new DebugDraw()); // Note - can't be decorated!
+    this.addComponent(new TweenComponent());
+
+   // Make easy-to-access references to common components.
+
+    if (this.hasComponent(PhysicsComponent)) { this.physics = this.getComponent(PhysicsComponent); }
+    if (this.hasComponent(DebugDraw))        { this.debug   = this.getComponent(DebugDraw);        }
+    if (this.hasComponent(TweenComponent))   { this.tween   = this.getComponent(TweenComponent);   }
   }
 
   public moveTo(x: number, y: number): this {
@@ -452,26 +454,6 @@ class Sprite {
     this.displayObject.on('mouseup',   (e: PIXI.interaction.InteractionEvent) => this.events.emit(SpriteEvents.MouseUp, e), this);
   }
 
-  private _initComponents(): void {
-    this.components = this.components.map(c => Util.Clone(c));
-
-    // Add default sprite components
-    // TODO: Should probably just decorate Sprite
-
-    this.components.push(new DebugDraw());
-    this.components.push(new TweenComponent())
-
-    for (const c of this.components) {
-      // Make easy-to-access references to common components.
-
-      if (c instanceof PhysicsComponent) { this.physics = c; }
-      if (c instanceof DebugDraw)        { this.debug = c;   }
-      if (c instanceof TweenComponent)   { this.tween = c;   }
-
-      c.init(this);
-    }
-  }
-
   private sortDepths(): void {
     this.displayObject.children.sort((a, b) => {
       /*
@@ -504,16 +486,5 @@ class Sprite {
     }
 
     return result;
-  }
-}
-
-const component = function<T extends Sprite>(comp: Component<Sprite>): (target: any) => void {
-  return (target: any) => { // TODO: Idk how to type this!
-    const name = /^function\s+([\w\$]+)\s*\(/.exec(target.toString())[1];
-    let comps  = Sprite.componentsForClasses[name];
-
-    if (!comps) { comps = Sprite.componentsForClasses[name] = []; }
-
-    comps.push(comp);
   }
 }
