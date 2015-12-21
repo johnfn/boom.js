@@ -17,8 +17,9 @@
    }
 
    public addComponent(comp: Component<Composite>): void {
-     this.components.push(comp);
-     comp.setTarget(this);
+     const c = Util.Clone(comp);
+     this.components.push(c);
+     c.setTarget(this);
    }
 
    public getComponent<T>(type: { new (...args: any[]): T } ): T {

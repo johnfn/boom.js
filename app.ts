@@ -6,14 +6,14 @@
 }))
 class Ship extends Sprite {
   constructor() {
-    super("assets/ship.png");
+    super('assets/ship.png');
 
     this.z = 10;
 
     this.y = 300;
   }
 
-  update(): void {
+  public update(): void {
     Globals.camera.x = this.x;
     Globals.camera.y = this.y;
 
@@ -34,7 +34,7 @@ class Ship extends Sprite {
     }
 
     if (Globals.keyboard.justDown.Spacebar) {
-      console.log("hello?");
+      debugger;
 
       const bullet = new Bullet(new Point(0, -1));
 
@@ -46,12 +46,13 @@ class Ship extends Sprite {
   }
 }
 
-
 class MovingComponent extends Component<Bullet> {
   public postUpdate(): void { }
   public preUpdate() : void { }
   public update(): void {
     super.update();
+
+    debugger;
 
     this._sprite.physics.moveBy(0, -1);
   }
@@ -59,7 +60,10 @@ class MovingComponent extends Component<Bullet> {
 
 @component(new DestroyWhenOffscreen())
 @component(new MovingComponent())
-@component(new PhysicsComponent({ solid: true, immovable: true }))
+@component(new PhysicsComponent({
+  immovable: true,
+  solid: true,
+}))
 class Bullet extends Sprite {
   constructor(velocity: Point) {
     super('assets/bullet.png');
@@ -71,12 +75,12 @@ class Bullet extends Sprite {
 }
 
 @component(new PhysicsComponent({
+  immovable: true,
   solid: true,
-  immovable: true
 }))
 class Enemy extends Sprite {
   constructor() {
-    super("assets/ship.png");
+    super('assets/ship.png');
 
     this.z = 10;
     this.y = 0;
@@ -105,7 +109,7 @@ class EnemySpawner extends Sprite {
 
 /*
 class Player extends Sprite {
-  public baseName: string = "Player";
+  public baseName: string = 'Player';
 
   @inspect
   public speed: number = 5;
@@ -185,13 +189,13 @@ class Box extends Sprite {
 
 class MyGame extends Game {
   constructor() {
-    super(600, 400, document.getElementById("main"), 0x000000, true);
+    super(600, 400, document.getElementById('main'), 0x000000, true);
 
     const ship = new Ship();
 
     Globals.stage.addChild(ship);
 
-    let tmp = new TiledMapParser("assets/map.json");
+    let tmp = new TiledMapParser('assets/map.json');
     tmp.z = -10;
 
     tmp.parse();
@@ -202,7 +206,7 @@ class MyGame extends Game {
 
     new FPSCounter();
 
-    const test = new TextField("This is [a test](red)xand [this should be blue](blue)")
+    const test = new TextField('This is [a test](red)xand [this should be blue](blue)')
 
     Globals.stage.addChild(test);
 

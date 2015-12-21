@@ -61,7 +61,7 @@ class Root extends React.Component<RootProps, RootState> {
       state.target = target;
 
       return state;
-    }, () => {
+    },            () => {
       if (target === undefined) {
         if (this.transformWidget.parent) {
           this.transformWidget.parent.removeChild(this.transformWidget);

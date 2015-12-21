@@ -15,10 +15,10 @@
 
   /**
    * Clone obj, optionally copying over key value pairs from props onto obj.
-   * Currently too stupid to do cycle detection... blehhhhh.
+   * Currently too stupid to do cycle detection... blehhhhh. (TODO)
    */
   public static Clone<T>(obj: T): T {
-    if (obj === undefined || typeof (obj) !== 'object' || 'isActiveClone' in obj) {
+    if (obj === undefined || obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj) {
       return obj;
     }
 
