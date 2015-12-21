@@ -25,7 +25,11 @@
     this.width  = width;
     this.height = height;
 
-    this.displayObject.hitArea = new PIXI.Rectangle(0, 0, width, height);
+    // TODO(confusing)
+    // I don't understand why I have to do this. According to the PIXI docs, I shouldn't,
+    // but if I remove this line, click events stop working!
+    this.displayObject.hitArea = new PIXI.Rectangle(-100000, -100000, 200000, 200000);
+
     this.displayObject.interactive = true;
   }
 }
