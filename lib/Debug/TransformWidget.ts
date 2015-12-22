@@ -1,10 +1,13 @@
-﻿@component(new DebugDraw())
+﻿
+@component(new DebugDraw())
 class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;
   private _target: Sprite;
 
   constructor() {
+    debugger;
+
     super();
 
     this.displayObject.interactive = true;

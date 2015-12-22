@@ -11,8 +11,10 @@
    constructor() {
      let proto = Object.getPrototypeOf(this);
 
+     // if (Util.GetClassName(this) === 'TransformWidget') { debugger; }
+
      while (proto !== null) {
-       const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(this)] || [];
+       const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(proto)] || [];
 
        for (const c of componentsToAdd) {
          this.addComponent(c);
@@ -23,6 +25,14 @@
    }
 
    public addComponent(comp: Component<Composite>): void {
+     if (this.hasComponent(comp.constructor as any)) {
+       console.error('Trying to add 2 components of the same type.')
+
+       debugger;
+
+       return;
+     }
+
      const c = Util.Clone(comp);
 
      this.components.push(c);
@@ -36,7 +46,7 @@
        }
      }
 
-     console.error(`couldn't find component of type ${type}`);
+     console.error(`couldn't find component of type ${type.name} on ${Util.GetClassName(this)}`);
 
      return undefined;
   }

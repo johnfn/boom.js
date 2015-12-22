@@ -222,7 +222,7 @@
       return '[object]';
     }
 
-    if ((target as any).__className) {
+    if (target.hasOwnProperty('__className')) {
       return (target as any).__className;
     }
 

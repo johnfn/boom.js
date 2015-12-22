@@ -26,7 +26,7 @@ type PIXIMouseEvent = PIXI.interaction.InteractionEvent;
  * Root is the react component at the base of the HTML hierarchy.
  */
 class Root extends React.Component<RootProps, RootState> {
-  public transformWidget = new TransformWidget();
+  public transformWidget: TransformWidget;
 
   private _currentMousedObject : Sprite;
   private _currentClickedObject: Sprite;
@@ -42,6 +42,8 @@ class Root extends React.Component<RootProps, RootState> {
 
   constructor(props: RootProps) {
     super(props);
+
+    this.transformWidget = new TransformWidget();
 
     const stage = props.stage;
 
