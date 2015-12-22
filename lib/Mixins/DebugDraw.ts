@@ -19,7 +19,7 @@ enum DebugEvents {
  * The idea is that DebugDraw will clear when you expect it to clear.
  */
 class DebugDraw extends Component<Sprite> {
-  public events = new Events<DebugEvents>(true);
+  public events: Events<DebugEvents> = new Events<DebugEvents>(true);
 
   private _graphics: PIXI.Graphics;
   private _clickableShapes   = new MagicArray<Polygon>();

@@ -21,6 +21,7 @@ enum SpriteEvents {
 
 @component(new DebugDraw())
 @component(new TweenComponent())
+@component(new Events<SpriteEvents>())
 class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
@@ -70,6 +71,11 @@ class Sprite extends Composite {
   public tween: TweenComponent;
 
   /**
+   * Events component. Useful for listening and reacting to changes in the Sprite.
+   */
+  public events: Events<SpriteEvents>;
+
+  /**
    * The first part of this sprite's name.
    */
   public baseName: string;
@@ -78,8 +84,6 @@ class Sprite extends Composite {
    * Name for this sprite. Only used for debugging.
    */
   public get name(): string { return `${this.baseName} (${this._objectNumber})`; }
-
-  public events = new Events<SpriteEvents>();
 
   /**
    * PIXI-backed Display Object for this Sprite.
@@ -287,20 +291,17 @@ class Sprite extends Composite {
 
     this._setUpEvents();
 
-    this.x = 0;
-    this.y = 0;
-
-    // Removed in the main game loop. (TODO - why not _actuallyDestroy)
-    Composites.add(this);
-
-    // TODO: Should probably just decorate Sprite
-    // Add default sprite components
-
-   // Make easy-to-access references to common components.
+    // Make easy-to-access references to common components.
 
     if (this.hasComponent(PhysicsComponent)) { this.physics = this.getComponent(PhysicsComponent); }
     if (this.hasComponent(DebugDraw))        { this.debug   = this.getComponent(DebugDraw);        }
     if (this.hasComponent(TweenComponent))   { this.tween   = this.getComponent(TweenComponent);   }
+    if (this.hasComponent(Events))           { this.events  = this.getComponent(Events);           }
+  }
+
+  public init(): void {
+    this.x = 0;
+    this.y = 0;
   }
 
   public moveTo(x: number, y: number): this {
@@ -432,7 +433,7 @@ class Sprite extends Composite {
     this.parent.displayObject.removeChild(this.displayObject);
 
     this.displayObject = undefined;
-    this.events = undefined;
+    this.events        = undefined;
   }
 
   public contains(p: Point): boolean {

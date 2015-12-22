@@ -2,15 +2,19 @@
   AddFirstEvent
 }
 
+interface HasEvents<T> { events: Events<T> }
+
 type EventCB = (...args: any[]) => void;
 
-class Events<T> {
+class Events<T> extends Component<Composite> {
   public metaEvents: Events<MetaEvents> = undefined;
 
   private _events    = new MagicDict<T, MagicArray<EventCB>>(() => new MagicArray<EventCB>());
   private _numEvents = 0;
 
   constructor(dispatchMetaEvents = false) {
+    super();
+
     if (dispatchMetaEvents) {
       this.metaEvents = new Events<MetaEvents>();
     }

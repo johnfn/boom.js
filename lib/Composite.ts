@@ -25,6 +25,8 @@
 
        proto = Object.getPrototypeOf(proto);
      }
+
+     Composites.add(this);
    }
 
    public addComponent(comp: Component<Composite>): void {
