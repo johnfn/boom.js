@@ -235,7 +235,9 @@
       result = '[stubborn builtin]'
     }
 
-    (target as any).__className = result;
+    if (target !== Object.prototype) {
+      (target as any).__className = result;
+    }
 
     return result;
   }

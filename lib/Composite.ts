@@ -11,7 +11,7 @@
    constructor() {
      let proto = Object.getPrototypeOf(this);
 
-     // if (Util.GetClassName(this) === 'TransformWidget') { debugger; }
+     if (Util.GetClassName(this) === 'Bullet') { debugger; }
 
      while (proto !== null) {
        const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(proto)] || [];
