@@ -18,7 +18,7 @@ enum SpriteEvents {
   ChangeParent
 }
 
-// @component(new DebugDraw())
+@component(new DebugDraw())
 class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
@@ -287,6 +287,7 @@ class Sprite extends Composite {
     }
 
     this.displayObject = new PIXI.Sprite(this.texture);
+
     Stage.doToSprite.put(this.displayObject, this);
 
     this._setUpEvents();

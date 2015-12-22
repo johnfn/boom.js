@@ -1,5 +1,4 @@
 ﻿
-@component(new DebugDraw())
 class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;

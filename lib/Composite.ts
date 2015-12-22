@@ -46,7 +46,7 @@
        }
      }
 
-     console.error(`couldn't find component of type ${type.name} on ${Util.GetClassName(this)}`);
+     console.error(`couldn't find component of type ${(type as any).name} on ${Util.GetClassName(this)}`);
 
      return undefined;
   }
@@ -98,15 +98,15 @@ interface Constructable<T> {
   new (...args: any[]): T;
 }
 
-const component = function<T extends Composite>(comp: Component<Composite>): (target: any) => void {
+const component = function<T extends Composite>(comp: Component<Composite>): any {
   const renameFunction = function(name: any, fn: any): any {
     return (new Function('return function (call) { return function ' + name +
       ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));
   };
 
-
-  return (constructor: any) => {
-    const name = /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
+  return function(constructor: any): any {
+    const original = constructor;
+    const name = constructor.name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
     // Deal with component
 
@@ -117,22 +117,31 @@ const component = function<T extends Composite>(comp: Component<Composite>): (ta
     // the new constructor behaviour
 
     const f: any = function(...args: any[]): any {
-      const obj: any = invokeConstructor(constructor, args)
+      original.apply(this, args);
 
-      obj._initializeComponents();
-      if (obj.init) {
-        obj.init();
+      this._initializeComponents();
+      if (this.init) {
+        this.init();
       } else {
         console.log('consider adding init to ' + name + ' class.')
       }
-
-      return obj;
     }
 
+    const renamed = renameFunction(name, f);
+
     // copy prototype so intanceof operator still works
-    f.prototype = constructor.prototype;
+    renamed.prototype = original.prototype;
+
+    // Copy over static properties (except the ones we already have)
+    const skippedProps = Object.getOwnPropertyNames(Function);
+
+    for (const propName of Object.getOwnPropertyNames(original)) {
+      if (skippedProps.indexOf(propName) !== -1) { continue; }
+
+      renamed[propName] = original[propName];
+    }
 
     // return new constructor (will override original)
-    return renameFunction(name, f);
+    return renamed;
   }
 }

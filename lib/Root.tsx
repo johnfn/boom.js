@@ -10,7 +10,6 @@ interface RootState {
  * A sprite purely used for rendering debugging graphics.
  */
 
-@component(new DebugDraw())
 class DebugSprite extends Sprite {
   constructor() {
     super();
