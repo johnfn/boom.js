@@ -294,7 +294,6 @@ class Sprite extends Composite {
     // Make easy-to-access references to common components.
 
     if (this.hasComponent(PhysicsComponent)) { this.physics = this.getComponent(PhysicsComponent); }
-    if (this.hasComponent(DebugDraw))        { this.debug   = this.getComponent(DebugDraw);        }
     if (this.hasComponent(TweenComponent))   { this.tween   = this.getComponent(TweenComponent);   }
     if (this.hasComponent(Events))           { this.events  = this.getComponent(Events);           }
   }

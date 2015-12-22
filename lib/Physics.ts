@@ -286,6 +286,7 @@ class PhysicsComponent extends Component<Sprite> {
   }
 
   public init(): void {
+    console.log('add ', Util.GetClassName(this._composite))
     Globals.physicsManager.add(this._composite)
   }
 

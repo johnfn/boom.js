@@ -73,7 +73,7 @@ class Game {
     for (const composite of composites) {
       composite.preUpdate();
 
-      for (const c of composite.components) {
+      for (const c of composite.getComponents()) {
         c.preUpdate();
       }
     }
@@ -81,7 +81,7 @@ class Game {
     for (const composite of composites) {
       composite.update();
 
-      for (const c of composite.components) {
+      for (const c of composite.getComponents()) {
         c.update();
       }
     }
@@ -91,13 +91,13 @@ class Game {
     for (const composite of composites) {
       composite.postUpdate();
 
-      for (const c of composite.components) {
+      for (const c of composite.getComponents()) {
         c.postUpdate();
       }
     }
 
     for (const sprite of Globals._destroyList) {
-      for (const c of sprite.components) {
+      for (const c of sprite.getComponents()) {
         c.destroy();
       }
 

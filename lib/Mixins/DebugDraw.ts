@@ -5,6 +5,8 @@ enum DebugEvents {
   MouseUp
 }
 
+interface HasDebugDraw { debug: DebugDraw }
+
 /**
  * A handy component for drawing debugging shapes (lines, rectangles)
  * on Sprites.
@@ -18,7 +20,7 @@ enum DebugEvents {
  *
  * The idea is that DebugDraw will clear when you expect it to clear.
  */
-class DebugDraw extends Component<Sprite> {
+class DebugDraw extends Component<Sprite & HasDebugDraw> {
   public events: Events<DebugEvents> = new Events<DebugEvents>(true);
 
   private _graphics: PIXI.Graphics;
@@ -34,6 +36,8 @@ class DebugDraw extends Component<Sprite> {
     this._composite._addDO(this._graphics);
     this._composite.displayObject.interactive = true;
     this._graphics.interactive = true;
+
+    this._composite.debug = this;
 
     /* Add mouse events, but listen to MetaEvents.AddFirstEvent so we
        aren't adding interactive events when there's no need to. */

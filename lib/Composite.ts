@@ -1,10 +1,15 @@
+interface ComponentInfo {
+  component: Component<Composite>;
+  hasInitialized: boolean;
+}
+
 /**
  * An object made up of components.
  */
  abstract class Composite {
    public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
-   public components: Component<Composite>[] = [];
+   private _components: ComponentInfo[] = [];
 
    private _hash: string;
 
@@ -40,12 +45,12 @@
 
      const c = Util.Clone(comp);
 
-     this.components.push(c);
+     this._components.push({ component: c, hasInitialized: false });
      c.setTarget(this);
    }
 
    public getComponent<T>(type: { new (...args: any[]): T } ): T {
-     for (const comp of this.components) {
+     for (const comp of this.getComponents()) {
        if (comp instanceof type) {
          return (comp as any) as T;
        }
@@ -56,8 +61,18 @@
      return undefined;
   }
 
+  public getComponents(): Component<Composite>[] {
+    const result: Component<Composite>[] = [];
+
+    for (const comp of this._components) {
+      result.push(comp.component);
+    }
+
+    return result;
+  }
+
   public hasComponent<T>(type: { new (...args: any[]): T } ): boolean {
-    for (const comp of this.components) {
+    for (const comp of this.getComponents()) {
       if (comp instanceof type) {
         return true;
       }
@@ -78,11 +93,20 @@
    * you to need to call it.
    */
   public _initializeComponents(): void {
-    for (const comp of this.components) {
-      comp.setTarget(this);
-      comp.init();
+    debugger;
+
+    for (const comp of this._components) {
+      if (comp.hasInitialized) { continue; }
+
+      comp.component.setTarget(this);
+      comp.component.init();
+      comp.hasInitialized = true;
     }
   }
+}
+
+interface Constructable< T > {
+  new (...args: any[]): T;
 }
 
 const component = function<T extends Composite>(comp: Component<Composite>): any {
@@ -91,8 +115,8 @@ const component = function<T extends Composite>(comp: Component<Composite>): any
       ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));
   };
 
-  return function(constructor: any): any {
-    const name = constructor.name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
+  return function(constructor: Constructable<Composite>): any {
+    const name = (constructor as any).name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
     // Deal with component
 
@@ -125,7 +149,7 @@ const component = function<T extends Composite>(comp: Component<Composite>): any
     for (const propName of Object.getOwnPropertyNames(constructor)) {
       if (skippedProps.indexOf(propName) !== -1) { continue; }
 
-      renamed[propName] = constructor[propName];
+      renamed[propName] = (constructor as any)[propName];
     }
 
     // return new constructor (will override original)
