@@ -1,4 +1,4 @@
-﻿class Group<T extends Sprite> {
+﻿class Group<T extends Composite> {
   private _length: number = 0;
 
   private _dict: { [key: string]: T } = {};

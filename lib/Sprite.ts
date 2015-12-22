@@ -1,5 +1,6 @@
 ﻿/// <reference path="./datastructures.d.ts"/>
 /// <reference path="./Mixins/DebugDraw.ts"/>
+/// <reference path="./lib.d.ts"/>
 
 enum SpriteEvents {
   AddChild,
@@ -19,6 +20,7 @@ enum SpriteEvents {
 }
 
 @component(new DebugDraw())
+@component(new TweenComponent())
 class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
@@ -102,14 +104,7 @@ class Sprite extends Composite {
    */
   private _objectNumber: number;
 
-  private _hash: string;
-
   private _globalXYCache: Point = undefined;
-
-  public get hash(): string {
-    if (this._hash) { return this._hash; }
-    return this._hash = '' + Math.random();
-  }
 
   public get textureUrl(): string {
     return this.texture.baseTexture.imageUrl;
@@ -296,13 +291,10 @@ class Sprite extends Composite {
     this.y = 0;
 
     // Removed in the main game loop. (TODO - why not _actuallyDestroy)
-    Sprites.add(this);
+    Composites.add(this);
 
     // TODO: Should probably just decorate Sprite
     // Add default sprite components
-
-    // this.addComponent(new DebugDraw()); // Note - can't be decorated!
-    this.addComponent(new TweenComponent());
 
    // Make easy-to-access references to common components.
 
@@ -381,8 +373,6 @@ class Sprite extends Composite {
   public update(): void {
     this._globalXYCache = undefined;
   }
-
-  public postUpdate(): void { }
 
   /**
    * Get every sprite that is nested under this sprite.

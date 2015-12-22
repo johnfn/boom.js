@@ -64,7 +64,7 @@ class Bullet extends Sprite {
 
     this.z = 20;
 
-    this.physics.collidesWith = Sprites.all(Ship);
+    this.physics.collidesWith = Composites.all(Ship);
   }
 }
 
@@ -80,7 +80,7 @@ class Enemy extends Sprite {
     this.y = 0;
   }
 
-  update(): void {
+  public update(): void {
     this.physics.moveBy(0, -5);
   }
 }
@@ -94,7 +94,7 @@ class EnemySpawner extends Sprite {
     this._stage = stage;
   }
 
-  update(): void {
+  public update(): void {
     if (Math.random() > .95) {
       Globals.stage.addChild(new Enemy());
     }

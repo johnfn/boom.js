@@ -1,17 +1,20 @@
 /**
  * An object made up of components.
- *
- * Note: Composite currently doesn't handle component inheritance...
  */
- class Composite {
+ abstract class Composite {
    public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
    public components: Component<Composite>[] = [];
 
+   private _hash: string;
+
+   public get hash(): string {
+     if (this._hash) { return this._hash; }
+     return this._hash = '' + Math.random();
+   }
+
    constructor() {
      let proto = Object.getPrototypeOf(this);
-
-     if (Util.GetClassName(this) === 'Bullet') { debugger; }
 
      while (proto !== null) {
        const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(proto)] || [];
@@ -61,6 +64,13 @@
     return false;
   }
 
+
+  public preUpdate(): void { }
+
+  public update(): void { }
+
+  public postUpdate(): void { }
+
   /**
    * This method is called for you. There should be no reason for
    * you to need to call it.
@@ -80,7 +90,6 @@ const component = function<T extends Composite>(comp: Component<Composite>): any
   };
 
   return function(constructor: any): any {
-    const original = constructor;
     const name = constructor.name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
     // Deal with component
@@ -91,10 +100,11 @@ const component = function<T extends Composite>(comp: Component<Composite>): any
 
     // the new constructor behaviour
 
-    const f: any = function(...args: any[]): any {
-      original.apply(this, args);
+    const f = function(...args: any[]): any {
+      constructor.apply(this, args);
 
       this._initializeComponents();
+
       if (this.init) {
         this.init();
       } else {
@@ -105,15 +115,15 @@ const component = function<T extends Composite>(comp: Component<Composite>): any
     const renamed = renameFunction(name, f);
 
     // copy prototype so intanceof operator still works
-    renamed.prototype = original.prototype;
+    renamed.prototype = constructor.prototype;
 
     // Copy over static properties (except the ones we already have)
     const skippedProps = Object.getOwnPropertyNames(Function);
 
-    for (const propName of Object.getOwnPropertyNames(original)) {
+    for (const propName of Object.getOwnPropertyNames(constructor)) {
       if (skippedProps.indexOf(propName) !== -1) { continue; }
 
-      renamed[propName] = original[propName];
+      renamed[propName] = constructor[propName];
     }
 
     // return new constructor (will override original)

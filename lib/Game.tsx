@@ -64,32 +64,34 @@ class Game {
    * The core update loop.
    */
   public update(): void {
-    let children = Sprites.all().items();
+    let composites = Composites.all().items();
 
     Game.ticks++;
 
     Globals.keyboard.update();
 
-    for (const sprite of children) {
-      for (const c of sprite.components) {
+    for (const composite of composites) {
+      composite.preUpdate();
+
+      for (const c of composite.components) {
         c.preUpdate();
       }
     }
 
-    for (const sprite of children) {
-      sprite.update();
+    for (const composite of composites) {
+      composite.update();
 
-      for (const c of sprite.components) {
+      for (const c of composite.components) {
         c.update();
       }
     }
 
     Globals.physicsManager.update();
 
-    for (const sprite of children) {
-      sprite.postUpdate();
+    for (const composite of composites) {
+      composite.postUpdate();
 
-      for (const c of sprite.components) {
+      for (const c of composite.components) {
         c.postUpdate();
       }
     }
@@ -99,7 +101,7 @@ class Game {
         c.destroy();
       }
 
-      Sprites.remove(sprite);
+      Composites.remove(sprite);
       sprite._actuallyDestroy();
     }
 

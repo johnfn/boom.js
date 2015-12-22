@@ -18,7 +18,7 @@ class FPSCounter extends TextField {
 
     if (now - this._timeElapsed > 1000) {
       this.text = `<one>FPS: ${ this._frames }
-Objects: ${ Sprites.all().length() }</one>`;
+Objects: ${ Composites.all().length() }</one>`;
 
       this._timeElapsed = now
       this._frames = 0;

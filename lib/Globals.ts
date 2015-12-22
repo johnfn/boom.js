@@ -49,41 +49,41 @@ class Globals {
   }
 }
 
-class Sprites {
-  public static list = new Group<Sprite>();
+class Composites {
+  public static list = new Group<Composite>();
 
-  private static _all: Sprite[] = [];
-  private static _cache: { [key: string]: Group<Sprite> } = {};
+  private static _all: Composite[] = [];
+  private static _cache: { [key: string]: Group<Composite> } = {};
 
   /**
-   * Get all sprites of a provided type.
+   * Get all composites of a provided type.
    * @param type
    */
-  public static all<T extends Sprite>(type: { new (...args: any[]) : T } = Sprite as any): Group<T> {
+  public static all<T extends Composite>(type: { new (...args: any[]) : T } = Composite as any): Group<T> {
     const typeName = ('' + type).split('function ')[1].split('(')[0];
 
-    if (typeName === 'Sprite') {
-      return Sprites.list as Group<T>;
+    if (typeName === 'Composite') {
+      return Composites.list as Group<T>;
     }
 
-    return Sprites._cache[typeName] as Group<T>;
+    return Composites._cache[typeName] as Group<T>;
   }
 
-  public static add<T extends Sprite>(s: T): void {
+  public static add<T extends Composite>(s: T): void {
     const typeName = Util.GetClassName(s);
 
     this.list.add(s);
     this._all.push(s);
 
-    if (!Sprites._cache[typeName]) {
-      Sprites._cache[typeName] = new Group<Sprite>();
+    if (!Composites._cache[typeName]) {
+      Composites._cache[typeName] = new Group<Composite>();
     }
 
-    Sprites._cache[typeName].add(s);
+    Composites._cache[typeName].add(s);
   }
 
-  public static by(fn: (s: Sprite) => boolean): Group<Sprite> {
-    const result: Sprite[] = [];
+  public static by(fn: (s: Composite) => boolean): Group<Composite> {
+    const result: Composite[] = [];
 
     for (let i = 0; i < this._all.length; i++) {
       const item = this._all[i];
@@ -94,12 +94,12 @@ class Sprites {
     return new Group(result);
   }
 
-  public static remove<T extends Sprite>(s: T): void {
+  public static remove<T extends Composite>(s: T): void {
     const typeName = Util.GetClassName(s);
 
     this._all.splice(this._all.indexOf(s), 1);
     this.list.remove(s);
 
-    Sprites._cache[typeName].remove(s);
+    Composites._cache[typeName].remove(s);
   }
 }

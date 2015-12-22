@@ -5,8 +5,6 @@ class TransformWidget extends Sprite {
   private _target: Sprite;
 
   constructor() {
-    debugger;
-
     super();
 
     this.displayObject.interactive = true;
