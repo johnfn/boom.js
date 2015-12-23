@@ -27,6 +27,13 @@ interface ComponentInfo {
      return this._hash = '' + Math.random();
    }
 
+   public static registerComponentForClass(comp: Component<Composite>, name: string): void {
+     let comps = Composite.componentsForClasses[name];
+
+     if (!comps) { comps = Composite.componentsForClasses[name] = []; }
+     comps.push(comp);
+   }
+
    constructor() {
      let proto = Object.getPrototypeOf(this);
 
@@ -173,11 +180,7 @@ const component = function<T extends Composite>(comp: Component<T>): any {
   return function(constructor: Constructable<Composite>): any {
     const name = (constructor as any).name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
-    // Deal with component
-
-    let comps = Composite.componentsForClasses[name];
-    if (!comps) { comps = Composite.componentsForClasses[name] = []; }
-    comps.push(comp);
+    Composite.registerComponentForClass(comp, name);
 
     // the new constructor behaviour
 
