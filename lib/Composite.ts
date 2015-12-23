@@ -11,6 +11,11 @@ interface ComponentInfo {
 
    public static _destroyList: Composite[] = [];
 
+   /**
+    * Allow multiple components of this type? Defauls to false.
+    */
+   public allowMultiple = false;
+
    private _components: ComponentInfo[] = [];
 
    private _hash: string;
@@ -64,14 +69,14 @@ interface ComponentInfo {
    }
 
    /**
-    * Immediately destroys this composite. It is highly recommended to use
-    * destroy() instead.
+    * Immediately destroys this composite, purging all the memory it used.
+    * If you want to destroy a Composite, it's strongly recommended to use
+    * destroy() instead, which will defer a call _actuallyDestroy.
     */
-   public _actuallyDestroy(): void {
-   }
+   public _actuallyDestroy(): void { }
 
    public addComponent(comp: Component<Composite>): void {
-     if (this.hasComponent(comp.constructor as any)) {
+     if (!this.allowMultiple && this.hasComponent(comp.constructor as any)) {
        console.error('Trying to add 2 components of the same type.')
 
        debugger;

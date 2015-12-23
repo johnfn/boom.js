@@ -6,7 +6,7 @@
  *
  */
 class Game {
-  public static ticks  : number = 0;
+  public static ticks     : number = 0;
 
   /**
    * Turns on a bunch of debugging-only features.
