@@ -15,6 +15,8 @@ class TransformWidget extends Sprite {
   }
 
   public init(): void {
+    super.init();
+
     this._draw();
 
     this.debug.events.on(DebugEvents.MouseDown, (point: PIXI.Point) => {

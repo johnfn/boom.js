@@ -13,7 +13,7 @@ class Events<T> extends Component<Composite> {
   private _numEvents = 0;
 
   constructor(dispatchMetaEvents = false) {
-    super();
+    super('events');
 
     if (dispatchMetaEvents) {
       this.metaEvents = new Events<MetaEvents>();

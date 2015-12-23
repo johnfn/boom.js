@@ -49,6 +49,8 @@ interface ComponentInfo {
 
    public postUpdate(): void { }
 
+   public init(): void { }
+
   /**
    * Destroys this sprite.
    */
@@ -127,6 +129,27 @@ interface ComponentInfo {
    * you to need to call it.
    */
   public _initializeComponents(): void {
+    // Add each component as a property on the composite (if it has a specified propName)
+
+    for (const c of this._components) {
+      if (c.hasInitialized) { continue; }
+
+      const comp = c.component;
+      const propName = comp.getPropName();
+
+      if (propName === '') {
+        continue;
+      }
+
+      if ((comp.getComposite() as any)[propName] !== undefined) {
+        console.log(`tried to set ${Util.GetClassName(comp.getComposite())}.${propName}, but it was already set...`);
+
+        continue;
+      }
+
+      (comp.getComposite() as any)[propName] = comp;
+    }
+
     for (const comp of this._components) {
       if (comp.hasInitialized) { continue; }
 

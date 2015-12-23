@@ -28,10 +28,12 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
   private _hasDrawnThisFrame = false;
 
   constructor() {
-    super()
+    super('debug')
   }
 
   public init(): void {
+    super.init();
+
     this._graphics = new PIXI.Graphics();
     this._composite._addDO(this._graphics);
     this._composite.displayObject.interactive = true;

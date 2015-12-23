@@ -36,7 +36,7 @@ class TweenComponent extends Component<Sprite> {
   private _tweens: { [key: string]: Tween};
 
   constructor() {
-    super();
+    super('tween');
 
     this._tweens = {};
   }

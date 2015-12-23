@@ -39,8 +39,6 @@ class Sprite extends Composite {
 
   /**
    * Physics component. Used for collisions and movement.
-   *
-   * @type {PhysicsComponent}
    */
   public physics: PhysicsComponent;
 
@@ -244,16 +242,11 @@ class Sprite extends Composite {
     Stage.doToSprite.put(this.displayObject, this);
 
     this._setUpEvents();
-
-    // Make easy-to-access references to common components.
-
-    if (this.hasComponent(PhysicsComponent)) { this.physics = this.getComponent(PhysicsComponent); }
-    if (this.hasComponent(TweenComponent))   { this.tween   = this.getComponent(TweenComponent);   }
-    if (this.hasComponent(Events))           { this.events  = this.getComponent(Events);           }
-    if (this.hasComponent(InspectComponent)) { this.inspect = this.getComponent(InspectComponent); }
   }
 
   public init(): void {
+    super.init();
+
     this.x = 0;
     this.y = 0;
   }

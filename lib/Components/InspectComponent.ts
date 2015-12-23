@@ -34,11 +34,17 @@ class InspectComponent extends Component<Sprite> {
     InspectComponent.inspectableProperties[className].push(propName);
   }
 
+  constructor() {
+    super('inspect');
+  }
+
   public setBaseName(name: string): void {
     this._baseName = name;
   }
 
   public init(): void {
+    super.init();
+
     const className = Util.GetClassName(this._composite);
 
     this._objectNumber = InspectComponent._derivedObjectCount[className] = (InspectComponent._derivedObjectCount[className] || 0) + 1;

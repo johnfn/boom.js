@@ -279,13 +279,15 @@ class PhysicsComponent extends Component<Sprite> {
   public collidedWith = new MagicArray<Sprite>();
 
   constructor(physics: Physics) {
-    super();
+    super('physics');
 
     this.solid        = physics.solid;
     this.immovable    = physics.immovable;
   }
 
   public init(): void {
+    super.init();
+
     Globals.physicsManager.add(this._composite)
   }
 
