@@ -6,9 +6,13 @@ Here's a few guidelines I follow for this project:
 
 Rationale: It's good to have a set of standards. tslint even catches a few bugs.
 
-#### Private methods annotated with an underscore
+#### Prefix private methods with an underscore
 
-Rationale: Inevitably people are going to use this project from JavaScript. If they do so, it should be Obvious and Ugly that they are doing the wrong thing (and by that, I mean using private methods, not using JavaScript... though that works, too. :-)
+Rationale: Inevitably people are going to use this project from JavaScript. If they do so, it should be Obvious that they are doing the wrong thing (and by that, I mean using private methods, not using JavaScript... though that is also accurate :-)
+
+#### The name of the backing variable for getters/setters called `foo` should be `_foo`
+
+Rationale: We may as well standardize on something, and this is a common practice. It also allows the property to be discoverable by the Inspector.
 
 #### Prefer `const` over `let`, even for arrays and objects where inner values change
 
@@ -18,4 +22,6 @@ Rationale: Stop reading `const` as "constant value." Start reading it as "single
 
 #### Never use `var`
 
-The only case I've found that it's necessary is when TypeScript refuses to capture a let/const in a function in a loop but when I know that it is fine - but they should be fixing that case in 1.8.
+Rationale: Everyone agrees on this.
+
+The only case I've found that `var` is necessary is when TypeScript refuses to capture a let/const in a function in a loop but when I can verify that it is fine. TypeScript is fixing that case in 1.8.
