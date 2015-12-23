@@ -119,6 +119,3 @@ class Game {
   }
 }
 
-function inspect<T extends Sprite>(target: T, name: string): void {
-  target.addInspectableProperty(Util.GetClassName(target), name);
-}

@@ -5,4 +5,5 @@
 /// <reference path="Evented.ts"/>
 /// <reference path="FollowWithCamera.ts"/>
 /// <reference path="FixedToCamera.ts"/>
+/// <reference path="InspectComponent.ts"/>
 /// <reference path="TweenComponent.ts"/>

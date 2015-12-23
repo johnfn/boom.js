@@ -1,10 +1,13 @@
 ## Guide
 
-The ordering goes like this:
+There's a bit of a dance between components and composites, since they both depend on each other. Rule of thumb:
 
-1. Component constructor()
-2. Composite constructor()
-3. Component init()
-4. Composite init()
+* Use `constructor` to set up yourself
+* Use `init` to talk with components if you're a composite, or vice versa.
 
-So, e.g., the component constructor can't refer to the composite at all.
+The explicit ordering goes like this:
+
+1. Component constructor() (can't use composite at all yet)
+2. Composite constructor() (set up composite - components exist but are not fully created)
+3. Component init() (components can now refer to composite)
+4. Composite init() (components are now fully functional)

@@ -275,7 +275,7 @@ class TiledMapParser extends Sprite {
   private parseTiledMapLayer(layerJSON: TiledMapLayerJSON, tilesets: MagicArray<Tileset>): Sprite {
     let layer = new Sprite();
 
-    layer.baseName = layerJSON.name;
+    layer.inspect.setBaseName(layerJSON.name);
 
     for (let i = 0; i < layerJSON.data.length; i++) {
       // Find the spritesheet that contains the tile id.

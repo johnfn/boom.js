@@ -32,7 +32,7 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
       subNodes = (
         <div className='prop-list'>
             { this.props.target.children.map((o, i) =>
-              <span key={ o.name }>
+              <span key={ o.inspect.name }>
                 <Hierarchy
                   target={ o }
                   root={ this.props.root }
@@ -47,7 +47,7 @@ class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
         <a href='#'
            onClick={ () => this._click() }
            className={ this.props.target === this.props.root.state.target ? 'target-element' : undefined }>
-          { this.props.target.name }
+          { this.props.target.inspect.name }
         </a>
         <span
           onClick={ () => this._toggle() }

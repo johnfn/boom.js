@@ -1,5 +1,4 @@
-﻿/// <reference path="./datastructures.d.ts"/>
-/// <reference path="./Mixins/DebugDraw.ts"/>
+/// <reference path="./datastructures.d.ts"/>
 /// <reference path="./lib.d.ts"/>
 
 enum SpriteEvents {
@@ -19,6 +18,7 @@ enum SpriteEvents {
   ChangeParent
 }
 
+@component(new InspectComponent())
 @component(new DebugDraw())
 @component(new TweenComponent())
 @component(new Events<SpriteEvents>())
@@ -32,22 +32,6 @@ class Sprite extends Composite {
    * Maps DisplayObjects to Sprites associated to those DisplayObjects.
    */
   public static doToSprite = new MagicDict<PIXI.DisplayObject, Sprite>();
-
-  public static defaultInspectableProperties = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
-
-  /**
-   * Mapping of class names to inspectable properties of that class.
-   *
-   * TODO: Should probably make a whole property type so that this seems less
-   * odd.
-   */
-  public static inspectableProperties: { [key: string]: string[]; } = {};
-
-  /**
-   * This just maps sprite names to number of that type of sprite that we have
-   * seen. Only really used for name.
-   */
-  private static _derivedObjectCount: { [key: string]: number; } = {};
 
   //
   //          COMPONENTS
@@ -71,19 +55,14 @@ class Sprite extends Composite {
   public tween: TweenComponent;
 
   /**
+   * Inspectable component. Used by the Inspector and Hierarchy.
+   */
+  public inspect: InspectComponent;
+
+  /**
    * Events component. Useful for listening and reacting to changes in the Sprite.
    */
   public events: Events<SpriteEvents>;
-
-  /**
-   * The first part of this sprite's name.
-   */
-  public baseName: string;
-
-  /**
-   * Name for this sprite. Only used for debugging.
-   */
-  public get name(): string { return `${this.baseName} (${this._objectNumber})`; }
 
   /**
    * PIXI-backed Display Object for this Sprite.
@@ -101,27 +80,10 @@ class Sprite extends Composite {
 
   private _z: number = 0;
 
-  /**
-   * This is the _objectNumber-th Sprite-subclass created.
-   */
-  private _objectNumber: number;
-
   private _globalXYCache: Point = undefined;
 
   public get textureUrl(): string {
     return this.texture.baseTexture.imageUrl;
-  }
-
-  get inspectableProperties(): string[] {
-    const className = Util.GetClassName(this);
-
-    Sprite.inspectableProperties[className] = Sprite.inspectableProperties[className] || Sprite.defaultInspectableProperties.slice(0);
-    return Sprite.inspectableProperties[className];
-  }
-
-  public addInspectableProperty(className: string, propName: string): void {
-    Sprite.inspectableProperties[className] = Sprite.inspectableProperties[className] || Sprite.defaultInspectableProperties.slice(0);
-    Sprite.inspectableProperties[className].push(propName);
   }
 
   /**
@@ -269,12 +231,6 @@ class Sprite extends Composite {
   constructor(texture: PIXI.Texture | string = undefined) {
     super();
 
-    const className = Util.GetClassName(this);
-
-    if (!this.baseName) { this.baseName = Util.GetClassName(this); }
-
-    this._objectNumber = Sprite._derivedObjectCount[className] = (Sprite._derivedObjectCount[className] || 0) + 1;
-
     if (texture instanceof PIXI.Texture) {
       this.texture = texture;
     } else if (typeof texture === 'string') {
@@ -294,6 +250,7 @@ class Sprite extends Composite {
     if (this.hasComponent(PhysicsComponent)) { this.physics = this.getComponent(PhysicsComponent); }
     if (this.hasComponent(TweenComponent))   { this.tween   = this.getComponent(TweenComponent);   }
     if (this.hasComponent(Events))           { this.events  = this.getComponent(Events);           }
+    if (this.hasComponent(InspectComponent)) { this.inspect = this.getComponent(InspectComponent); }
   }
 
   public init(): void {

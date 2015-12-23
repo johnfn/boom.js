@@ -51,7 +51,7 @@ class Inspector extends React.Component<InspectorProps, InspectorState> {
 
     return (
       <div id='inspector'>
-        <div className='title'> Inspecting: { this.props.target.name } </div>
+        <div className='title'> Inspecting: { this.props.target.inspect.name } </div>
 
         <div className='prop-list'>
           <InspectorItemObject
