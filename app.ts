@@ -34,8 +34,6 @@ class Ship extends Sprite {
     }
 
     if (Globals.keyboard.justDown.Spacebar) {
-      debugger;
-
       const bullet = new Bullet(new Point(0, -1));
 
       Globals.stage.addChild(bullet);
