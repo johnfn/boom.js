@@ -59,16 +59,16 @@ interface ComponentInfo {
    public init(): void { }
 
   /**
-   * Destroys this sprite.
+   * Destroys this composite.
    */
    public destroy(): void {
-     // I lied! This doesn't actually destroy the sprite. It just marks it for deletion.
-     // Since updates are unordered, it's possible that a sprite that is yet to be
-     // deleted this tick still refers to this sprite, and if we deleted it immediately
+     // I lied! This doesn't actually destroy the composite. It just marks it for deletion.
+     // Since updates are unordered, it's possible that a composite that is yet to be
+     // deleted this tick still refers to this composite, and if we deleted it immediately
      // we would run into problems.
 
      if (this._destroyed) {
-       console.error('Sprite destroyed multiple times. THIS IS REALLY BAD.')
+       console.error('Composite destroyed multiple times. This is probably unintentional.')
 
        return;
      }

@@ -31,8 +31,6 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
 
     if (this.state.expanded) {
       for (const prop in this.obj) {
-        if (!this.obj.hasOwnProperty(prop)) { continue; }
-
         const node = this._valueToElem(this.obj[prop], prop, this.props.debugSprite);
 
         if (!node) { continue; }
@@ -63,7 +61,7 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
 
     const itemArgs = {
       debugSprite   : debugSprite,
-      onPropsChange : () => Inspector.instance.innerPropChange(),
+      onPropsChange : (): void => Inspector.instance.innerPropChange(),
       propName      : propName,
       target        : this.obj,
     };
