@@ -3,79 +3,78 @@ interface ComponentInfo {
   hasInitialized: boolean;
 }
 
-/**
- * An object made up of components.
- */
- abstract class Composite {
-   public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
+abstract class Composite {
+  public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
-   public static _destroyList: Composite[] = [];
+  public static _destroyList: Composite[] = [];
 
    /**
     * Allow multiple components of this type? Defauls to false.
     */
-   public allowMultiple = false;
+    public allowMultiple = false;
 
-   private _components: ComponentInfo[] = [];
+    public hasCalledInit = false;
 
-   private _hash: string;
+    private _components: ComponentInfo[] = [];
 
-   private _destroyed: boolean;
+    private _hash: string;
 
-   public get hash(): string {
-     if (this._hash) { return this._hash; }
-     return this._hash = '' + Math.random();
-   }
+    private _destroyed: boolean;
 
-   public static registerComponentForClass(comp: Component<Composite>, name: string): void {
-     let comps = Composite.componentsForClasses[name];
+    public get hash(): string {
+      if (this._hash) { return this._hash; }
+      return this._hash = '' + Math.random();
+    }
 
-     if (!comps) { comps = Composite.componentsForClasses[name] = []; }
-     comps.push(comp);
-   }
+    public static registerComponentForClass(comp: Component<Composite>, name: string): void {
+      let comps = Composite.componentsForClasses[name];
 
-   constructor() {
-     let proto = Object.getPrototypeOf(this);
+      if (!comps) { comps = Composite.componentsForClasses[name] = []; }
+      comps.push(comp);
+    }
 
-     while (proto !== null) {
-       const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(proto)] || [];
+    constructor() {
+      let proto = Object.getPrototypeOf(this);
 
-       for (const c of componentsToAdd) {
-         this.addComponent(c);
-       }
+      while (proto !== null) {
+        const componentsToAdd = Composite.componentsForClasses[Util.GetClassName(proto)] || [];
 
-       proto = Object.getPrototypeOf(proto);
-     }
+        for (const c of componentsToAdd) {
+          this.addComponent(c);
+        }
 
-     Composites.add(this);
-   }
+        proto = Object.getPrototypeOf(proto);
+      }
 
-   public preUpdate(): void { }
+      Composites.add(this);
+    }
 
-   public update(): void { }
+    public preUpdate(): void { }
 
-   public postUpdate(): void { }
+    public update(): void { }
 
-   public init(): void { }
+    public postUpdate(): void { }
+
+    public init(): void { }
 
   /**
    * Destroys this composite.
    */
-   public destroy(): void {
-     // I lied! This doesn't actually destroy the composite. It just marks it for deletion.
-     // Since updates are unordered, it's possible that a composite that is yet to be
-     // deleted this tick still refers to this composite, and if we deleted it immediately
-     // we would run into problems.
+  public destroy(): void {
+    // I lied! This doesn't actually destroy the composite. It just marks it for deletion.
+    // Since updates are unordered, it's possible that a composite that is yet to be
+    // deleted this tick still refers to this composite, and if we deleted it immediately
+    // we would run into problems.
 
-     if (this._destroyed) {
-       console.error('Composite destroyed multiple times. This is probably unintentional.')
+    if (this._destroyed) {
+      console.error('Composite destroyed multiple times. This is probably unintentional.')
 
-       return;
-     }
+      return;
+    }
 
-     Composite._destroyList.push(this);
-     this._destroyed = true;
-   }
+    Composite._destroyList.push(this);
+    this._destroyed = true;
+  }
 
    /**
     * Immediately destroys this composite, purging all the memory it used.
@@ -109,27 +108,27 @@ interface ComponentInfo {
      console.error(`couldn't find component of type ${(type as any).name} on ${Util.GetClassName(this)}`);
 
      return undefined;
-  }
+   }
 
-  public getComponents(): Component<Composite>[] {
-    const result: Component<Composite>[] = [];
+   public getComponents(): Component<Composite>[] {
+     const result: Component<Composite>[] = [];
 
-    for (const comp of this._components) {
-      result.push(comp.component);
-    }
+     for (const comp of this._components) {
+       result.push(comp.component);
+     }
 
-    return result;
-  }
+     return result;
+   }
 
-  public hasComponent<T>(type: { new (...args: any[]): T } ): boolean {
-    for (const comp of this.getComponents()) {
-      if (comp instanceof type) {
-        return true;
-      }
-    }
+   public hasComponent<T>(type: { new (...args: any[]): T } ): boolean {
+     for (const comp of this.getComponents()) {
+       if (comp instanceof type) {
+         return true;
+       }
+     }
 
-    return false;
-  }
+     return false;
+   }
 
   /**
    * This method is called for you. There should be no reason for
@@ -175,42 +174,45 @@ const component = function<T extends Composite>(comp: Component<T>): any {
   const renameFunction = function(name: any, fn: any): any {
     return (new Function('return function (call) { return function ' + name +
       ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));
-  };
+    };
 
-  return function(constructor: Constructable<Composite>): any {
-    const name = (constructor as any).name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
+    return function(constructor: Constructable<Composite>): any {
+      const name = (constructor as any).name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
-    Composite.registerComponentForClass(comp, name);
+        Composite.registerComponentForClass(comp, name);
 
-    // the new constructor behaviour
+        // the new constructor behaviour
 
-    const f = function(...args: any[]): any {
-      constructor.apply(this, args);
+        const f = function(...args: any[]): any {
+          constructor.apply(this, args);
 
-      this._initializeComponents();
+          this._initializeComponents();
 
-      if (this.init) {
-        this.init();
-      } else {
-        console.log('consider adding init to ' + name + ' class.')
+          if (this.init) {
+            if (!this.hasCalledInit) {
+              this.init();
+              this.hasCalledInit = true;
+            }
+          } else {
+            console.log('consider adding init to ' + name + ' class.')
+          }
+        }
+
+        const renamed = renameFunction(name, f);
+
+        // copy prototype so intanceof operator still works
+        renamed.prototype = constructor.prototype;
+
+        // Copy over static properties (except the ones we already have)
+        const skippedProps = Object.getOwnPropertyNames(Function);
+
+        for (const propName of Object.getOwnPropertyNames(constructor)) {
+          if (skippedProps.indexOf(propName) !== -1) { continue; }
+
+          renamed[propName] = (constructor as any)[propName];
+        }
+
+        // return new constructor (will override original)
+        return renamed;
       }
     }
-
-    const renamed = renameFunction(name, f);
-
-    // copy prototype so intanceof operator still works
-    renamed.prototype = constructor.prototype;
-
-    // Copy over static properties (except the ones we already have)
-    const skippedProps = Object.getOwnPropertyNames(Function);
-
-    for (const propName of Object.getOwnPropertyNames(constructor)) {
-      if (skippedProps.indexOf(propName) !== -1) { continue; }
-
-      renamed[propName] = (constructor as any)[propName];
-    }
-
-    // return new constructor (will override original)
-    return renamed;
-  }
-}
