@@ -96,16 +96,16 @@ class Game {
       }
     }
 
-    for (const sprite of Globals._destroyList) {
-      for (const c of sprite.getComponents()) {
+    for (const composite of Composite._destroyList) {
+      for (const c of composite.getComponents()) {
         c.destroy();
       }
 
-      Composites.remove(sprite);
-      sprite._actuallyDestroy();
+      Composites.remove(composite);
+      composite._actuallyDestroy();
     }
 
-    Globals._destroyList = [];
+    Composite._destroyList = [];
 
     Globals.camera.update();
 

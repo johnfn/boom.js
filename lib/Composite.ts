@@ -9,9 +9,13 @@ interface ComponentInfo {
  abstract class Composite {
    public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
+   public static _destroyList: Composite[] = [];
+
    private _components: ComponentInfo[] = [];
 
    private _hash: string;
+
+   private _destroyed: boolean;
 
    public get hash(): string {
      if (this._hash) { return this._hash; }
@@ -32,6 +36,38 @@ interface ComponentInfo {
      }
 
      Composites.add(this);
+   }
+
+   public preUpdate(): void { }
+
+   public update(): void { }
+
+   public postUpdate(): void { }
+
+  /**
+   * Destroys this sprite.
+   */
+   public destroy(): void {
+     // I lied! This doesn't actually destroy the sprite. It just marks it for deletion.
+     // Since updates are unordered, it's possible that a sprite that is yet to be
+     // deleted this tick still refers to this sprite, and if we deleted it immediately
+     // we would run into problems.
+
+     if (this._destroyed) {
+       console.error('Sprite destroyed multiple times. THIS IS REALLY BAD.')
+
+       return;
+     }
+
+     Composite._destroyList.push(this);
+     this._destroyed = true;
+   }
+
+   /**
+    * Immediately destroys this composite. It is highly recommended to use
+    * destroy() instead.
+    */
+   public _actuallyDestroy(): void {
    }
 
    public addComponent(comp: Component<Composite>): void {
@@ -81,20 +117,11 @@ interface ComponentInfo {
     return false;
   }
 
-
-  public preUpdate(): void { }
-
-  public update(): void { }
-
-  public postUpdate(): void { }
-
   /**
    * This method is called for you. There should be no reason for
    * you to need to call it.
    */
   public _initializeComponents(): void {
-    debugger;
-
     for (const comp of this._components) {
       if (comp.hasInitialized) { continue; }
 
@@ -109,7 +136,7 @@ interface Constructable< T > {
   new (...args: any[]): T;
 }
 
-const component = function<T extends Composite>(comp: Component<Composite>): any {
+const component = function<T extends Composite>(comp: Component<T>): any {
   const renameFunction = function(name: any, fn: any): any {
     return (new Function('return function (call) { return function ' + name +
       ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));

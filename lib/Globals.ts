@@ -22,8 +22,6 @@ class Globals {
 
   public static events = new Events<GlobalEvents>();
 
-  public static _destroyList: Sprite[] = [];
-
   private static _thingsThatAreLoading: number = 0;
 
   public static get thingsThatAreLoading(): number { return Globals._thingsThatAreLoading; }

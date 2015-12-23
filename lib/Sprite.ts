@@ -101,8 +101,6 @@ class Sprite extends Composite {
 
   private _z: number = 0;
 
-  private _destroyed: boolean = false;
-
   /**
    * This is the _objectNumber-th Sprite-subclass created.
    */
@@ -405,38 +403,17 @@ class Sprite extends Composite {
     });
   }
 
-  /**
-   * Destroys this sprite.
-   */
-  public destroy(): void {
-    // I lied! This doesn't actually destroy the sprite. It just marks it for deletion.
-    // Since updates are unordered, it's possible that a sprite that is yet to be
-    // deleted this tick still refers to this sprite, and if we deleted it immediately
-    // we would run into problems.
-
-    if (this._destroyed) {
-      console.error('Sprite destroyed multiple times. THIS IS REALLY BAD PPL.')
-
-      return;
-    }
-
-    Globals._destroyList.push(this);
-    this._destroyed = true;
+  public contains(p: Point): boolean {
+    return Util.RectPointIntersection(this.bounds, p);
   }
 
-  /**
-   * Actually destroys the sprite. (I don't recommend using this method
-   * unless you know what you're doing.)
-   */
   public _actuallyDestroy(): void {
+    super._actuallyDestroy();
+
     this.parent.displayObject.removeChild(this.displayObject);
 
     this.displayObject = undefined;
     this.events        = undefined;
-  }
-
-  public contains(p: Point): boolean {
-    return Util.RectPointIntersection(this.bounds, p);
   }
 
   private _setUpEvents(): void {
