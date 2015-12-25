@@ -159,6 +159,8 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
     let stageWidth  = Globals.stage.width;
     let stageHeight = Globals.stage.height;
 
+    const camera = Globals.camera;
+
     /*
           (1)        (2)
           x0         x1
@@ -178,22 +180,22 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
 
     // (1)
 
-    this._drawLine(x0, 0, x0, stageHeight, white, alpha);
+    this._drawLine(x0, camera.y - camera.height / 2, x0, camera.y + camera.height / 2, white, alpha);
     this._drawLine(x0, y0, x0, y1);
 
     // (2)
 
-    this._drawLine(x1, 0, x1, stageHeight, white, alpha);
+    this._drawLine(x1, camera.y - camera.height / 2, x1, camera.y + camera.height / 2, white, alpha);
     this._drawLine(x1, y0, x1, y1);
 
     // (3)
 
-    this._drawLine(0, y0, stageWidth, y0, white, alpha);
+    this._drawLine(camera.x - camera.width / 2, y0, camera.x + camera.width / 2, y0, white, alpha);
     this._drawLine(x0, y0, x1, y0);
 
     // (4)
 
-    this._drawLine(0, y1, stageWidth, y1, white, alpha);
+    this._drawLine(camera.x - camera.width / 2, y1, camera.x + camera.width / 2, y1, white, alpha);
     this._drawLine(x0, y1, x1, y1);
   }
 }

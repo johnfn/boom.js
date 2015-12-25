@@ -32,11 +32,23 @@ class Camera {
    */
   private _y: number;
 
+  // Screen shake state (TODO - should be separated out)
+
+  private static SHAKE_AMT: number = 3;
+  private _shakingDuration: number = 0;
+  private _isShaking: boolean = false;
+
+  private _hasXYChanged: boolean = false;
+  private _initialX: number;
+  private _initialY: number;
+
   private _gameWidth: number;
   private _gameHeight: number;
 
   /**
    * The x position of the center of the camera.
+   *
+   * TODO: This is not consistent!
    */
   public get x(): number { return this._x; }
   public set x(value: number) {
@@ -55,15 +67,8 @@ class Camera {
     this._hasXYChanged = true;
   }
 
-  // Screen shake state (TODO - should be separated out)
-
-  private static SHAKE_AMT: number = 3;
-  private _shakingDuration: number = 0;
-  private _isShaking: boolean = false;
-
-  private _hasXYChanged: boolean = false;
-  private _initialX: number;
-  private _initialY: number;
+  public get width(): number { return this._gameWidth; }
+  public get height(): number { return this._gameHeight; }
 
   constructor(stage: Stage) {
     this._gameWidth = stage.width;
