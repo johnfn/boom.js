@@ -41,9 +41,7 @@ class Globals {
     Globals.stage          = Globals.stage || stage;
     Globals.fixedStage     = Globals.fixedStage || fixedStage;
 
-    Globals.camera.x = stage.width / 2;
-    Globals.camera.y = stage.height / 2;
-    Globals.camera.addParallaxLayer(Globals.stage, 1);
+    Globals.camera.addLayer(Globals.stage, 1);
   }
 }
 

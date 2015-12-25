@@ -174,12 +174,7 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
     let white = 0xffffff;
     let alpha = 1;
 
-    let stageWidth  = Globals.stage.width;
-    let stageHeight = Globals.stage.height;
-
     const camera = Globals.camera;
-
-    console.log(`${x0} ${y0} ${x1} ${y1}`);
 
     /*
           (1)        (2)
@@ -200,22 +195,22 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
 
     // (1)
 
-    this._drawLine(x0, camera.y - camera.height / 2, x0, camera.y + camera.height / 2, white, alpha);
+    this._drawLine(x0, camera.y, x0, camera.y + camera.height, white, alpha);
     this._drawLine(x0, y0, x0, y1, white, alpha, true);
 
     // (2)
 
-    this._drawLine(x1, camera.y - camera.height / 2, x1, camera.y + camera.height / 2, white, alpha);
+    this._drawLine(x1, camera.y, x1, camera.y + camera.height, white, alpha);
     this._drawLine(x1, y0, x1, y1, white, alpha, true);
 
     // (3)
 
-    this._drawLine(camera.x - camera.width / 2, y0, camera.x + camera.width / 2, y0, white, alpha);
+    this._drawLine(camera.x, y0, camera.x + camera.width, y0, white, alpha);
     this._drawLine(x0, y0, x1, y0, white, alpha, true);
 
     // (4)
 
-    this._drawLine(camera.x - camera.width / 2, y1, camera.x + camera.width / 2, y1, white, alpha);
+    this._drawLine(camera.x, y1, camera.x + camera.width, y1, white, alpha);
     this._drawLine(x0, y1, x1, y1, white, alpha, true);
   }
 }

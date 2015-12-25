@@ -4,6 +4,7 @@
   immovable: true,
   solid: true,
 }))
+@component(new FollowWithCamera())
 class Ship extends Sprite {
   constructor() {
     super('assets/ship.png');
@@ -14,9 +15,6 @@ class Ship extends Sprite {
   }
 
   public update(): void {
-    Globals.camera.x = this.x;
-    Globals.camera.y = this.y;
-
     if (Globals.keyboard.down.A) {
       this.physics.moveBy(-5, 0);
     }

@@ -3,7 +3,6 @@
   contents: Sprite;
 }
 
-
 /**
  * A quick note about coordinate systems. Every layer with a different parallax scroll
  * amount has a different coordinate system associated with it.
@@ -42,6 +41,10 @@ class Camera {
   private _initialX: number;
   private _initialY: number;
 
+  /**
+   * Width of the HTML element containing the game.
+   * @type {number}
+   */
   private _gameWidth: number;
   private _gameHeight: number;
 
@@ -82,8 +85,8 @@ class Camera {
    */
   public topLeft(parallax = 1): Point {
     return new Point(
-      (this._x - this._gameWidth / 2) * parallax,
-      (this._y - this._gameHeight / 2) * parallax
+      this._x * parallax,
+      this._y * parallax
     );
   }
 
@@ -94,13 +97,16 @@ class Camera {
    */
   public bottomRight(parallax = 1): Point {
     return new Point(
-      (this._x - this._gameWidth / 2) * parallax + this._gameWidth,
-      (this._y - this._gameHeight / 2) * parallax + this._gameHeight
+      this._x * parallax + this._gameWidth,
+      this._y * parallax + this._gameHeight
     );
   }
 
   /**
    * Add a layer to the camera.
+   *
+   * You can optionally specify a parallax amount which effects how much the layer
+   * moves with the camera.
    *
    * parallaxAmount of 1 is the behavior you'd expect from a camera. The object is
    * only visible so long as it is within the frame of the camera.
@@ -114,7 +120,7 @@ class Camera {
    * @param layer
    * @param parallaxAmount
    */
-  public addParallaxLayer(contents: Sprite, parallaxAmount = 1): void {
+  public addLayer(contents: Sprite, parallaxAmount = 1): void {
     Globals.fixedStage.addChild(contents);
 
     this._layers.push({
@@ -152,8 +158,8 @@ class Camera {
     this._y = Math.round(y);
 
     for (const layer of this._layers) {
-      layer.contents.x = layer.contents.width / 2 - (this._x * layer.parallaxAmount);
-      layer.contents.y = layer.contents.height / 2 - (this._y * layer.parallaxAmount);
+      layer.contents.x = - this._x * layer.parallaxAmount;
+      layer.contents.y = - this._y * layer.parallaxAmount;
     }
   }
 
