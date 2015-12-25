@@ -123,11 +123,29 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
     return false;
   }
 
-  private _drawLine(x0: number, y0: number, x1: number, y1: number, color = 0xffffff, alpha = 1): void {
+  private _drawLine(x0: number, y0: number, x1: number, y1: number, color = 0xffffff, alpha = 1, double = false): void {
     this._graphics.lineStyle(1, color, alpha);
 
     this._graphics.moveTo(x0, y0);
     this._graphics.lineTo(x1, y1);
+
+    if (double) {
+      this._graphics.lineStyle(1, 0x000000, alpha);
+
+      if (y0 !== y1) {
+        this._graphics.moveTo(x0 - 1, y0);
+        this._graphics.lineTo(x1 - 1, y1);
+
+        this._graphics.moveTo(x0 + 1, y0);
+        this._graphics.lineTo(x1 + 1, y1);
+      } else {
+        this._graphics.moveTo(x0, y0 - 1);
+        this._graphics.lineTo(x1, y1 - 1);
+
+        this._graphics.moveTo(x0, y0 + 1);
+        this._graphics.lineTo(x1, y1 + 1);
+      }
+    }
   }
 
   private _drawPoint(x: number, y: number, color = 0xff0000): void {
@@ -154,12 +172,14 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
 
   private drawRectangle(x0: number, y0: number, x1: number, y1: number): void {
     let white = 0xffffff;
-    let alpha = .2;
+    let alpha = 1;
 
     let stageWidth  = Globals.stage.width;
     let stageHeight = Globals.stage.height;
 
     const camera = Globals.camera;
+
+    console.log(`${x0} ${y0} ${x1} ${y1}`);
 
     /*
           (1)        (2)
@@ -181,21 +201,21 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
     // (1)
 
     this._drawLine(x0, camera.y - camera.height / 2, x0, camera.y + camera.height / 2, white, alpha);
-    this._drawLine(x0, y0, x0, y1);
+    this._drawLine(x0, y0, x0, y1, white, alpha, true);
 
     // (2)
 
     this._drawLine(x1, camera.y - camera.height / 2, x1, camera.y + camera.height / 2, white, alpha);
-    this._drawLine(x1, y0, x1, y1);
+    this._drawLine(x1, y0, x1, y1, white, alpha, true);
 
     // (3)
 
     this._drawLine(camera.x - camera.width / 2, y0, camera.x + camera.width / 2, y0, white, alpha);
-    this._drawLine(x0, y0, x1, y0);
+    this._drawLine(x0, y0, x1, y0, white, alpha, true);
 
     // (4)
 
     this._drawLine(camera.x - camera.width / 2, y1, camera.x + camera.width / 2, y1, white, alpha);
-    this._drawLine(x0, y1, x1, y1);
+    this._drawLine(x0, y1, x1, y1, white, alpha, true);
   }
 }
