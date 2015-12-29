@@ -19,7 +19,8 @@ enum SpriteEvents {
 }
 
 /**
- * State of the Sprite (gets flushed every update).
+ * State of the Sprite (gets flushed every update). Encapsulated into an object
+ * so that we get type errors if we forget to flush one of the properties.
  */
 interface SpriteFrameState {
   globalXYCache: Point;

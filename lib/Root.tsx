@@ -36,7 +36,13 @@ class Root extends React.Component<RootProps, RootState> {
    * clean it up later.
    */
   private _debugDraw = () => {
-    this._stageDebug.debug.draw(this.state.target);
+    console.log('draw');
+
+    if (this.state.target) {
+      this._stageDebug.debug.draw(this.state.target);
+    } else {
+      this._stageDebug.debug.clear();
+    }
   };
 
   constructor(props: RootProps) {
@@ -75,8 +81,6 @@ class Root extends React.Component<RootProps, RootState> {
         this.transformWidget.x = target.width / 2;
         this.transformWidget.y = target.height / 2;
 
-        this._debugDraw();
-
         this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
 
         if (this._currentClickedObject) {
@@ -85,6 +89,8 @@ class Root extends React.Component<RootProps, RootState> {
 
         this._currentClickedObject = target;
       }
+
+      this._debugDraw();
     });
   }
 
