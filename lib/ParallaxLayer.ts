@@ -15,7 +15,7 @@
       this._texture = PIXI.Texture.fromImage(texture);
     }
 
-    Globals.camera.addParallaxLayer(this, parallax);
+    Globals.camera.addLayer(this, parallax);
 
     this.z = -100;
   }

@@ -1,5 +1,16 @@
 ## Guide
 
+#### Update order
+
+1. Update the keyboard
+2. `preUpdate` all composites and components
+3. Update physics.
+4. `update` all composites and components
+5. `postUpdate` all composites and components
+6. Remove any destroyed composites and add any created composites.
+
+#### Initialization order
+
 There's a bit of a dance between components and composites, since they both depend on each other. Rule of thumb:
 
 * Use `constructor` to set up yourself

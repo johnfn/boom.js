@@ -18,6 +18,14 @@ enum SpriteEvents {
   ChangeParent
 }
 
+/**
+ * State of the Sprite (gets flushed every update).
+ */
+interface SpriteFrameState {
+  globalXYCache: Point;
+  hasMoved: boolean;
+}
+
 @component(new InspectComponent())
 @component(new DebugDraw())
 @component(new TweenComponent())
@@ -78,7 +86,10 @@ class Sprite extends Composite {
 
   private _z: number = 0;
 
-  private _globalXYCache: Point = undefined;
+  private _frameState: SpriteFrameState = {
+    globalXYCache: undefined,
+    hasMoved: false,
+  };
 
   public get textureUrl(): string {
     return this.texture.baseTexture.imageUrl;
@@ -98,16 +109,14 @@ class Sprite extends Composite {
 
   get x(): number { return this.displayObject.position.x; }
   set x(val: number) {
+    this._frameState.hasMoved = true;
     this.displayObject.position.x = val;
-
-    this.events.emit(SpriteEvents.Move);
   }
 
   get y(): number { return this.displayObject.y; }
   set y(val: number) {
+    this._frameState.hasMoved = true;
     this.displayObject.y = val;
-
-    this.events.emit(SpriteEvents.Move);
   }
 
   get parent(): Sprite {
@@ -318,8 +327,21 @@ class Sprite extends Composite {
     return new Sprite(this.texture);
   }
 
+  public preUpdate(): void {
+    this._frameState = {
+      globalXYCache: undefined,
+      hasMoved     : false,
+    };
+  }
+
   public update(): void {
-    this._globalXYCache = undefined;
+
+  }
+
+  public postUpdate(): void {
+    if (this._frameState.hasMoved) {
+      this.events.emit(SpriteEvents.Move);
+    }
   }
 
   /**
