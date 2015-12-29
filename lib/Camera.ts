@@ -3,6 +3,17 @@
   contents: Sprite;
 }
 
+enum CameraEvents {
+  Move
+}
+
+interface CameraFrameState {
+  /**
+   * Has the camera moved this tick?
+   */
+  hasMoved: boolean;
+}
+
 /**
  * A quick note about coordinate systems. Every layer with a different parallax scroll
  * amount has a different coordinate system associated with it.
@@ -18,7 +29,13 @@
 /**
  * Camera class. Effects what we can see.
  */
-class Camera {
+@component(new Events<CameraEvents>())
+class Camera extends Composite {
+  /**
+   * Events component. Useful for listening and reacting to changes in the Camera.
+   */
+  public events: Events<CameraEvents>;
+
   private _layers: CameraLayer[] = [];
 
   /**
@@ -48,32 +65,40 @@ class Camera {
   private _gameWidth: number;
   private _gameHeight: number;
 
+  private _frameState: CameraFrameState = {
+    hasMoved: false
+  };
+
   /**
-   * The x position of the center of the camera.
-   *
-   * TODO: This is not consistent!
+   * The x position of the left side of the camera.
    */
   public get x(): number { return this._x; }
   public set x(value: number) {
     this._moveTo(value, this._y);
 
-    this._hasXYChanged = true;
+    this._hasXYChanged        = true;
   }
 
   /**
-   * The y position of the center of the camera.
+   * The y position of the top of the camera.
    */
   public get y(): number { return this._y; }
   public set y(value: number) {
     this._moveTo(this._x, value);
 
-    this._hasXYChanged = true;
+    this._hasXYChanged        = true;
   }
 
   public get width(): number { return this._gameWidth; }
   public get height(): number { return this._gameHeight; }
 
+  public static getActiveCamera(): Camera {
+    return Globals.camera;
+  }
+
   constructor(stage: Stage) {
+    super();
+
     this._gameWidth = stage.width;
     this._gameHeight = stage.height;
   }
@@ -138,10 +163,23 @@ class Camera {
     this._initialY = this.y;
   }
 
+  public preUpdate(): void {
+    if (this._frameState.hasMoved) {
+      this.events.emit(CameraEvents.Move);
+    }
+
+    this._frameState = {
+      hasMoved: false
+    }
+  }
+
   public update(): void {
     if (this._isShaking) {
       this.shake();
     }
+  }
+
+  public postUpdate(): void {
   }
 
   /**
@@ -154,8 +192,15 @@ class Camera {
   private _moveTo(x: number, y: number): void {
     // Round to avoid artifacts
 
-    this._x = Math.round(x);
-    this._y = Math.round(y);
+    const newX = Math.round(x);
+    const newY = Math.round(y);
+
+    if (newX !== this.x || newY !== this.y) {
+      this._frameState.hasMoved = true;
+    }
+
+    this._x = newX;
+    this._y = newY;
 
     for (const layer of this._layers) {
       layer.contents.x = - this._x * layer.parallaxAmount;
@@ -163,7 +208,7 @@ class Camera {
     }
   }
 
-  private stopShaking(): void {
+  private _stopShaking(): void {
     if (!this._hasXYChanged) {
       this.x = this._initialX;
       this.y = this._initialY;
@@ -176,7 +221,7 @@ class Camera {
     this._shakingDuration--;
 
     if (this._shakingDuration < 0) {
-      this.stopShaking();
+      this._stopShaking();
       return;
     }
 

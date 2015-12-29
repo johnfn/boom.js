@@ -36,8 +36,6 @@ class Root extends React.Component<RootProps, RootState> {
    * clean it up later.
    */
   private _debugDraw = () => {
-    console.log('draw');
-
     if (this.state.target) {
       this._stageDebug.debug.draw(this.state.target);
     } else {
@@ -63,6 +61,8 @@ class Root extends React.Component<RootProps, RootState> {
 
       this.setTarget(target);
     })
+
+    Globals.camera.events.on(CameraEvents.Move, () => this._debugDraw());
   }
 
   public setTarget(target: Sprite): void {
@@ -73,10 +73,6 @@ class Root extends React.Component<RootProps, RootState> {
 
       return state;
     },            () => {
-      if (oldTarget) {
-        oldTarget.events.off(SpriteEvents.Move, this._debugDraw);
-      }
-
       if (target === undefined) {
         if (this.transformWidget.parent) {
           this.transformWidget.parent.removeChild(this.transformWidget);
@@ -95,6 +91,10 @@ class Root extends React.Component<RootProps, RootState> {
         }
 
         this._currentClickedObject = target;
+      }
+
+      if (oldTarget) {
+        oldTarget.events.off(SpriteEvents.Move, this._debugDraw);
       }
 
       this._debugDraw();
