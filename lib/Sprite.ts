@@ -192,12 +192,12 @@ class Sprite extends Composite {
       return this.position;
     }
 
-    if (!this._globalXYCache) {
-      this._globalXYCache = new Point(this.x + this.parent.globalXY.x,
-                                      this.y + this.parent.globalXY.y);
+    if (!this._frameState.globalXYCache) {
+      this._frameState.globalXYCache = new Point(this.x + this.parent.globalXY.x,
+                                                 this.y + this.parent.globalXY.y);
     }
 
-    return this._globalXYCache;
+    return this._frameState.globalXYCache;
   }
 
   get globalX(): number {

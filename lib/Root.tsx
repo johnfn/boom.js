@@ -66,15 +66,22 @@ class Root extends React.Component<RootProps, RootState> {
   }
 
   public setTarget(target: Sprite): void {
+    const oldTarget = this.state.target;
+
     this.setState((state: RootState) => {
       state.target = target;
 
       return state;
     },            () => {
+      if (oldTarget) {
+        oldTarget.events.off(SpriteEvents.Move, this._debugDraw);
+      }
+
       if (target === undefined) {
         if (this.transformWidget.parent) {
           this.transformWidget.parent.removeChild(this.transformWidget);
         }
+
       } else {
         target.addChild(this.transformWidget);
 
@@ -121,6 +128,9 @@ class Root extends React.Component<RootProps, RootState> {
     );
   }
 
+  /**
+   * Indicate which composite is under the mouse.
+   */
   private _trackMousedObject(e: PIXI.interaction.InteractionEvent): void {
     let point = Point.From(e.data.global);
 

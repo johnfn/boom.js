@@ -35,6 +35,8 @@ class Events<T> extends Component<Composite> {
   }
 
   public off(event: T, cb: EventCB): void {
-    this._events.get(event).remove(cb);
+    const updated = this._events.get(event).remove(cb);
+
+    this._events.put(event, updated);
   }
 }
