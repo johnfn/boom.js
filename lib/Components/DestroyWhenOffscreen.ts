@@ -1,6 +1,6 @@
-﻿/// <reference path="../Component.ts"/>
+﻿import { Component, Sprite, Globals } from './../Core.ts'
 
-class DestroyWhenOffscreen extends Component<Sprite> {
+export class DestroyWhenOffscreen extends Component<Sprite> {
   public update(): void {
     const stage = Globals.stage;
 

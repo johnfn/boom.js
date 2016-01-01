@@ -1,7 +1,8 @@
-﻿/// <reference path="lib.d.ts"/>
+﻿import { FixedToCamera } from './Components.ts'
+import { component, Composites, TextField } from './Core.ts'
 
 @component(new FixedToCamera(200, 100))
-class FPSCounter extends TextField {
+export class FPSCounter extends TextField {
   private _frames: number = 0;
   private _timeElapsed: number = 0;
 

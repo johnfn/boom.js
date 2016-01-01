@@ -1,6 +1,6 @@
-﻿/// <reference path="../Component.ts"/>
+﻿import { Component, Sprite, Globals } from './../Core.ts'
 
-class FixedToCamera extends Component<Sprite> {
+export class FixedToCamera extends Component<Sprite> {
   private _x: number;
 
   private _y: number;

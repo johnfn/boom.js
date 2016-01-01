@@ -1,12 +1,17 @@
-﻿enum MetaEvents {
-  AddFirstEvent
-}
+﻿import { MagicArray, MagicDict } from '../DataStructures.ts'
+import { Composite, Component } from '../Core.ts'
+
+debugger;
 
 interface HasEvents<T> { events: Events<T> }
 
 type EventCB = (...args: any[]) => void;
 
-class Events<T> extends Component<Composite> {
+export enum MetaEvents {
+  AddFirstEvent
+}
+
+export class Events<T> extends Component<Composite> {
   public metaEvents: Events<MetaEvents> = undefined;
 
   private _events    = new MagicDict<T, MagicArray<EventCB>>(() => new MagicArray<EventCB>());

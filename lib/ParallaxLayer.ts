@@ -1,4 +1,8 @@
-﻿class ParallaxLayer extends Sprite {
+﻿import { Sprite, Globals } from './Core.ts'
+import { MagicDict } from './DataStructures.ts'
+import { Point } from './DataStructures.ts'
+
+class ParallaxLayer extends Sprite {
   private _texture: PIXI.Texture;
   private _tiles: MagicDict<Point, Sprite>;
   private _parallax: number;

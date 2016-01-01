@@ -1,7 +1,6 @@
 ﻿/* PIXI.Polygon is good, but it does not allow us to get the points that we passed in ourselves
    (easily), which is just dumb. */
-
-class Polygon {
+export class Polygon {
   private _pixiPolygon: PIXI.Polygon;
 
   public get points(): PIXI.Point[] {

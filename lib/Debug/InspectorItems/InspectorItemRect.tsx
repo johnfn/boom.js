@@ -1,4 +1,7 @@
-﻿class InspectorItemRect extends React.Component<InspectorItemProps, {}> {
+﻿import * as React from 'react';
+import { InspectorItemProps } from './../Inspector.tsx'
+
+export class InspectorItemRect extends React.Component<InspectorItemProps, {}> {
   get rect(): PIXI.Rectangle {
     return this.props.target[this.props.propName];
   }

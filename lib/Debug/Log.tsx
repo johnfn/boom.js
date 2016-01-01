@@ -1,4 +1,15 @@
-﻿declare var consoleCache: LogItemState[];
+﻿import {
+  LogItemObject,
+  LogItemPoint,
+  LogItemRect,
+  LogItemSprite,
+  LogItemString,
+  LogItemTexture,
+} from './LogItems.ts'
+import { Util, Sprite, Stage } from '../Core.ts'
+import { Root, DebugSprite } from '../Root.tsx'
+
+declare var consoleCache: LogItemState[];
 declare var sourceMaps: { [key: string]: sourceMap.RawSourceMap };
 
 // Object[] should really be Loggable[] - but Typescript doesn't currently
@@ -33,7 +44,7 @@ class LogState {
   public contents: LogItemState[];
 }
 
-class Log extends React.Component<LogProps, LogState> {
+export class Log extends React.Component<LogProps, LogState> {
   private _debugSprite: Sprite;
 
   private _shouldScrollBottom: boolean;
@@ -72,7 +83,7 @@ class Log extends React.Component<LogProps, LogState> {
   // [4]: "   at callingFunction (http://localhost:58550/main.js?0.6854253500429788:384:9)"
   // [5]: "   at Anonymous function (http://localhost:58550/main.js?0.6854253500429788:390:31)"
 
-  private _getCallingFunction() {
+  private _getCallingFunction(): string {
     let error: Error;
 
     // First try catch is because I need a stack object from an error.

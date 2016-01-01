@@ -1,4 +1,24 @@
-﻿/// <reference path="lib/lib.d.ts"/>
+﻿import { Point } from './lib/DataStructures.ts'
+
+import {
+  Sprite,
+  Globals,
+  TextField,
+  PhysicsComponent,
+  Game,
+  Stage,
+  Util,
+  Composites,
+  Component,
+  TiledMapParser,
+  FPSCounter,
+  component,
+} from './lib/Core.ts'
+
+import {
+  FollowWithCamera,
+  DestroyWhenOffscreen,
+} from './lib/Components.ts'
 
 @component(new PhysicsComponent({
   immovable: true,
@@ -205,6 +225,8 @@ class MyGame extends Game {
     console.log(new Point(20, 20))
   }
 }
+
+debugger;
 
 Util.RunOnStart(() => {
   Game.DEBUG_MODE = true;

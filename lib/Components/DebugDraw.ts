@@ -1,6 +1,11 @@
-﻿/// <reference path="./Evented.ts"/>
+﻿import { Point, Ray, MagicArray, Polygon } from '../DataStructures.ts'
+import { Component, Globals, Sprite } from '../Core.ts'
 
-enum DebugEvents {
+import { Events, MetaEvents } from './Evented.ts'
+
+debugger;
+
+export enum DebugEvents {
   MouseDown,
   MouseUp
 }
@@ -20,7 +25,7 @@ interface HasDebugDraw { debug: DebugDraw }
  *
  * The idea is that DebugDraw will clear when you expect it to clear.
  */
-class DebugDraw extends Component<Sprite & HasDebugDraw> {
+export class DebugDraw extends Component<Sprite & HasDebugDraw> {
   public events: Events<DebugEvents> = new Events<DebugEvents>(true);
 
   private _graphics: PIXI.Graphics;

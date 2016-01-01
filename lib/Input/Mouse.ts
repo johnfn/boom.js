@@ -1,8 +1,12 @@
-﻿enum MouseEvents {
+﻿import { Events } from '../Components.ts'
+import { Stage } from '../Core.ts'
+import { Point } from '../DataStructures.ts'
+
+export enum MouseEvents {
   MouseDown
 }
 
-class Mouse {
+export class Mouse {
   /**
    * The current position of the mouse.
    */

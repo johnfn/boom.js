@@ -1,10 +1,12 @@
-﻿/// <reference path="../Component.ts"/>
+﻿import { Component, Sprite } from '../Core.ts'
+
+/// <reference path="../Component.ts"/>
 
 interface TweenEvent {
   (tweenProps: Tween): void;
 }
 
-interface Tween {
+export interface Tween {
   /**
    * Name of the tween.
    */
@@ -32,7 +34,7 @@ interface Tween {
   onTick: TweenEvent;
 }
 
-class TweenComponent extends Component<Sprite> {
+export class TweenComponent extends Component<Sprite> {
   private _tweens: { [key: string]: Tween};
 
   constructor() {

@@ -1,11 +1,11 @@
-﻿/// <reference path="../Component.ts"/>
+﻿import { Component, Sprite, Globals } from '../Core.ts'
 
 /**
  * Follow the target with the camera.
  *
  * Could eventually build better camera behaviors etc.
  */
-class FollowWithCamera extends Component<Sprite> {
+export class FollowWithCamera extends Component<Sprite> {
   public update(): void {}
 
   public postUpdate(): void {

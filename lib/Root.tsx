@@ -1,4 +1,13 @@
-﻿interface RootProps {
+﻿import * as React from 'react';
+import { Game, Globals, CameraEvents, Sprite, SpriteEvents, Stage } from './Core.ts'
+import { TransformWidget } from './Debug/TransformWidget.ts'
+import { Point } from './DataStructures.ts'
+
+import { Hierarchy } from './Debug/Hierarchy.tsx'
+import { Inspector } from './Debug/Inspector.tsx'
+import { Log } from './Debug/Log.tsx'
+
+interface RootProps {
   stage: Stage;
 }
 
@@ -9,8 +18,7 @@ interface RootState {
 /**
  * A sprite purely used for rendering debugging graphics.
  */
-
-class DebugSprite extends Sprite {
+export class DebugSprite extends Sprite {
   constructor() {
     super();
 
@@ -24,7 +32,7 @@ type PIXIMouseEvent = PIXI.interaction.InteractionEvent;
 /**
  * Root is the react component at the base of the HTML hierarchy.
  */
-class Root extends React.Component<RootProps, RootState> {
+export class Root extends React.Component<RootProps, RootState> {
   public transformWidget: TransformWidget;
 
   private _currentMousedObject : Sprite;

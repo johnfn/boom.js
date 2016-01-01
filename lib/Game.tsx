@@ -1,11 +1,23 @@
-﻿/**
+﻿import * as React from 'react';
+import {
+  Sprite,
+  SpriteEvents,
+  Composites,
+  Composite,
+  Stage,
+  Globals,
+  GlobalEvents,
+  Root,
+} from './Core.ts'
+
+/**
  * Main Game object.
  *
  * Put everything that needs to be loaded in the constructor. When loading is finished,
  * loadingComplete() will be called.
  *
  */
-class Game {
+export class Game {
   public static ticks     : number = 0;
 
   /**

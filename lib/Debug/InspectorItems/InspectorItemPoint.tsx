@@ -1,4 +1,7 @@
-﻿class InspectorItemPoint extends React.Component<InspectorItemProps, {}> {
+﻿import * as React from 'react';
+import { InspectorItemProps } from './../Inspector.tsx'
+
+export class InspectorItemPoint extends React.Component<InspectorItemProps, {}> {
   get point(): PIXI.Point {
     return this.props.target[this.props.propName];
   }

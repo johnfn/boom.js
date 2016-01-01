@@ -1,4 +1,8 @@
-﻿type HierarchyProps = {
+﻿import * as React from 'react';
+import { Root } from '../Root.tsx'
+import { Sprite } from '../Core.ts'
+
+type HierarchyProps = {
   root: Root;
 
   /**
@@ -16,7 +20,7 @@ type HierarchyState = {
   collapsed: boolean
 }
 
-class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
+export class Hierarchy extends React.Component<HierarchyProps, HierarchyState> {
   constructor(props: HierarchyProps) {
     super();
 

@@ -1,4 +1,7 @@
-﻿class Util {
+﻿import { Point, Ray, Polygon, Maybe } from './DataStructures.ts'
+import { Globals } from './Core.ts'
+
+export class Util {
   public static Draw(item: Ray | Point | Polygon | PIXI.Rectangle, color = 0xff0000, alpha = 1): void {
     Globals.stage.debug.draw(item, color, alpha);
   }

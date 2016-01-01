@@ -1,4 +1,22 @@
-﻿type InspectorObjectState = {
+﻿import * as React from 'react';
+import {
+  InspectorItemString,
+  InspectorItemColor,
+  InspectorItemNumber,
+  InspectorItemPoint,
+  InspectorItemRect,
+  InspectorItemBoolean,
+} from './../InspectorItems.ts'
+import {
+  InspectorItemProps,
+  Inspector,
+} from './../Inspector.tsx'
+import {
+  Util,
+  Sprite,
+} from './../../Core.ts'
+
+type InspectorObjectState = {
   target: Sprite;
   expanded: boolean;
 };
@@ -7,7 +25,7 @@ interface InspectorObjectProps extends InspectorItemProps {
   open?: boolean;
 }
 
-class InspectorItemObject extends React.Component<InspectorObjectProps, InspectorObjectState> {
+export class InspectorItemObject extends React.Component<InspectorObjectProps, InspectorObjectState> {
   get obj(): any {
     return this.props.target[this.props.propName];
   }

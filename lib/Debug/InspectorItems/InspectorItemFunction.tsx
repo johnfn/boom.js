@@ -1,4 +1,6 @@
-﻿type InspectorFunctionProps = {
+﻿import { InspectorItemProps } from './../Inspector.tsx'
+
+type InspectorFunctionProps = {
   propName: string
 };
 

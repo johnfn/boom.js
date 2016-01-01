@@ -1,4 +1,8 @@
-﻿interface InspectorItemProps {
+﻿import { Sprite, Stage } from '../Core.ts'
+import { DebugSprite } from '../Root.tsx'
+import { InspectorItemObject } from './InspectorItems.ts'
+
+export interface InspectorItemProps {
   /**
    * Name of the property that we are inspecting
    * @type {string}
@@ -30,7 +34,7 @@ type InspectorProps = {
 
 class InspectorState { }
 
-class Inspector extends React.Component<InspectorProps, InspectorState> {
+export class Inspector extends React.Component<InspectorProps, InspectorState> {
   public static instance: Inspector;
 
   private _debugSprite: Sprite;

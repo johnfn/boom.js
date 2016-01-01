@@ -1,4 +1,7 @@
-﻿class InspectorItemNumber extends React.Component<InspectorItemProps, {}> {
+﻿import * as React from 'react';
+import { InspectorItemProps } from './../Inspector.tsx'
+
+export class InspectorItemNumber extends React.Component<InspectorItemProps, {}> {
   constructor(props: InspectorItemProps) {
     super(props);
   }

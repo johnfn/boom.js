@@ -1,4 +1,4 @@
-﻿class MagicArray<T> extends Array<T> {
+﻿export class MagicArray<T> extends Array<T> {
   constructor(contents: T | T[] = undefined) {
     super();
 

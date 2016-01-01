@@ -1,4 +1,6 @@
-﻿class Stage extends Sprite {
+﻿import { Sprite } from './Sprite.ts'
+
+export class Stage extends Sprite {
   public baseName: string = 'Stage';
 
   private _width : number;

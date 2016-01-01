@@ -1,4 +1,8 @@
-﻿interface ParticleBehavior {
+﻿import { Events, Tween } from './Components.ts'
+import { Util, Sprite } from './Core.ts'
+import { Point } from './DataStructures.ts'
+
+interface ParticleBehavior {
   /**
    * x speed of the particle.
    */

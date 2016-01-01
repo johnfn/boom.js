@@ -1,8 +1,20 @@
-﻿enum GlobalEvents {
+﻿import {
+  Util,
+  Sprite,
+  Stage,
+  Composite,
+  PhysicsManager,
+  Camera,
+} from './Core.ts'
+import { Group } from './DataStructures.ts'
+import { Events } from './Components.ts'
+import { Keyboard, Mouse } from './Input.ts'
+
+export enum GlobalEvents {
   LoadingIsDone
 }
 
-class Globals {
+export class Globals {
   public static physicsManager: PhysicsManager;
   /**
    * Reference to the first stage created.
@@ -45,7 +57,7 @@ class Globals {
   }
 }
 
-class Composites {
+export class Composites {
   public static list = new Group<Composite>();
 
   private static _all: Composite[] = [];

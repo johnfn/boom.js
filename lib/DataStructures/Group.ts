@@ -1,4 +1,6 @@
-﻿class Group<T extends Composite> {
+﻿import { Composite } from '../Core.ts'
+
+export class Group<T extends Composite> {
   private _length: number = 0;
 
   private _dict: { [key: string]: T } = {};

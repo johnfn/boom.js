@@ -1,7 +1,10 @@
-﻿type PointState = { expanded: boolean };
+﻿import * as React from 'react';
+import { Sprite } from '../../Core.ts'
+
+type PointState = { expanded: boolean };
 type PointProps = { point: PIXI.Point, debugSprite: Sprite };
 
-class LogItemPoint extends React.Component<PointProps, PointState> {
+export class LogItemPoint extends React.Component<PointProps, PointState> {
   constructor(props: PointProps) {
     super(props);
 

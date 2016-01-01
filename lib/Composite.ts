@@ -1,9 +1,13 @@
+import { Util, Component, Composites } from './Core.ts'
+
+'use strict'
+
 interface ComponentInfo {
   component: Component<Composite>;
   hasInitialized: boolean;
 }
 
-abstract class Composite {
+export abstract class Composite {
   public static componentsForClasses: { [className: string]: Component<Composite>[] } = {};
 
   public static _destroyList: Composite[] = [];
@@ -170,49 +174,49 @@ interface Constructable< T > {
   new (...args: any[]): T;
 }
 
-const component = function<T extends Composite>(comp: Component<T>): any {
+export function component<T extends Composite>(comp: Component<T>): any {
   const renameFunction = function(name: any, fn: any): any {
     return (new Function('return function (call) { return function ' + name +
       ' () { return call(this, arguments) }; };')())(Function.apply.bind(fn));
-    };
+  };
 
-    return function(constructor: Constructable<Composite>): any {
-      const name = (constructor as any).name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
+  return function(constructor: Constructable<Composite>): any {
+    const name = (constructor as any).name || /^function\s+([\w\$]+)\s*\(/.exec(constructor.toString())[1];
 
-      Composite.registerComponentForClass(comp, name);
+    Composite.registerComponentForClass(comp, name);
 
-      // the new constructor behaviour
+    // the new constructor behaviour
 
-      const f = function(...args: any[]): any {
-        constructor.apply(this, args);
+    const f = function(...args: any[]): any {
+      constructor.apply(this, args);
 
-        this._initializeComponents();
+      this._initializeComponents();
 
-        if (this.init) {
-          if (!this.hasCalledInit) {
-            this.init();
-            this.hasCalledInit = true;
-          }
-        } else {
-          console.log('consider adding init to ' + name + ' class.')
+      if (this.init) {
+        if (!this.hasCalledInit) {
+          this.init();
+          this.hasCalledInit = true;
         }
+      } else {
+        console.log('consider adding init to ' + name + ' class.')
       }
-
-      const renamed = renameFunction(name, f);
-
-      // copy prototype so intanceof operator still works
-      renamed.prototype = constructor.prototype;
-
-      // Copy over static properties (except the ones we already have)
-      const skippedProps = Object.getOwnPropertyNames(Function);
-
-      for (const propName of Object.getOwnPropertyNames(constructor)) {
-        if (skippedProps.indexOf(propName) !== -1) { continue; }
-
-        renamed[propName] = (constructor as any)[propName];
-      }
-
-      // return new constructor (will override original)
-      return renamed;
     }
+
+    const renamed = renameFunction(name, f);
+
+    // copy prototype so intanceof operator still works
+    renamed.prototype = constructor.prototype;
+
+    // Copy over static properties (except the ones we already have)
+    const skippedProps = Object.getOwnPropertyNames(Function);
+
+    for (const propName of Object.getOwnPropertyNames(constructor)) {
+      if (skippedProps.indexOf(propName) !== -1) { continue; }
+
+      renamed[propName] = (constructor as any)[propName];
+    }
+
+    // return new constructor (will override original)
+    return renamed;
   }
+}

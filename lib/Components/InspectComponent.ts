@@ -1,6 +1,6 @@
-/// <reference path="../Component.ts"/>
+import { Util, Component, Sprite } from '../Core.ts'
 
-class InspectComponent extends Component<Sprite> {
+export class InspectComponent extends Component<Sprite> {
   public static defaultInspectableProperties = ['x', 'y', 'width', 'height', 'rotation', 'alpha'];
 
   /**

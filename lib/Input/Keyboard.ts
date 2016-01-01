@@ -1,4 +1,8 @@
-﻿class KeyInfo {
+﻿import {
+  Util,
+} from '../Core.ts'
+
+class KeyInfo {
   [key: string]: boolean;
 
   public static keys: string[] =
@@ -27,7 +31,7 @@ interface QueuedKeyboardEvent {
   event : KeyboardEvent;
 }
 
-class Keyboard {
+export class Keyboard {
   public down     = new KeyInfo();
   public justDown = new KeyInfo();
 

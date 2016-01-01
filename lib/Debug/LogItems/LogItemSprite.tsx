@@ -1,4 +1,7 @@
-﻿type SpriteState = { expanded: boolean };
+﻿import * as React from 'react';
+import { Sprite, Root, Game } from '../../Core.ts'
+
+type SpriteState = { expanded: boolean };
 type SpriteProps = { sprite: Sprite, debugSprite: Sprite, root: Root };
 
 class SpriteCanvas extends Game {
@@ -9,7 +12,7 @@ class SpriteCanvas extends Game {
   }
 }
 
-class LogItemSprite extends React.Component<SpriteProps, SpriteState> {
+export class LogItemSprite extends React.Component<SpriteProps, SpriteState> {
   private _oldSprite: Sprite;
 
   constructor(props: SpriteProps) {
@@ -32,7 +35,7 @@ class LogItemSprite extends React.Component<SpriteProps, SpriteState> {
   }
 
   // Called after every render except first.
-  public componentDidUpdate(prevProps: TextureProps, prevState: TextureState): void {
+  public componentDidUpdate(prevProps: SpriteProps, prevState: SpriteState): void {
     this._renderSprite();
   }
 

@@ -1,7 +1,17 @@
 /// <reference path="./datastructures.d.ts"/>
 /// <reference path="./lib.d.ts"/>
 
-enum SpriteEvents {
+import * as PIXI from 'pixi.js'
+import { Point, MagicArray, MagicDict } from './DataStructures.ts'
+import { component, Composite, PhysicsComponent, Stage, Util } from './Core.ts'
+import {
+  InspectComponent,
+  DebugDraw,
+  TweenComponent,
+  Events,
+} from './Components.ts'
+
+export enum SpriteEvents {
   AddChild,
   MouseDown,
   MouseUp,
@@ -31,7 +41,7 @@ interface SpriteFrameState {
 @component(new DebugDraw())
 @component(new TweenComponent())
 @component(new Events<SpriteEvents>())
-class Sprite extends Composite {
+export class Sprite extends Composite {
   /**
    * Allow traversal of our own keys. Useful for metaprogramming.
    */

@@ -1,7 +1,12 @@
-﻿type RectState = { rect: PIXI.Rectangle, expanded: boolean };
+﻿import * as React from 'react';
+import {
+  Sprite
+} from '../../Core.ts'
+
+type RectState = { rect: PIXI.Rectangle, expanded: boolean };
 type RectProps = { rect: PIXI.Rectangle, debugSprite: Sprite };
 
-class LogItemRect extends React.Component<RectProps, RectState> {
+export class LogItemRect extends React.Component<RectProps, RectState> {
   constructor(props: RectProps) {
     super(props);
 

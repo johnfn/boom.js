@@ -1,5 +1,5 @@
 ﻿// TODO - maybe look into immutable.js for how they hash js objects, generally speaking.
-class MagicDict<Key, Value> {
+export class MagicDict<Key, Value> {
   private _map: { [key: string]: Value; } = {};
 
   private _hashToKey: { [key: string]: Key; } = {};

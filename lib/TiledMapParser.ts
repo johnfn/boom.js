@@ -1,4 +1,5 @@
-﻿/// <reference path="Sprite.ts"/>
+﻿import { Sprite, Globals } from './Core.ts'
+import { MagicArray } from './DataStructures.ts'
 
 /* I am unsure what goes in here. */
 interface ITiledProperties { }
@@ -87,7 +88,7 @@ interface ObjectProcess {
   (texture: PIXI.Texture, json: TiledObjectJSON): Sprite;
 }
 
-class TiledMapParser extends Sprite {
+export class TiledMapParser extends Sprite {
   private _rootPath: string;
   private _tileLayers: { [key: string]: Sprite; } = {};
   private _objectLayers: { [key: string]: Sprite; } = {};

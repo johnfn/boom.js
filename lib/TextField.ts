@@ -1,4 +1,6 @@
-﻿class TextField extends Sprite {
+﻿import { Sprite } from './Core.ts'
+
+export class TextField extends Sprite {
   private _textField: PIXI.MultiStyleText;
 
   /**

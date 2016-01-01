@@ -1,6 +1,7 @@
-﻿type StringState = { content: string };
+﻿import * as React from 'react';
+type StringState = { content: string };
 
-class LogItemString extends React.Component<StringState, StringState> {
+export class LogItemString extends React.Component<StringState, StringState> {
   constructor(props: StringState) {
     super(props);
 

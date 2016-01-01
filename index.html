@@ -11,14 +11,34 @@
         console.log = console.error = console.info = console.debug = console.warn = function (s) {
             window.consoleCache.push({ content: [s], metadata: "[bootstrap]" });
         };
+
+        var require = {
+            paths: {
+                pixi: 'pixi',
+                app: 'app'
+                react: 'external/react-with-addons',
+                sourcemap: 'external/source-map',
+                jquery: 'external/jquery-2.1.4.min',
+                pixitext: 'external/pixi.multistyletext'
+            }
+            /*,
+            shim: {
+                'token': ['jquery']
+            } */
+        };
     </script>
 
-    <script src="external/pixi.js"></script>
-    <script src="external/pixi.multistyletext.js"> </script>
-    <script src="external/react-with-addons.js"></script>
-    <script src="external/jquery-2.1.4.min.js"></script>
-    <script src="external/source-map.js"></script>
+    <script data-main="app" src="external/require.js"></script>
+
     <script>
+        requirejs.onError = function (err) {
+            debugger;
+
+            console.log(err.requireType);
+            console.log('modules: ' + err.requireModules);
+            throw err;
+        };
+
         window.sourceMaps = {};
 
         window.loadJsFile = function (path) {
@@ -66,7 +86,7 @@
     </div>
 
     <script>
-        window.loadJsFile("main.js")
+        // window.loadJsFile("main.js")
         window.loadCssFile("app.css");
     </script>
 </body>

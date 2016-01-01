@@ -1,4 +1,7 @@
-﻿type Obj = { [key: string]: any; };
+﻿import * as React from 'react';
+import { Root } from '../../Root.tsx'
+
+type Obj = { [key: string]: any; };
 
 type ObjectState = { expanded: boolean };
 type ObjectProps = {
@@ -6,7 +9,7 @@ type ObjectProps = {
   root: Root
 };
 
-class LogItemObject extends React.Component<ObjectProps, ObjectState> {
+export class LogItemObject extends React.Component<ObjectProps, ObjectState> {
   constructor(props: ObjectProps) {
     super(props);
 

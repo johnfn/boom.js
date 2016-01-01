@@ -1,4 +1,7 @@
-﻿type TextureState = { }
+﻿import * as React from 'react';
+import { Sprite, Game } from '../../Core.ts'
+
+type TextureState = { }
 type TextureProps = { texture: PIXI.Texture }
 
 class TextureCanvas extends Game {
@@ -10,7 +13,7 @@ class TextureCanvas extends Game {
   }
 }
 
-class LogItemTexture extends React.Component<TextureProps, TextureState> {
+export class LogItemTexture extends React.Component<TextureProps, TextureState> {
   private _oldTextureUrl: string = '';
 
   constructor(props: TextureProps) {

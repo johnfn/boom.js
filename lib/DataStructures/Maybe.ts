@@ -2,7 +2,7 @@
  * Maybe type in the spirit of Haskell to indicate nullable types. It doesn't have all the Monadic coolness of Haskell,
  * but it indicates nullable types pretty well.
  */
-class Maybe<T> {
+export class Maybe<T> {
   public hasValue: boolean = false;
   private _value: T;
 

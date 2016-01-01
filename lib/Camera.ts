@@ -1,9 +1,20 @@
-﻿interface CameraLayer {
+﻿import {
+  component,
+  Util,
+  Composite,
+  Sprite,
+  Stage,
+  Globals,
+} from './Core.ts'
+import { Events } from './Components.ts'
+import { Point } from './DataStructures.ts'
+
+interface CameraLayer {
   parallaxAmount: number;
   contents: Sprite;
 }
 
-enum CameraEvents {
+export enum CameraEvents {
   Move
 }
 
@@ -30,7 +41,7 @@ interface CameraFrameState {
  * Camera class. Effects what we can see.
  */
 @component(new Events<CameraEvents>())
-class Camera extends Composite {
+export class Camera extends Composite {
   /**
    * Events component. Useful for listening and reacting to changes in the Camera.
    */

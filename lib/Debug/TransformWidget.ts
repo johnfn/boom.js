@@ -1,5 +1,8 @@
-﻿
-class TransformWidget extends Sprite {
+﻿import { Sprite, SpriteEvents } from '../Core.ts'
+import { DebugEvents } from '../Components.ts'
+import { Point, Ray, Polygon, Color } from '../DataStructures.ts'
+
+export class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;
   private _target: Sprite;

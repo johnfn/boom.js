@@ -1,17 +1,16 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "system",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
         "experimentalDecorators": true,
         "jsx": "react",
-        "out": "main.js",
+        "outFile": "test.js",
         "target": "es5",
         "sourceMap": true
     },
     "exclude": [
-        "node_modules",
-        "wwwroot"
+        "node_modules"
     ]
 }

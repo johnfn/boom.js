@@ -1,4 +1,6 @@
-﻿class Point extends PIXI.Point {
+﻿import * as PIXI from 'pixi.js'
+
+export class Point extends PIXI.Point {
   public static From(p: PIXI.Point): Point {
     return new Point(p.x, p.y);
   }

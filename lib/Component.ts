@@ -1,4 +1,5 @@
-﻿abstract class Component<T extends Composite> {
+﻿import { Composite } from './Core.ts'
+export abstract class Component<T extends Composite> {
   /**
    * The composite that this component belongs to.
    */
