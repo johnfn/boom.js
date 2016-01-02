@@ -4,14 +4,17 @@ class TransformWidget extends Sprite {
   private _rightArrow: Polygon;
   private _target: Sprite;
 
+  private _moveToTarget = () => {
+    this.x = this._target.globalX + this._target.width / 2;
+    this.y = this._target.globalY + this._target.height / 2;
+  }
+
   constructor() {
     super();
 
     this.displayObject.interactive = true;
 
-    this.events.on(SpriteEvents.ChangeParent, (parent: Sprite) => {
-      this._target = parent;
-    })
+    this.z = Number.POSITIVE_INFINITY;
   }
 
   public init(): void {
@@ -28,6 +31,18 @@ class TransformWidget extends Sprite {
         this._target.x += 10;
       }
     });
+  }
+
+  public setTarget(target: Sprite): void {
+    if (this._target) {
+      this._target.events.off(SpriteEvents.Move, this._moveToTarget);
+    }
+
+    this._target = target;
+
+    this._target.events.on(SpriteEvents.Move, this._moveToTarget);
+
+    this._moveToTarget();
   }
 
   private _draw(): void {

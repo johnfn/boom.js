@@ -82,8 +82,7 @@ class Root extends React.Component<RootProps, RootState> {
       } else {
         this.transformWidget.visible = true;
 
-        this.transformWidget.x = target.globalX + target.width / 2;
-        this.transformWidget.y = target.globalY + target.height / 2;
+        this.transformWidget.setTarget(target);
 
         this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
 

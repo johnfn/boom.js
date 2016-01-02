@@ -329,6 +329,10 @@ class Sprite extends Composite {
   }
 
   public preUpdate(): void {
+    if (this._frameState.hasMoved) {
+      this.events.emit(SpriteEvents.Move);
+    }
+
     this._frameState = {
       globalXYCache: undefined,
       hasMoved     : false,
@@ -340,9 +344,6 @@ class Sprite extends Composite {
   }
 
   public postUpdate(): void {
-    if (this._frameState.hasMoved) {
-      this.events.emit(SpriteEvents.Move);
-    }
   }
 
   /**
