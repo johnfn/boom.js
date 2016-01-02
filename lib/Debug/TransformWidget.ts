@@ -4,6 +4,9 @@ class TransformWidget extends Sprite {
   private _rightArrow: Polygon;
   private _target: Sprite;
 
+  private _downHighlighted: boolean = false;
+  private _rightHighlighted: boolean = false;
+
   private _moveToTarget = () => {
     this.x = this._target.globalX + this._target.width / 2;
     this.y = this._target.globalY + this._target.height / 2;
@@ -21,6 +24,17 @@ class TransformWidget extends Sprite {
     super.init();
 
     this._draw();
+
+    this.debug.events.on(DebugEvents.MouseMove, (point: PIXI.Point) => {
+      const newdh  = this._downArrow.contains(point);
+      const newrh  = this._rightArrow.contains(point);
+      const change = (newdh !== this._downHighlighted) || (newrh !== this._rightHighlighted);
+
+      this._downHighlighted  = newdh;
+      this._rightHighlighted = newrh;
+
+      if (change) { this._draw(); }
+    });
 
     this.debug.events.on(DebugEvents.MouseDown, (point: PIXI.Point) => {
       if (this._downArrow.contains(point)) {
@@ -63,7 +77,8 @@ class TransformWidget extends Sprite {
 
     this.debug.draw(ray1, 0xffffff, 1);
     this.debug.draw(ray2, 0xffffff, 1);
-    this.debug.draw(this._downArrow, Color.RED);
-    this.debug.draw(this._rightArrow, Color.RED);
+
+    this.debug.draw(this._downArrow, this._downHighlighted ? Color.WHITE : Color.RED);
+    this.debug.draw(this._rightArrow, this._rightHighlighted ? Color.WHITE : Color.RED);
   }
 }

@@ -2,6 +2,7 @@
   public static RED  : number = 0xff0000;
   public static GREEN: number = 0x00ff00;
   public static BLUE : number = 0x0000ff;
+  public static WHITE: number = 0xffffff;
 
   public r: number;
   public g: number;

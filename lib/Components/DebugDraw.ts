@@ -2,7 +2,8 @@
 
 enum DebugEvents {
   MouseDown,
-  MouseUp
+  MouseUp,
+  MouseMove
 }
 
 interface HasDebugDraw { debug: DebugDraw }
@@ -67,6 +68,14 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
 
         e.stopPropagation();
       });
+
+      dObj.on('mousemove', (e: PIXI.interaction.InteractionEvent) => {
+        let pos = e.data.getLocalPosition(dObj, e.data.global.clone());
+
+        this.events.emit(DebugEvents.MouseMove, pos);
+
+        e.stopPropagation();
+      })
     });
   }
 
