@@ -46,9 +46,11 @@ class Root extends React.Component<RootProps, RootState> {
   constructor(props: RootProps) {
     super(props);
 
+    const stage = props.stage;
+
     this.transformWidget = new TransformWidget();
 
-    const stage = props.stage;
+    this.transformWidget.addTo(stage);
 
     this.state = { target: undefined };
 
@@ -74,15 +76,14 @@ class Root extends React.Component<RootProps, RootState> {
       return state;
     },            () => {
       if (target === undefined) {
-        if (this.transformWidget.parent) {
-          this.transformWidget.parent.removeChild(this.transformWidget);
-        }
+        this.transformWidget.visible = false;
+      } else if (target === this.transformWidget) {
 
       } else {
-        target.addChild(this.transformWidget);
+        this.transformWidget.visible = true;
 
-        this.transformWidget.x = target.width / 2;
-        this.transformWidget.y = target.height / 2;
+        this.transformWidget.x = target.globalX + target.width / 2;
+        this.transformWidget.y = target.globalY + target.height / 2;
 
         this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
 

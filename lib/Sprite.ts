@@ -188,7 +188,7 @@ class Sprite extends Composite {
    * @returns {}
    */
   get globalXY(): Point {
-    if (!this.parent) {
+    if (this.parent === Globals.stage) {
       return this.position;
     }
 
