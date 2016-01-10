@@ -5,8 +5,9 @@ class TransformWidget extends Sprite {
   private _dragSquare: Polygon;
   private _target: Sprite;
 
-  private _downHighlighted = false;
-  private _rightHighlighted = false;
+  private _downHighlighted   = false;
+  private _rightHighlighted  = false;
+  private _squareHighlighted = false;
 
   private get _isDragging(): boolean {
     return this._isDraggingX || this._isDraggingY;
@@ -36,16 +37,23 @@ class TransformWidget extends Sprite {
 
     this.debug.events.on(DebugEvents.MouseMove, (point: PIXI.Point) => {
       if (this._isDragging) {
-        this._target.x += Globals.mouse.position.x - this.absXY.x - this._dragOffset.x;
-        this._target.y += Globals.mouse.position.y - this.absXY.y - this._dragOffset.y;
+        if (this._isDraggingX) {
+          this._target.x += Globals.mouse.position.x - this.absXY.x - this._dragOffset.x;
+        }
+
+        if (this._isDraggingY) {
+          this._target.y += Globals.mouse.position.y - this.absXY.y - this._dragOffset.y;
+        }
       } else {
         // mouse over effects.
         const newdh  = this._downArrow.contains(point);
         const newrh  = this._rightArrow.contains(point);
-        const change = (newdh !== this._downHighlighted) || (newrh !== this._rightHighlighted);
+        const newsh  = this._dragSquare.contains(point);
+        const change = (newdh !== this._downHighlighted) || (newrh !== this._rightHighlighted) || (newsh !== this._squareHighlighted);
 
-        this._downHighlighted  = newdh;
-        this._rightHighlighted = newrh;
+        this._downHighlighted   = newdh;
+        this._rightHighlighted  = newrh;
+        this._squareHighlighted = newsh;
 
         if (change) { this._draw(); }
       }
@@ -115,6 +123,6 @@ class TransformWidget extends Sprite {
     this.debug.draw(this._downArrow, this._downHighlighted ? Color.WHITE : Color.RED);
     this.debug.draw(this._rightArrow, this._rightHighlighted ? Color.WHITE : Color.RED);
 
-    this.debug.draw(this._dragSquare, Color.WHITE);
+    this.debug.draw(this._dragSquare, this._squareHighlighted ? Color.WHITE : Color.RED);
   }
 }

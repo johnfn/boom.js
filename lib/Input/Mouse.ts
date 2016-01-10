@@ -30,18 +30,8 @@ class Mouse {
     this.position  = new Point(0, 0);
     this.events    = new Events<MouseEvents>();
 
-    console.log('new mouse');
-
-    stage.displayObject.on('mousemove', (e: any) => this._mousemove(e))
     stage.displayObject.on('mouseup',   (e: any) => this._mouseup(e))
     stage.displayObject.on('mousedown', (e: any) => this._mousedown(e))
-  }
-
-  private _mousemove(e: PIXI.interaction.InteractionEvent): void {
-    this.position.x = e.data.global.x;
-    this.position.y = e.data.global.y;
-
-    console.log(this.position);
   }
 
   private _mousedown(e: PIXI.interaction.InteractionEvent): void {
