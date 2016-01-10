@@ -36,7 +36,8 @@ class TransformWidget extends Sprite {
 
     this.debug.events.on(DebugEvents.MouseMove, (point: PIXI.Point) => {
       if (this._isDragging) {
-
+        this._target.x += Globals.mouse.position.x - this.absXY.x - this._dragOffset.x;
+        this._target.y += Globals.mouse.position.y - this.absXY.y - this._dragOffset.y;
       } else {
         // mouse over effects.
         const newdh  = this._downArrow.contains(point);

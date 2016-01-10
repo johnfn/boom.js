@@ -9,7 +9,9 @@ class Mouse {
    * The current position of the mouse.
    */
   public get position(): Point {
-    return (this._renderer as any).plugins.interaction.mouse.global;
+    const pos = (this._renderer as any).plugins.interaction.mouse.global;
+
+    return new Point(pos.x, pos.y);
   }
 
   /**
