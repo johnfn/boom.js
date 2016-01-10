@@ -1,5 +1,4 @@
-﻿
-class TransformWidget extends Sprite {
+﻿class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;
   private _dragSquare: Polygon;

@@ -31,6 +31,8 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
 
     if (this.state.expanded) {
       for (const prop in this.obj) {
+        if (this._isPrivateProperty(prop)) { continue; }
+
         const node = this._valueToElem(this.obj[prop], prop, this.props.debugSprite);
 
         if (!node) { continue; }
@@ -46,6 +48,10 @@ class InspectorItemObject extends React.Component<InspectorObjectProps, Inspecto
           { propList }
         </div>
       </div>);
+  }
+
+  private _isPrivateProperty(prop: string): boolean {
+    return prop[0] === '_';
   }
 
   private _toggle(e: React.SyntheticEvent): void {
