@@ -165,6 +165,8 @@ class DebugDraw extends Component<Sprite & HasDebugDraw> {
   private _drawShape(polygon: Polygon, color = 0xffffff): void {
     let lastPoint = polygon.points[polygon.points.length - 1];
 
+    this._graphics.lineStyle(0, 0x000000, 0);
+
     this._graphics.beginFill(color);
     this._graphics.lineColor = 0;
 

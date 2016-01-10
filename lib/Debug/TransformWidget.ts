@@ -2,10 +2,19 @@
 class TransformWidget extends Sprite {
   private _downArrow: Polygon;
   private _rightArrow: Polygon;
+  private _dragSquare: Polygon;
   private _target: Sprite;
 
-  private _downHighlighted: boolean = false;
-  private _rightHighlighted: boolean = false;
+  private _downHighlighted = false;
+  private _rightHighlighted = false;
+
+  private get _isDragging(): boolean {
+    return this._isDraggingX || this._isDraggingY;
+  }
+
+  private _isDraggingX    = false;
+  private _isDraggingY    = false;
+  private _dragOffset     : PIXI.Point;
 
   private _moveToTarget = () => {
     this.x = this._target.globalX + this._target.width / 2;
@@ -38,13 +47,25 @@ class TransformWidget extends Sprite {
 
     this.debug.events.on(DebugEvents.MouseDown, (point: PIXI.Point) => {
       if (this._downArrow.contains(point)) {
-        this._target.y += 10;
+        this._isDraggingY = true;
       }
 
       if (this._rightArrow.contains(point)) {
-        this._target.x += 10;
+        this._isDraggingX = true;
+      }
+
+      if (this._dragSquare.contains(point)) {
+        this._isDraggingX = this._isDraggingY = true;
+      }
+
+      if (this._isDragging) {
+        console.log(Globals.mouse.position);
       }
     });
+
+    this.debug.events.on(DebugEvents.MouseUp, (point: PIXI.Point) => {
+      this._isDraggingX = this._isDraggingY = false;
+    })
   }
 
   public setTarget(target: Sprite): void {
@@ -72,6 +93,13 @@ class TransformWidget extends Sprite {
       new Point(70, 0),
     ]);
 
+    this._dragSquare = new Polygon([
+      new Point(0, 0),
+      new Point(20, 0),
+      new Point(20, 20),
+      new Point(0, 20),
+    ]);
+
     const ray1 = new Ray(0, 0, 0, 50);
     const ray2 = new Ray(0, 0, 50, 0);
 
@@ -80,5 +108,7 @@ class TransformWidget extends Sprite {
 
     this.debug.draw(this._downArrow, this._downHighlighted ? Color.WHITE : Color.RED);
     this.debug.draw(this._rightArrow, this._rightHighlighted ? Color.WHITE : Color.RED);
+
+    this.debug.draw(this._dragSquare, Color.WHITE);
   }
 }

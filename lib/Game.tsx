@@ -22,6 +22,7 @@ class Game {
 
   private root         : React.Component<any, {}>;
   private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
+  get renderer(): PIXI.WebGLRenderer { return this._renderer as any; }
 
   private _width: number;
   get width(): number { return this._width; }
@@ -37,7 +38,7 @@ class Game {
     this.fixedStage = new Sprite();
     this.stage      = new Stage(width, height);
 
-    Globals.initialize(this.stage, this.fixedStage);
+    Globals.initialize(this);
 
     this.root       = React.render(<Root stage={ this.stage } />, element);
 

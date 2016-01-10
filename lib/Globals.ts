@@ -33,13 +33,13 @@ class Globals {
     }
   }
 
-  public static initialize(stage: Stage, fixedStage: Sprite): void {
+  public static initialize(game: Game): void {
     Globals.physicsManager = new PhysicsManager();
     Globals.keyboard       = new Keyboard();
-    Globals.mouse          = new Mouse(stage);
-    Globals.camera         = new Camera(stage);
-    Globals.stage          = Globals.stage || stage;
-    Globals.fixedStage     = Globals.fixedStage || fixedStage;
+    Globals.mouse          = new Mouse(game.stage, game.renderer);
+    Globals.camera         = new Camera(game.stage);
+    Globals.stage          = Globals.stage || game.stage;
+    Globals.fixedStage     = Globals.fixedStage || game.fixedStage;
 
     Globals.camera.addLayer(Globals.stage, 1);
   }
