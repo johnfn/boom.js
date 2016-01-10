@@ -35,14 +35,19 @@ class TransformWidget extends Sprite {
     this._draw();
 
     this.debug.events.on(DebugEvents.MouseMove, (point: PIXI.Point) => {
-      const newdh  = this._downArrow.contains(point);
-      const newrh  = this._rightArrow.contains(point);
-      const change = (newdh !== this._downHighlighted) || (newrh !== this._rightHighlighted);
+      if (this._isDragging) {
 
-      this._downHighlighted  = newdh;
-      this._rightHighlighted = newrh;
+      } else {
+        // mouse over effects.
+        const newdh  = this._downArrow.contains(point);
+        const newrh  = this._rightArrow.contains(point);
+        const change = (newdh !== this._downHighlighted) || (newrh !== this._rightHighlighted);
 
-      if (change) { this._draw(); }
+        this._downHighlighted  = newdh;
+        this._rightHighlighted = newrh;
+
+        if (change) { this._draw(); }
+      }
     });
 
     this.debug.events.on(DebugEvents.MouseDown, (point: PIXI.Point) => {
@@ -59,7 +64,7 @@ class TransformWidget extends Sprite {
       }
 
       if (this._isDragging) {
-        console.log(Globals.mouse.position);
+        this._dragOffset = Globals.mouse.position.subtract(this.absXY);
       }
     });
 

@@ -183,6 +183,12 @@ class Sprite extends Composite {
     return new PIXI.Rectangle(this.x, this.y, this.width, this.height);
   }
 
+  get absXY(): Point {
+    if (this === Globals.fixedStage) { return this.position; }
+
+    return this.parent.absXY.add(this.position);
+  }
+
   /**
    * Get the screen-space x and y coordinates of this object (not relative to anything).
    * @returns {}

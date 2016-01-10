@@ -21,6 +21,7 @@ class Game {
   public fixedStage: Sprite;
 
   private root         : React.Component<any, {}>;
+
   private _renderer    : PIXI.WebGLRenderer | PIXI.CanvasRenderer;
   get renderer(): PIXI.WebGLRenderer { return this._renderer as any; }
 
