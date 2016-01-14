@@ -110,14 +110,18 @@ class Sprite extends Composite {
 
   get x(): number { return this.displayObject.position.x; }
   set x(val: number) {
-    this._frameState.hasMoved = true;
-    this.displayObject.position.x = val;
+    if (this.displayObject.position.x !== val) {
+      this._frameState.hasMoved = true;
+      this.displayObject.position.x = val;
+    }
   }
 
   get y(): number { return this.displayObject.y; }
   set y(val: number) {
-    this._frameState.hasMoved = true;
-    this.displayObject.y = val;
+    if (this.displayObject.position.y !== val) {
+      this._frameState.hasMoved = true;
+      this.displayObject.y = val;
+    }
   }
 
   get parent(): Sprite {

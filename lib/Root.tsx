@@ -84,11 +84,13 @@ class Root extends React.Component<RootProps, RootState> {
 
         this.transformWidget.setTarget(target);
 
-        this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
+        // The ordering ensures nothing bad happens if we switch to the same thing.
 
         if (this._currentClickedObject) {
           this._currentClickedObject.events.off(SpriteEvents.Move, this._debugDraw);
         }
+
+        this.state.target.events.on(SpriteEvents.Move, this._debugDraw);
 
         this._currentClickedObject = target;
       }
